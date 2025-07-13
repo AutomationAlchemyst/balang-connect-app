@@ -49,3 +49,6 @@ firestore-debug.log
 
 # Path to Firebase Admin SDK credentials
 GOOGLE_APPLICATION_CREDENTIALS=".credentials/service-account.json"
+
+# Ignore sensitive credentials
+credentials/service-account.json
