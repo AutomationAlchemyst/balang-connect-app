@@ -74,7 +74,7 @@ export default function EventBuilderPage() {
             setIsCalendarDataLoading(false);
         }
     };
-    fetchBlockedDates();
+    //fetchBlockedDates();
   }, [toast]);
   const getMaxFlavors = useCallback(() => {
     if (selectedPackage) {
