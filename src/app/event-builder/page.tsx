@@ -804,55 +804,60 @@ export default function EventBuilderPage() {
         </div>
       </div>
 
+      // Replace your existing Date & Time Dialog with this corrected version
+
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="sm:max-w-md md:max-w-lg">
-            <DialogHeader className="p-6 pb-4 border-b">
-                <DialogTitle className="font-headline text-primary flex items-center">
-                <CalendarDays className="mr-2 h-6 w-6" /> Select Event Date &amp; Time
-                </DialogTitle>
-                <ShadDialogDescription>
-                Choose your desired date and time for the event. Blocked dates are disabled.
-                </ShadDialogDescription>
-            </DialogHeader>
-            <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] gap-4 items-start">
-                <div>
-                    <Calendar
-                    mode="single"
-                    selected={selectedEventDate}
-                    onSelect={setSelectedEventDate}
-                    disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
-                    className="rounded-md border shadow-sm"
-                    />
+        <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh]">
+          <DialogHeader className="p-6 pb-4 border-b shrink-0">
+            <DialogTitle className="font-headline text-primary flex items-center">
+              <CalendarDays className="mr-2 h-6 w-6" /> Select Event Date &amp; Time
+            </DialogTitle>
+            <ShadDialogDescription>
+              Choose your desired date and time for the event. Blocked dates are disabled.
+            </ShadDialogDescription>
+          </DialogHeader>
+
+          {/* This new div makes the content area scrollable */}
+          <div className="flex-grow min-h-0 overflow-y-auto p-6">
+            <div className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] gap-4 items-start">
+              <div>
+                <Calendar
+                  mode="single"
+                  selected={selectedEventDate}
+                  onSelect={setSelectedEventDate}
+                  disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
+                  className="rounded-md border shadow-sm"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label className="font-medium text-sm">Available Time Slots:</Label>
+                <div className="grid grid-cols-2 gap-2 max-h-[260px] md:max-h-none overflow-y-auto pr-1">
+                  {EVENT_TIME_SLOTS.map((time) => (
+                    <Button
+                      key={time}
+                      variant={selectedEventTime === time ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedEventTime(time)}
+                      className={cn("w-full justify-center text-xs", selectedEventTime === time && "bg-primary text-primary-foreground")}
+                    >
+                      {time}
+                    </Button>
+                  ))}
                 </div>
-                <div className="space-y-3">
-                    <Label className="font-medium text-sm">Available Time Slots:</Label>
-                    <div className="grid grid-cols-2 gap-2 max-h-[260px] overflow-y-auto pr-1">
-                    {EVENT_TIME_SLOTS.map((time) => (
-                        <Button
-                        key={time}
-                        variant={selectedEventTime === time ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setSelectedEventTime(time)}
-                        className={cn("w-full justify-center text-xs", selectedEventTime === time && "bg-primary text-primary-foreground")}
-                        >
-                        {time}
-                        </Button>
-                    ))}
-                    </div>
-                </div>
-                </div>
+              </div>
             </div>
-            <DialogFooter className="border-t p-6 pt-4">
-                <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)}>Cancel</Button>
-                <Button 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={handleDateTimeSubmit}
-                disabled={!selectedEventDate || !selectedEventTime}
-                >
-                Confirm Date &amp; Time
-                </Button>
-            </DialogFooter>
+          </div>
+
+          <DialogFooter className="border-t p-6 pt-4 shrink-0">
+            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)}>Cancel</Button>
+            <Button 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={handleDateTimeSubmit}
+              disabled={!selectedEventDate || !selectedEventTime}
+            >
+              Confirm Date &amp; Time
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

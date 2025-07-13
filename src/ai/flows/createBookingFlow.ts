@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A flow for creating a booking and syncing it with Google Sheets and Google Calendar.
@@ -36,14 +35,36 @@ const BookingFlowInputSchema = z.object({
 
 export type BookingFlowInput = z.infer<typeof BookingFlowInputSchema>;
 
+// =================================================================
+//  THIS IS THE CORRECTED AUTHENTICATION FUNCTION
+// =================================================================
 const getGoogleAuthClient = () => {
+  const scopes = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/calendar',
+  ];
+
+  // This block runs on Vercel where the JSON key is stored in an environment variable
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    console.log("Using GOOGLE_SERVICE_ACCOUNT_JSON from environment variables for Google APIs.");
+    const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    return new GoogleAuth({
+      credentials,
+      scopes,
+    });
+  }
+  
+  // This block runs on your local machine, relying on the GOOGLE_APPLICATION_CREDENTIALS
+  // file path set in your package.json dev script.
+  console.log("Using local Application Default Credentials for Google APIs.");
   return new GoogleAuth({
-    scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-      'https://www.googleapis.com/auth/calendar',
-    ],
+    scopes,
   });
 };
+// =================================================================
+//  END OF FIX
+// =================================================================
+
 
 const addBookingToSheet = ai.defineTool(
   {
