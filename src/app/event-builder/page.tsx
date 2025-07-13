@@ -25,6 +25,10 @@ import { cn } from '@/lib/utils';
 import { createBookingFlow } from '@/ai/flows/createBookingFlow';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
 
+const DELIVERY_FEE = 45.00; // ADD THIS LINE BACK
+
+const EVENT_TIME_SLOTS = [ ... ];
+
 // --- This interface is changed ---
 interface EventConfig {
   selectedPackage: { name: string; price: string; flavors?: string[] } | null;
