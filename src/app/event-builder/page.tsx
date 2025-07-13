@@ -63,8 +63,24 @@ export default function EventBuilderPage() {
   const [isCalendarDataLoading, setIsCalendarDataLoading] = useState(true);
 
   useEffect(() => {
-    // This function is now empty because we commented out the call
-    // to keep it disabled for our test. You can re-enable it later.
+    const fetchBlockedDates = async () => {
+        setIsCalendarDataLoading(true);
+        try {
+            const dates = await getBlockedDates();
+            setBlockedDates(dates.map(d => d.date));
+        } catch (error) {
+            console.error("Failed to fetch blocked dates for event builder:", error);
+            toast({
+                title: "Could not load calendar",
+                description: "Failed to fetch blocked dates. Please try refreshing.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsCalendarDataLoading(false);
+        }
+    };
+
+    fetchBlockedDates();
   }, [toast]);
 
   const getMaxFlavors = useCallback(() => {
