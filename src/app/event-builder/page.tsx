@@ -25,6 +25,7 @@ import { format } from "date-fns"
 import { cn } from '@/lib/utils';
 import { createBookingFlow } from '@/ai/flows/createBookingFlow';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import { storage } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const DELIVERY_FEE = 45.00; // ADD THIS LINE BACK
