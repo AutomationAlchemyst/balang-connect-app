@@ -573,7 +573,7 @@ export default function EventBuilderPage() {
         </Dialog>
 
         {currentEventConfig && customerDetailsForPayment && currentEventConfig.eventDate && (
-            <PaymentConfirmationDialog
+          <PaymentConfirmationDialog
             isOpen={isPaymentModalOpen}
             onClose={resetBookingProcess}
             eventConfig={currentEventConfig}
