@@ -381,48 +381,13 @@ export default function EventBuilderPage() {
   const addonsOnlyRouteValid = !packageIsSelected && addonsSelected;
   const canProceed = packageRouteValid || addonsOnlyRouteValid;
 
-  return (
-    <div className="space-y-8">
-      {/* ... All your JSX for displaying packages, addons, etc. ... */}
-      {/* For brevity, I'm omitting the full JSX, but no changes are needed here */}
-      <div/>
-
-      <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        {/* ... Date Time Modal content ... */}
-      </Dialog>
-
-      <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-        <DialogContent className="sm:max-w-[525px] flex flex-col max-h-[85vh] overflow-hidden">
-          <DialogHeader className="shrink-0 p-6 pb-4 border-b">
-            <DialogTitle className="font-headline text-primary">Customer Details</DialogTitle>
-            <ShadDialogDescription>
-              Please fill in your details. All fields marked with * are required.
-            </ShadDialogDescription>
-            {currentEventConfig?.eventDate && currentEventConfig?.eventTime && (
-              <div className="text-sm text-muted-foreground mt-2">
-                <strong>Event scheduled for: {format(currentEventConfig.eventDate, "PPP")} at {currentEventConfig.eventTime}</strong>
-              </div>
-            )}
-          </DialogHeader>
-          <div className="flex-grow min-h-0 overflow-y-auto">
-            <CustomerDetailsForm 
-              onSubmit={handleCustomerDetailsSubmit} 
-              onCancel={() => setIsCustomerDetailsModalOpen(false)}
-              eventTime={selectedEventTime}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* THIS IS THE CORRECTED LINE */}
-      {currentEventConfig && customerDetailsForPayment && currentEventConfig.eventDate && (
-        <PaymentConfirmationDialog
-          isOpen={isPaymentModalOpen}
-          onClose={resetBookingProcess}
-          eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
-          customerDetails={customerDetailsForPayment}
-        />
-      )}
+  // Replace your entire existing return statement with this
+return (
+    <div className="container mx-auto p-8">
+        <h1 className="text-4xl font-bold">Event Builder Test</h1>
+        <p className="mt-4 text-xl">
+            If you can see this text, it means the component is loading correctly, and the error is hidden somewhere in your original display code (JSX).
+        </p>
     </div>
-  );
+);
 }
