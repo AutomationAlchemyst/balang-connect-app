@@ -804,8 +804,6 @@ export default function EventBuilderPage() {
         </div>
       </div>
 
-      // Replace your existing Date & Time Dialog with this corrected version
-
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
         <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh]">
           <DialogHeader className="p-6 pb-4 border-b shrink-0">
