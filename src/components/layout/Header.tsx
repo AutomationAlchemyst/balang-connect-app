@@ -1,10 +1,9 @@
-
-'use client'; // This component now uses a hook, so it must be a client component.
+'use client'; 
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'; // Import Footer, Header, Title
 import { 
   Menu, 
   CupSoda, 
@@ -14,12 +13,12 @@ import {
   Ticket, 
   Users, 
   Sparkles,
-  Sheet as SheetIcon, // aliasing Sheet icon
+  Sheet as SheetIcon,
   CalendarDays,
   Ban,
   LogOut
 } from 'lucide-react';
-import { useAdmin } from '@/context/AdminContext'; // Import useAdmin hook
+import { useAdmin } from '@/context/AdminContext';
 import { Separator } from '@/components/ui/separator';
 
 const navItems = [
@@ -86,59 +85,78 @@ export default function Header() {
           )}
         </nav>
 
+        {/* ================================================================= */}
+        {/* START OF MOBILE NAVIGATION FIX */}
+        {/* ================================================================= */}
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
                 <Menu className="h-6 w-6" />
+                <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <nav className="flex flex-col space-y-4 mt-8">
-                <Link href="/" className="text-xl font-headline font-bold text-primary mb-4">
-                  BalangConnect
-                </Link>
-                {navItems.map((item) => (
-                  <Button key={item.label} variant="ghost" asChild className="justify-start">
-                    <Link href={item.href} className="flex items-center space-x-3 text-lg">
-                      <item.icon size={24} />
-                      <span>{item.label}</span>
-                    </Link>
+            <SheetContent side="right" className="flex flex-col h-full">
+              <SheetHeader className="shrink-0">
+                <SheetTitle asChild>
+                  <Link href="/" className="text-2xl font-headline font-bold text-primary">
+                    BalangConnect
+                  </Link>
+                </SheetTitle>
+              </SheetHeader>
+              
+              {/* This new div makes the content scrollable */}
+              <div className="flex-grow overflow-y-auto py-4">
+                <nav className="grid gap-2">
+                  {navItems.map((item) => (
+                    <Button key={item.label} variant="ghost" asChild className="justify-start text-base p-4">
+                      <Link href={item.href} className="flex items-center gap-4">
+                        <item.icon className="h-5 w-5" />
+                        {item.label}
+                      </Link>
+                    </Button>
+                  ))}
+                  {isAdmin && (
+                    <>
+                      <Separator className="my-4" />
+                      <div className="px-4 text-sm font-semibold text-muted-foreground">Admin Tools</div>
+                      <Button variant="secondary" asChild className="justify-start text-base p-4">
+                          <Link href="/admin/manage-dates" className="flex items-center gap-4">
+                            <Ban className="h-5 w-5" />
+                            <span>Manage Dates</span>
+                          </Link>
+                      </Button>
+                      <Button variant="secondary" asChild className="justify-start text-base p-4">
+                          <Link href={sheetUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
+                            <SheetIcon className="h-5 w-5" />
+                            <span>View Bookings</span>
+                          </Link>
+                      </Button>
+                      <Button variant="secondary" asChild className="justify-start text-base p-4">
+                          <Link href={calendarUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
+                            <CalendarDays className="h-5 w-5" />
+                            <span>View Calendar</span>
+                          </Link>
+                      </Button>
+                    </>
+                  )}
+                </nav>
+              </div>
+
+              {isAdmin && (
+                <SheetFooter className="mt-auto border-t pt-4 shrink-0">
+                  <Button variant="ghost" onClick={handleLogout} className="w-full justify-center text-base">
+                      <LogOut className="mr-2 h-5 w-5"/>
+                      <span>Logout</span>
                   </Button>
-                ))}
-                {isAdmin && (
-                  <>
-                    <Separator className="my-4" />
-                    <p className="px-4 text-sm font-semibold text-muted-foreground">Admin Tools</p>
-                    <Button variant="secondary" asChild className="justify-start">
-                       <Link href="/admin/manage-dates" className="flex items-center space-x-3 text-lg">
-                         <Ban size={24} />
-                         <span>Manage Dates</span>
-                       </Link>
-                    </Button>
-                    <Button variant="secondary" asChild className="justify-start">
-                       <Link href={sheetUrl} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-lg">
-                         <SheetIcon size={24} />
-                         <span>View Bookings</span>
-                       </Link>
-                    </Button>
-                     <Button variant="secondary" asChild className="justify-start">
-                       <Link href={calendarUrl} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-lg">
-                         <CalendarDays size={24} />
-                         <span>View Calendar</span>
-                       </Link>
-                    </Button>
-                    <Separator />
-                    <Button variant="ghost" onClick={handleLogout} className="justify-start text-lg">
-                       <LogOut size={24} className="mr-3" />
-                       <span>Logout</span>
-                    </Button>
-                  </>
-                )}
-              </nav>
+                </SheetFooter>
+              )}
             </SheetContent>
           </Sheet>
         </div>
+        {/* ================================================================= */}
+        {/* END OF MOBILE NAVIGATION FIX */}
+        {/* ================================================================= */}
       </div>
     </header>
   );
