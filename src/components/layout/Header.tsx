@@ -1,9 +1,12 @@
-'use client'; 
+'use client';
 
+// 1. Import useState to manage the sidebar's state
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'; // Import Footer, Header, Title
+// Import SheetFooter and SheetTitle for better structure
+import { Sheet, SheetContent, SheetTrigger, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'; 
 import { 
   Menu, 
   CupSoda, 
@@ -38,9 +41,13 @@ export default function Header() {
   const { isAdmin, setIsAdmin } = useAdmin();
   const router = useRouter();
 
+  // 2. Add state to control the sheet's open/closed status
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
   const handleLogout = () => {
     setIsAdmin(false);
     sessionStorage.removeItem('isAdmin');
+    setIsSheetOpen(false); // Close sheet on logout
     router.push('/');
   };
 
@@ -85,11 +92,9 @@ export default function Header() {
           )}
         </nav>
 
-        {/* ================================================================= */}
-        {/* START OF MOBILE NAVIGATION FIX */}
-        {/* ================================================================= */}
         <div className="md:hidden">
-          <Sheet>
+          {/* 3. Control the Sheet component with our new state */}
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
                 <Menu className="h-6 w-6" />
@@ -99,18 +104,25 @@ export default function Header() {
             <SheetContent side="right" className="flex flex-col h-full">
               <SheetHeader className="shrink-0">
                 <SheetTitle asChild>
-                  <Link href="/" className="text-2xl font-headline font-bold text-primary">
+                  <Link 
+                    href="/" 
+                    className="text-2xl font-headline font-bold text-primary"
+                    onClick={() => setIsSheetOpen(false)} // Close on click
+                  >
                     BalangConnect
                   </Link>
                 </SheetTitle>
               </SheetHeader>
               
-              {/* This new div makes the content scrollable */}
               <div className="flex-grow overflow-y-auto py-4">
                 <nav className="grid gap-2">
                   {navItems.map((item) => (
                     <Button key={item.label} variant="ghost" asChild className="justify-start text-base p-4">
-                      <Link href={item.href} className="flex items-center gap-4">
+                      <Link 
+                        href={item.href} 
+                        className="flex items-center gap-4"
+                        onClick={() => setIsSheetOpen(false)} // Close on click
+                      >
                         <item.icon className="h-5 w-5" />
                         {item.label}
                       </Link>
@@ -121,19 +133,35 @@ export default function Header() {
                       <Separator className="my-4" />
                       <div className="px-4 text-sm font-semibold text-muted-foreground">Admin Tools</div>
                       <Button variant="secondary" asChild className="justify-start text-base p-4">
-                          <Link href="/admin/manage-dates" className="flex items-center gap-4">
+                          <Link 
+                            href="/admin/manage-dates" 
+                            className="flex items-center gap-4"
+                            onClick={() => setIsSheetOpen(false)} // Close on click
+                          >
                             <Ban className="h-5 w-5" />
                             <span>Manage Dates</span>
                           </Link>
                       </Button>
                       <Button variant="secondary" asChild className="justify-start text-base p-4">
-                          <Link href={sheetUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
+                          <Link 
+                            href={sheetUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center gap-4"
+                            onClick={() => setIsSheetOpen(false)} // Close on click
+                          >
                             <SheetIcon className="h-5 w-5" />
                             <span>View Bookings</span>
                           </Link>
                       </Button>
                       <Button variant="secondary" asChild className="justify-start text-base p-4">
-                          <Link href={calendarUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
+                          <Link 
+                            href={calendarUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center gap-4"
+                            onClick={() => setIsSheetOpen(false)} // Close on click
+                          >
                             <CalendarDays className="h-5 w-5" />
                             <span>View Calendar</span>
                           </Link>
@@ -154,9 +182,6 @@ export default function Header() {
             </SheetContent>
           </Sheet>
         </div>
-        {/* ================================================================= */}
-        {/* END OF MOBILE NAVIGATION FIX */}
-        {/* ================================================================= */}
       </div>
     </header>
   );
