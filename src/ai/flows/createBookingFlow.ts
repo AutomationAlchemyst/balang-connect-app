@@ -8,6 +8,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { google } from 'googleapis';
 import { GoogleAuth } from 'google-auth-library';
+import { sendWhatsAppMessage } from './sendWhatsAppMessage';
 
 const SHEET_NAME = 'Sheet1';
 
@@ -65,6 +66,9 @@ const getGoogleAuthClient = () => {
 //  END OF FIX
 // =================================================================
 
+const generateOrderId = () => {
+  return Math.random().toString(36).substring(2, 8);
+};
 
 const addBookingToSheet = ai.defineTool(
   {
@@ -205,7 +209,7 @@ ${description}
 
 Pickup/Dismantle Time: ${input.pickupTime || 'Not specified'}
 
-Total: $${input.totalAmount.toFixed(2)}
+Total: ${input.totalAmount.toFixed(2)}
 Contact: ${input.email} / ${input.phone}
 Payment Proof: ${input.paymentProofUrl || 'Not provided'}`,
         start,
@@ -229,21 +233,25 @@ export const createBookingFlow = ai.defineFlow(
     outputSchema: z.object({
       sheet: z.any(),
       calendar: z.any(),
+      whatsapp: z.any(),
     }),
   },
   async (input) => {
     try {
-      const [sheetResult, calendarResult] = await Promise.all([
+      const orderId = generateOrderId();
+      const [sheetResult, calendarResult, whatsappResult] = await Promise.all([
         addBookingToSheet(input),
         createCalendarEvent(input),
+        sendWhatsAppMessage({ ...input, orderId }),
       ]);
 
-      return { sheet: sheetResult, calendar: calendarResult };
+      return { sheet: sheetResult, calendar: calendarResult, whatsapp: whatsappResult };
     } catch (error: any) {
       console.error('createBookingFlow: FATAL - An unhandled error occurred:', error);
       return {
         sheet: { success: false, error: `Flow failed: ${error.message}` },
         calendar: { success: false, error: `Flow failed: ${error.message}` },
+        whatsapp: { success: false, error: `Flow failed: ${error.message}` },
       };
     }
   }
