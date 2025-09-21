@@ -289,7 +289,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
           />
         </div>
         
-        <div className="flex justify-end space-x-3 p-6 pt-4 border-t shrink-0">
+        <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 p-6 pt-4 border-t shrink-0">
           <Button type="button" variant="outline" onClick={onBack}>
             Back
           </Button>
