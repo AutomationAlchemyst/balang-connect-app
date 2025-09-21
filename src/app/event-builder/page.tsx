@@ -847,7 +847,7 @@ export default function EventBuilderPage() {
           </div>
 
           <DialogFooter className="border-t p-6 pt-4 shrink-0">
-            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)}>Back</Button>
             <Button 
               className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={handleDateTimeSubmit}
@@ -876,7 +876,12 @@ export default function EventBuilderPage() {
             <CustomerDetailsForm 
               onSubmit={handleCustomerDetailsSubmit} 
               onCancel={() => setIsCustomerDetailsModalOpen(false)}
+              onBack={() => {
+                setIsCustomerDetailsModalOpen(false);
+                setIsDateTimeModalOpen(true);
+              }}
               eventTime={selectedEventTime}
+              initialValues={customerDetailsForPayment || undefined}
             />
           </div>
         </DialogContent>
@@ -886,6 +891,10 @@ export default function EventBuilderPage() {
         <PaymentConfirmationDialog
           isOpen={isPaymentModalOpen}
           onClose={resetBookingProcess}
+          onBack={() => {
+            setIsPaymentModalOpen(false);
+            setIsCustomerDetailsModalOpen(true);
+          }}
           eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
           customerDetails={customerDetailsForPayment}
         />

@@ -29,6 +29,7 @@ import type { EventConfig } from '@/app/event-builder/page';
 interface PaymentConfirmationDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  onBack: () => void;
   eventConfig: EventConfig & { eventDate: Date };
   customerDetails: CustomerDetailsFormValues;
 }
@@ -42,6 +43,7 @@ type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 export default function PaymentConfirmationDialog({
   isOpen,
   onClose,
+  onBack,
   eventConfig,
   customerDetails,
 }: PaymentConfirmationDialogProps) {
@@ -87,8 +89,8 @@ export default function PaymentConfirmationDialog({
       setUploadStatus('error');
       return;
     }
-    if (file.size > 1 * 1024 * 1024) { 
-      setUploadError('File is too large. Max size is 1MB.');
+    if (file.size > 5 * 1024 * 1024) { 
+      setUploadError('File is too large. Max size is 5MB.');
       setUploadStatus('error');
       return;
     }
@@ -260,7 +262,7 @@ export default function PaymentConfirmationDialog({
 
               <div className="space-y-2">
                 <Label htmlFor="paymentProof" className="text-md font-semibold text-foreground">Upload Payment Proof*</Label>
-                <p className="text-xs text-muted-foreground">Please upload a screenshot or PDF. Max file size: 1MB.</p>
+                <p className="text-xs text-muted-foreground">Please upload a screenshot or PDF. Max file size: 5MB.</p>
                 <div className="flex items-center justify-center w-full">
                   <label htmlFor="paymentProof" className={cn("flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-card hover:bg-muted transition-colors", uploadStatus === 'error' && "border-destructive", uploadStatus === 'success' && "border-green-500")}>
                     <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
@@ -277,7 +279,7 @@ export default function PaymentConfirmationDialog({
                           </span>
                         </p>
                         {uploadStatus === 'error' && <p className="text-xs text-destructive">{uploadError}</p>}
-                        {uploadStatus !== 'error' && <p className="text-xs text-muted-foreground">PNG, JPG, GIF, PDF (MAX. 1MB)</p>}
+                        {uploadStatus !== 'error' && <p className="text-xs text-muted-foreground">PNG, JPG, GIF, PDF (MAX. 5MB)</p>}
                     </div>
                     <Input id="paymentProof" type="file" className="hidden" onChange={handleFileChange} accept="image/*,.pdf" disabled={isActionDisabled} />
                   </label>
@@ -318,6 +320,9 @@ export default function PaymentConfirmationDialog({
         default: // 'idle'
             return (
                 <DialogFooter className="p-6 pt-4 border-t shrink-0">
+                    <Button variant="outline" onClick={onBack} disabled={isActionDisabled}>
+                        Back
+                    </Button>
                     <Button variant="outline" onClick={() => handleDialogStateChange(false)} disabled={isActionDisabled}>
                         Cancel
                     </Button>

@@ -68,13 +68,15 @@ export type CustomerDetailsFormValues = z.infer<typeof customerDetailsFormSchema
 interface CustomerDetailsFormProps {
   onSubmit: (values: CustomerDetailsFormValues) => void;
   onCancel: () => void;
+  onBack: () => void;
   eventTime?: string;
+  initialValues?: Partial<CustomerDetailsFormValues>;
 }
 
-export default function CustomerDetailsForm({ onSubmit, onCancel, eventTime }: CustomerDetailsFormProps) {
+export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventTime, initialValues }: CustomerDetailsFormProps) {
   const form = useForm<CustomerDetailsFormValues>({
     resolver: zodResolver(customerDetailsFormSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       fullName: '',
       email: '',
       phone: '',
@@ -288,6 +290,9 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, eventTime }: C
         </div>
         
         <div className="flex justify-end space-x-3 p-6 pt-4 border-t shrink-0">
+          <Button type="button" variant="outline" onClick={onBack}>
+            Back
+          </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
