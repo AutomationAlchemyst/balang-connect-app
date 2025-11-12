@@ -29,9 +29,9 @@ const navItems = [
   { href: '/packages', label: 'Packages', icon: Package },
   { href: '/event-builder', label: 'Event Builder', icon: Wrench },
   { href: '/infaq', label: 'Infaq Orders', icon: HeartHandshake },
-  { href: '/ai-stylist', label: 'AI Stylist', icon: Sparkles },
-  { href: '/promotions', label: 'Promotions', icon: Ticket },
-  { href: '/community', label: 'Community', icon: Users },
+  // { href: '/ai-stylist', label: 'AI Stylist', icon: Sparkles },
+  // { href: '/promotions', label: 'Promotions', icon: Ticket },
+  // { href: '/community', label: 'Community', icon: Users },
 ];
 
 const sheetUrl = 'https://docs.google.com/spreadsheets/d/1M5nf8xC34Y6ZvB5qQCWYoWsSAAplzX1uO6IsPXdxyKE/edit';
