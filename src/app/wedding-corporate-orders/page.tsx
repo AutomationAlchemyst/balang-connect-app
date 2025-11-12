@@ -60,7 +60,11 @@ export default function CorporateOrdersPage() {
   const [currentEventConfig, setCurrentEventConfig] = useState<EventConfig | null>(null);
 
   const [customerDetailsForPayment, setCustomerDetailsForPayment] = useState<CustomerDetailsFormValues | null>(null);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isDeliveryOptOut, setIsDeliveryOptOut] = useState(false);
+
+  useEffect(() => {
+    setIsDeliveryOptOut(false);
+  }, [selectedPackage]);
 
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
   const [isCalendarDataLoading, setIsCalendarDataLoading] = useState(true);
@@ -226,8 +230,19 @@ export default function CorporateOrdersPage() {
     }
     
     if (addonsSelectedList.length > 0 && !selectedPackage) {
-      currentTotal += deliveryFee;
-      deliveryFeeApplied = true;
+      if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
+        // Do not add delivery fee
+      } else {
+        currentTotal += deliveryFee;
+        deliveryFeeApplied = true;
+      }
+    } else if (selectedPackage && !selectedPackage.isAllInclusive) {
+        if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
+            // Do not add delivery fee
+        } else {
+            currentTotal += deliveryFee;
+            deliveryFeeApplied = true;
+        }
     }
 
 
@@ -511,6 +526,18 @@ export default function CorporateOrdersPage() {
                   <ul className="text-xs mt-2">
                     {selectedPackage.includedItems.map(item => <li key={item}>- {item}</li>)}
                   </ul>
+                  {selectedPackage.id === 'pkg_17l_self_pickup' && (
+                    <div className="flex items-center space-x-2 mt-4">
+                      <Checkbox
+                        id="delivery-opt-out"
+                        checked={isDeliveryOptOut}
+                        onCheckedChange={() => setIsDeliveryOptOut(!isDeliveryOptOut)}
+                      />
+                      <Label htmlFor="delivery-opt-out" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        I want to opt-out from delivery (Self-pickup)
+                      </Label>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
