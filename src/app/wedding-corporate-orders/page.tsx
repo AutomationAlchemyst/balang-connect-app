@@ -463,9 +463,9 @@ export default function CorporateOrdersPage() {
 
   return (
     <div className="space-y-8">
-      <SectionTitle>Build Your Custom Corporate Package</SectionTitle>
+      <SectionTitle>Build Your Custom Wedding & Corporate Package</SectionTitle>
       <p className="text-lg text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-      Create the perfect beverage experience for your corporate event. Choose from our tailored packages and add-ons.
+      Create the perfect beverage experience for your wedding or corporate event. Choose from our tailored packages and add-ons.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
