@@ -27,6 +27,7 @@ import { Separator } from '@/components/ui/separator';
 const navItems = [
   { href: '/flavors', label: 'Flavors', icon: CupSoda },
   { href: '/packages', label: 'Packages', icon: Package },
+  { href: '/corporate-orders', label: 'Corporate Orders', icon: Wrench },
   { href: '/event-builder', label: 'Event Builder', icon: Wrench },
   { href: '/infaq', label: 'Infaq Orders', icon: HeartHandshake },
   // { href: '/ai-stylist', label: 'AI Stylist', icon: Sparkles },
