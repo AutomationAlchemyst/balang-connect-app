@@ -24,7 +24,8 @@ import { format } from "date-fns";
 import { cn } from '@/lib/utils';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
 
-const DELIVERY_FEE = 45.00;
+const BASE_DELIVERY_FEE = 45.00;
+const SPECIAL_DELIVERY_FEE = 20.00;
 const EVENT_TIME_SLOTS = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
 
 export interface EventConfig {
@@ -46,6 +47,7 @@ export default function EventBuilderPage() {
   const [selectedAddons, setSelectedAddons] = useState<Record<string, number>>({});
   const [addonFlavorSelections, setAddonFlavorSelections] = useState<Record<string, (string | undefined)[]>>({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const [deliveryFee, setDeliveryFee] = useState(BASE_DELIVERY_FEE);
   const [displayDeliveryFee, setDisplayDeliveryFee] = useState(0);
   const [activeAddonFlavorPopover, setActiveAddonFlavorPopover] = useState<{ addonId: string; balangIndex: number } | null>(null);
 
@@ -207,7 +209,14 @@ export default function EventBuilderPage() {
     let deliveryFeeApplied = false;
 
     if (selectedPackage) {
-      currentTotal += selectedPackage.price; 
+      currentTotal += selectedPackage.price;
+      if (selectedPackage.id === 'pkg_17l_self_pickup') {
+        setDeliveryFee(SPECIAL_DELIVERY_FEE);
+      } else {
+        setDeliveryFee(BASE_DELIVERY_FEE);
+      }
+    } else {
+      setDeliveryFee(BASE_DELIVERY_FEE);
     }
 
     const addonsSelectedList = Object.entries(selectedAddons).filter(([, quantity]) => quantity > 0);
@@ -221,17 +230,17 @@ export default function EventBuilderPage() {
     }
     
     if (addonsSelectedList.length > 0 && (!selectedPackage || (selectedPackage && !selectedPackage.isAllInclusive))) {
-      currentTotal += DELIVERY_FEE;
+      currentTotal += deliveryFee;
       deliveryFeeApplied = true;
     } else if (selectedPackage && !selectedPackage.isAllInclusive) { 
-      currentTotal += DELIVERY_FEE;
+      currentTotal += deliveryFee;
       deliveryFeeApplied = true;
     }
 
 
     setTotalPrice(currentTotal);
-    setDisplayDeliveryFee(deliveryFeeApplied ? DELIVERY_FEE : 0); 
-  }, [selectedPackage, selectedAddons]);
+    setDisplayDeliveryFee(deliveryFeeApplied ? deliveryFee : 0); 
+  }, [selectedPackage, selectedAddons, deliveryFee]);
 
   useEffect(() => {
     setAddonFlavorSelections(prevSelections => {
@@ -504,7 +513,7 @@ export default function EventBuilderPage() {
                   <p className="text-sm text-muted-foreground">{selectedPackage.description}</p>
                    {selectedPackage.isAllInclusive && (
                       <p className="text-xs mt-1 text-muted-foreground">Note: Price is all-inclusive of setup (worth ${selectedPackage.setupFee.toFixed(2)}), 
-                      delivery (worth ${DELIVERY_FEE.toFixed(2)}), and unlimited cups.</p>
+                      delivery (worth ${deliveryFee.toFixed(2)}), and unlimited cups.</p>
                    )}
                   <ul className="text-xs mt-2">
                     {selectedPackage.includedItems.map(item => <li key={item}>- {item}</li>)}

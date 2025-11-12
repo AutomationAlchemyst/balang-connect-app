@@ -254,9 +254,101 @@ export const mockFlavors: Flavor[] = [
     color: 'bg-yellow-700',
     dataAiHint: 'coffee frappe'
   },
+  {
+    id: 'f18',
+    name: 'Osmanthus Mango Tea',
+    description: 'A refreshing blend of osmanthus and sweet mango.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-orange-400',
+    dataAiHint: 'mango tea'
+  },
+  {
+    id: 'f19',
+    name: 'Cucumber Lemonade',
+    description: 'Crisp cucumber paired with tangy lemonade.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-green-300',
+    dataAiHint: 'cucumber lemonade'
+  },
+  {
+    id: 'f20',
+    name: 'Guava Chilli',
+    description: 'Sweet guava with a surprising kick of chilli.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-pink-400',
+    dataAiHint: 'guava drink'
+  },
+  {
+    id: 'f21',
+    name: 'Air Mata Kucing',
+    description: 'A traditional herbal drink made with longan, monk fruit, and winter melon.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-amber-800',
+    dataAiHint: 'herbal drink'
+  },
+  {
+    id: 'f22',
+    name: 'Da Hong Pao Milk Tea',
+    description: 'A premium roasted oolong tea with a rich and creamy milk base.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Milk Base'],
+    color: 'bg-red-900',
+    dataAiHint: 'oolong milk tea'
+  },
+  {
+    id: 'f23',
+    name: 'Jasmine Green Milk Tea',
+    description: 'A light and fragrant jasmine green tea with a creamy milk base.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Milk Base'],
+    color: 'bg-green-200',
+    dataAiHint: 'jasmine milk tea'
+  },
+  {
+    id: 'f24',
+    name: 'Strawberry Mojito',
+    description: 'A refreshing mix of strawberries, mint, and lime.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-red-400',
+    dataAiHint: 'strawberry mojito'
+  },
+  {
+    id: 'f25',
+    name: 'Blueberry Longan',
+    description: 'A sweet and fruity blend of blueberries and longan.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Non Milk Base'],
+    color: 'bg-purple-400',
+    dataAiHint: 'blueberry longan'
+  }
 ];
 
 export const mockPackages: EventPackage[] = [
+  { 
+    id: 'pkg_17l_self_pickup',
+    name: '17L Balang (Self-Pickup / Delivery)',
+    description: 'Suitable for 15-25 pax. Price is for self-pickup. Delivery is available for an additional $20.00. Includes one 17L balang with your choice of one flavor.',
+    price: 98.00,
+    setupFee: 0,
+    isAllInclusive: false,
+    includedItems: ['1 x 17L Balang (Choice of 1 Flavor)'],
+    imageUrl: 'https://placehold.co/400x250.png',
+    pax: '15-25',
+    dataAiHint: 'small party drinks'
+  },
   { 
     id: 'pkg_opt1', 
     name: 'Package Option 1', 
@@ -301,6 +393,9 @@ export const mockAddons: Addon[] = [
   { id: 'addon_bartender_1hr', name: 'Additional Bal-Tender (1 Hour)', description: 'Additional hour of bal-tender service.', price: 15.00, category: 'Services' },
   { id: 'addon_bartender_4hr', name: 'Bal-Tender (4 Hours)', description: '4 hours of dedicated bal-tender service (if not included in package).', price: 60.00, category: 'Services' },
   { id: 'addon_table_rental', name: 'Table Rental', description: 'Rental of one table for your setup.', price: 20.00, category: 'Equipment' },
+  { id: 'addon_bobba', name: '3 types of Bobba', description: '3 types of Bobba.', price: 20.00, category: 'Drinks' },
+  { id: 'addon_metal_racks', name: 'Metal Racks', description: 'Metal Racks.', price: 80.00, category: 'Equipment' },
+  { id: 'addon_infused_water', name: 'Infused Water', description: 'Infused Water.', price: 25.00, category: 'Drinks' },
   { id: 'addon_infused_water_23l', name: '23L Infused Water', description: 'Refreshing 23L infused water (e.g., lemon & mint).', price: 25.00, category: 'Drinks' },
   { id: 'addon_cups_upgrade', name: 'Cups Upgrade (per 100)', description: 'Upgrade to premium cups, priced per 100 units.', price: 30.00, category: 'Services' },
 ];
