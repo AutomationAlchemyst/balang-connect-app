@@ -369,7 +369,7 @@ export default function CorporateOrdersPage() {
     const addonsDetails = Object.entries(selectedAddons)
       .map(([addonId, quantity]) => {
         if (quantity === 0) return null;
-        const addon = mockAddons.find(a => a.id === addonId);
+        const addon = mockCorporateAddons.find(a => a.id === addonId);
         if (!addon) return null;
         
         const flavorsForThisAddon = (addonFlavorSelections[addonId] || [])
