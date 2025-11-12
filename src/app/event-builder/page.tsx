@@ -719,7 +719,7 @@ export default function EventBuilderPage() {
                     {selectedPackage.isAllInclusive && (
                       <p className="text-xs text-muted-foreground ml-0">
                         (Includes setup worth ${selectedPackage.setupFee.toFixed(2)}, 
-                        delivery worth ${DELIVERY_FEE.toFixed(2)}, and unlimited cups)
+                        delivery worth ${deliveryFee.toFixed(2)}, and unlimited cups)
                       </p>
                     )}
                   </div>
