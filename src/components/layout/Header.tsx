@@ -56,7 +56,7 @@ export default function Header() {
     <header className="bg-card shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-headline font-bold text-primary hover:text-primary/80 transition-colors">
-          BalangConnect
+          Balang Kepalang
         </Link>
         
         <nav className="hidden md:flex space-x-2 items-center">
@@ -110,7 +110,7 @@ export default function Header() {
                     className="text-2xl font-headline font-bold text-primary"
                     onClick={() => setIsSheetOpen(false)} // Close on click
                   >
-                    BalangConnect
+                    Balang Kepalang
                   </Link>
                 </SheetTitle>
               </SheetHeader>

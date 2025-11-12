@@ -8,8 +8,8 @@ import { AdminProvider } from '@/context/AdminContext';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'BalangConnect - Your Community Beverage Partner',
-  description: 'Discover balang flavors, event packages, and community stories with BalangConnect.',
+  title: 'Balang Kepalang - Your Community Beverage Partner',
+  description: 'Discover balang flavors, event packages, and community stories with Balang Kepalang.',
 };
 
 function LayoutLoader() {
@@ -20,7 +20,7 @@ function LayoutLoader() {
        <header className="bg-card shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-headline font-bold text-primary">
-            BalangConnect
+            Balang Kepalang
           </div>
         </div>
       </header>

@@ -1,4 +1,4 @@
-# BalangConnect - Gamified Community Giving
+# Balang Kepalang - Gamified Community Giving
 
 Welcome to BalangConnect, a full-featured web application that transforms every purchase into a rewarding act of community support.
 

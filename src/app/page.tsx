@@ -19,7 +19,7 @@ export default function Home() {
       <section className="text-center py-16 bg-gradient-to-br from-primary/20 to-background rounded-lg shadow-lg">
         <div className="container mx-auto px-4">
           <h1 className="font-headline text-5xl md:text-6xl font-bold text-primary mb-6">
-            Welcome to BalangConnect!
+            Welcome to Balang Kepalang!
           </h1>
           <p className="text-xl text-foreground mb-8 max-w-2xl mx-auto">
             Your one-stop solution for refreshing balang drinks, delightful event packages, and heartwarming community connections.
