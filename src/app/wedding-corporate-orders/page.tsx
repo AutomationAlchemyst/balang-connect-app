@@ -57,6 +57,7 @@ export default function CorporateOrdersPage() {
   const [selectedEventTime, setSelectedEventTime] = useState<string | undefined>(undefined);
   
   const [isCustomerDetailsModalOpen, setIsCustomerDetailsModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentEventConfig, setCurrentEventConfig] = useState<EventConfig | null>(null);
 
   const [customerDetailsForPayment, setCustomerDetailsForPayment] = useState<CustomerDetailsFormValues | null>(null);
@@ -230,12 +231,8 @@ export default function CorporateOrdersPage() {
     }
     
     if (addonsSelectedList.length > 0 && !selectedPackage) {
-      if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
-        // Do not add delivery fee
-      } else {
-        currentTotal += deliveryFee;
-        deliveryFeeApplied = true;
-      }
+      currentTotal += deliveryFee;
+      deliveryFeeApplied = true;
     } else if (selectedPackage && !selectedPackage.isAllInclusive) {
         if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
             // Do not add delivery fee

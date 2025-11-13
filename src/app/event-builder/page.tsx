@@ -56,6 +56,7 @@ export default function EventBuilderPage() {
   const [selectedEventTime, setSelectedEventTime] = useState<string | undefined>(undefined);
   
   const [isCustomerDetailsModalOpen, setIsCustomerDetailsModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentEventConfig, setCurrentEventConfig] = useState<EventConfig | null>(null);
 
   const [customerDetailsForPayment, setCustomerDetailsForPayment] = useState<CustomerDetailsFormValues | null>(null);
