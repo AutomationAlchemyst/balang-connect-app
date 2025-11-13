@@ -50,7 +50,7 @@ export default function Home() {
                 data-ai-hint="colorful drink"
               />
             </div>
-            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+            <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
               <CardHeader>
                 <CardTitle className="font-headline text-3xl text-accent">{featuredFlavor.name}</CardTitle>
                 <CardDescription className="text-lg">{featuredFlavor.description}</CardDescription>
@@ -82,7 +82,7 @@ export default function Home() {
                 data-ai-hint="event setup"
               />
             </div>
-            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+            <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
               <CardHeader>
                 <CardTitle className="font-headline text-3xl text-accent">{featuredPackage.name}</CardTitle>
                 <CardDescription className="text-lg">{featuredPackage.description}</CardDescription>

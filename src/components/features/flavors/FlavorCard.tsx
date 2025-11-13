@@ -15,13 +15,14 @@ interface FlavorCardProps {
 export default function FlavorCard({ flavor, isSelected, onToggleSelect }: FlavorCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+      <div className={cn("w-full h-2", flavor.color)} />
       <div className="relative w-full h-56">
         <Image
           src={flavor.imageUrl}
           alt={flavor.name}
           width={300}
           height={200}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover shadow-lg"
           data-ai-hint={flavor.dataAiHint || "colorful drink"}
         />
         {flavor.color && <div className={cn("absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-card", flavor.color)}></div>}
