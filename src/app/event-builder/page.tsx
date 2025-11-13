@@ -253,7 +253,7 @@ export default function EventBuilderPage() {
 
     setTotalPrice(currentTotal);
     setDisplayDeliveryFee(deliveryFeeApplied ? deliveryFee : 0); 
-  }, [selectedPackage, selectedAddons, deliveryFee]);
+  }, [selectedPackage, selectedAddons, deliveryFee, isDeliveryOptOut]);
 
   useEffect(() => {
     setAddonFlavorSelections(prevSelections => {
