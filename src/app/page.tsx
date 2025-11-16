@@ -24,7 +24,7 @@ export default function Home() {
           <p className="text-xl text-foreground mb-8 max-w-2xl mx-auto">
             Your one-stop solution for refreshing balang drinks, delightful event packages, and heartwarming community connections.
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Link href="/flavors">Explore Flavors <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
