@@ -220,7 +220,7 @@ export default function Home() {
                  <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_#000000] flex-1 flex flex-col justify-center items-center text-center hover:bg-brand-yellow transition-colors cursor-pointer group">
                     <Gift className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <h4 className="font-condensed font-bold text-2xl uppercase">View All Packages</h4>
-                    <Link href="/packages" className="mt-4 font-mono text-sm underline decoration-2 underline-offset-4">Explore Catalog -></Link>
+                    <Link href="/packages" className="mt-4 font-mono text-sm underline decoration-2 underline-offset-4">Explore Catalog -&gt;</Link>
                  </div>
                  <div className="bg-black text-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_#888] flex-1 flex flex-col justify-center items-center text-center">
                     <h4 className="font-display font-bold text-2xl uppercase text-brand-green">Custom Events?</h4>
