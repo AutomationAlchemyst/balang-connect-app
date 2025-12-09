@@ -10,13 +10,23 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Nunito', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['Space Grotesk', 'sans-serif'],
+        display: ['Syne', 'sans-serif'],
+        condensed: ['Oswald', 'sans-serif'],
+        handwriting: ['Permanent Marker', 'cursive'],
         code: ['monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        brand: {
+          blue: '#1C489E',
+          yellow: '#FDDD59',
+          cyan: '#3CD3E8',
+          gold: '#D4A110',
+          purple: '#B576A4',
+          green: '#3FC300',
+        },
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
@@ -88,10 +98,20 @@ export default {
             height: '0',
           },
         },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' },
+        },
+        'marquee-reverse': {
+          from: { transform: 'translateX(-100%)' },
+          to: { transform: 'translateX(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        marquee: 'marquee 25s linear infinite',
+        'marquee-reverse': 'marquee-reverse 25s linear infinite',
       },
     },
   },

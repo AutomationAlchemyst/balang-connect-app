@@ -7,13 +7,12 @@ import { getInfaqSlots } from './actions';
 import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
-import { HeartHandshake, Info, Gift, ScrollText, AlertTriangle, DollarSign, Users, Sparkles } from 'lucide-react';
+import { HeartHandshake, Info, Gift, ScrollText, AlertTriangle, DollarSign, Users, Sparkles, Check } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from '@/components/ui/separator';
 import type { InfaqNoticeBoardSlot } from '@/lib/types';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-
 
 export const metadata: Metadata = {
   title: 'Infaq Balang & Delivery Sponsorship - BalangConnect',
@@ -24,18 +23,21 @@ function FormSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       <div className="flex items-center space-x-3">
-        <Skeleton className="h-6 w-6 rounded-full" />
-        <Skeleton className="h-6 w-32 rounded-md" />
+        <Skeleton className="h-6 w-6 rounded-full bg-gray-300" />
+        <Skeleton className="h-6 w-32 rounded-md bg-gray-300" />
       </div>
-      <Skeleton className="h-10 w-full rounded-md" />
-      <Skeleton className="h-10 w-full rounded-md" />
-      <Skeleton className="h-10 w-full rounded-md" />
-      <Skeleton className="h-24 w-full rounded-md" />
-      <Skeleton className="h-12 w-full rounded-md" />
+      <Skeleton className="h-10 w-full rounded-md bg-gray-300" />
+      <Skeleton className="h-10 w-full rounded-md bg-gray-300" />
+      <Skeleton className="h-10 w-full rounded-md bg-gray-300" />
+      <Skeleton className="h-24 w-full rounded-md bg-gray-300" />
+      <Skeleton className="h-12 w-full rounded-md bg-gray-300" />
     </div>
   );
 }
 
+// Neo-Brutalism Constants
+const CARD_STYLE = "bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none transition-all hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_#000000]";
+const ALERT_STYLE = "bg-[#FFFDF5] border-4 border-black shadow-[6px_6px_0px_0px_#000000] rounded-none text-black";
 
 export default async function InfaqPage() {
   let infaqNoticeBoardSlots: InfaqNoticeBoardSlot[] = [];
@@ -49,66 +51,76 @@ export default async function InfaqPage() {
   }
 
   return (
-    <div className="space-y-12">
-      <SectionTitle>Infaq Balang: Share the Blessings</SectionTitle>
+    <div className="space-y-16 pb-16">
+      <div className="text-center">
+        <SectionTitle>Infaq Balang: Share the Blessings</SectionTitle>
+      </div>
       
-      <Alert variant="default" className="bg-primary/10 border-primary/30">
-        <Info className="h-5 w-5 text-primary" />
-        <AlertTitle className="text-primary font-semibold">How Your Infaq & Sponsorship Works</AlertTitle>
-        <AlertDescription>
-          <div className="space-y-4 pt-2 text-foreground/90">
-              <div className="flex items-start gap-3">
-                  <DollarSign className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                  <div>
-                      <p>Each Infaq Balang is <strong>$95.00</strong>. A separate <strong>$25.00</strong> delivery fee applies for each unique delivery slot (mosque + date).</p>
+      <div className={ALERT_STYLE}>
+        <div className="flex items-start p-6">
+           <Info className="h-8 w-8 text-black mr-4 shrink-0" strokeWidth={2.5} />
+           <div className="w-full">
+              <h4 className="font-display font-black text-xl uppercase mb-2">How Your Infaq & Sponsorship Works</h4>
+              <div className="space-y-4 pt-2 text-black font-medium">
+                  <div className="flex items-start gap-3">
+                      <div className="bg-brand-yellow p-1 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
+                         <DollarSign className="h-5 w-5 text-black" strokeWidth={2.5}/>
+                      </div>
+                      <div>
+                          <p>Each Infaq Balang is <strong className="bg-brand-cyan px-1 border border-black">$95.00</strong>. A separate <strong className="bg-brand-cyan px-1 border border-black">$25.00</strong> delivery fee applies for each unique delivery slot (mosque + date).</p>
+                      </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                      <div className="bg-brand-green p-1 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
+                         <Users className="h-5 w-5 text-white" strokeWidth={2.5}/>
+                      </div>
+                      <div>
+                          <p><strong>Sharing is Caring!</strong> When multiple donors contribute to the same slot, the $25 delivery fee is shared. We may contact initial donors for a partial refund if others join in.</p>
+                      </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                      <div className="bg-[#FF6B6B] p-1 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
+                         <Sparkles className="h-5 w-5 text-white" strokeWidth={2.5}/>
+                      </div>
+                      <div>
+                          <p><strong>Pro-Tip:</strong> Check the <strong>Community Infaq Board</strong> below before donating. You might find a slot where delivery is already sponsored or being shared!</p>
+                      </div>
                   </div>
               </div>
-              <div className="flex items-start gap-3">
-                  <Users className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                  <div>
-                      <p><strong>Sharing is Caring!</strong> When multiple donors contribute to the same slot, the $25 delivery fee is shared. We may contact initial donors for a partial refund if others join in.</p>
-                  </div>
-              </div>
-              <div className="flex items-start gap-3">
-                  <Sparkles className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                  <div>
-                      <p><strong>Pro-Tip:</strong> Check the <strong>Community Infaq Board</strong> below before donating. You might find a slot where delivery is already sponsored or being shared!</p>
-                  </div>
-              </div>
-          </div>
-        </AlertDescription>
-      </Alert>
+           </div>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        <div className="space-y-8">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="font-headline text-primary flex items-center">
-                <Gift className="mr-2 h-7 w-7" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+        <div className="space-y-12">
+          <Card className={CARD_STYLE}>
+            <CardHeader className="bg-brand-cyan border-b-4 border-black p-6">
+              <CardTitle className="font-display font-black text-2xl uppercase flex items-center">
+                <Gift className="mr-3 h-8 w-8 text-black" strokeWidth={2.5} />
                 Order Infaq Balang(s)
               </CardTitle>
-              <CardDescription>
-                Your generous Infaq will help us provide refreshing balang drinks to your chosen mosque. Every drop counts towards spreading joy and kindness. Please fill in the details below.
+              <CardDescription className="text-black font-medium text-base mt-2">
+                Your generous Infaq will help us provide refreshing balang drinks to your chosen mosque. Every drop counts towards spreading joy and kindness.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <Suspense fallback={<FormSkeleton />}>
                 <InfaqForm />
               </Suspense>
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg border-green-500 border-2">
-            <CardHeader>
-              <CardTitle className="font-headline text-green-600 flex items-center">
-                <HeartHandshake className="mr-2 h-7 w-7" />
+          <Card className={`${CARD_STYLE} border-brand-green shadow-[8px_8px_0px_0px_#3FC300]`}>
+            <CardHeader className="bg-[#B8FF9F] border-b-4 border-black p-6">
+              <CardTitle className="font-display font-black text-2xl uppercase flex items-center">
+                <HeartHandshake className="mr-3 h-8 w-8 text-black" strokeWidth={2.5} />
                 Sponsor a Jumaat Delivery
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-black font-medium text-base mt-2">
                 Can't order a balang right now? You can still contribute by sponsoring the $25 delivery fee for a Jumaat delivery. This helps us get Infaq balangs to a mosque in need within the community!
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <Suspense fallback={<FormSkeleton />}>
                 <SponsorDeliveryForm />
               </Suspense>
@@ -117,68 +129,73 @@ export default async function InfaqPage() {
         </div>
 
         <div className="space-y-6 md:sticky md:top-24"> 
-          <Card className="shadow-lg">
-            <CardContent className="p-0">
+          <Card className={CARD_STYLE}>
+            <div className="border-b-4 border-black">
               <Image 
                 src="https://placehold.co/600x400.png" 
                 alt="Community receiving Infaq Balang" 
                 width={600} 
                 height={400} 
-                className="rounded-t-lg object-cover"
+                className="w-full object-cover h-64"
                 data-ai-hint="charity event" 
               />
-            </CardContent>
-            <CardHeader>
-               <CardTitle className="font-headline text-xl text-accent">How Your Contributions Help</CardTitle>
+            </div>
+            <CardHeader className="bg-black text-white p-4">
+               <CardTitle className="font-display font-black text-xl uppercase">How Your Contributions Help</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                <li>Provides cool refreshments during prayers and community gatherings at mosques.</li>
-                <li>Supports various religious events and functions.</li>
-                <li>Brings smiles and relief, especially during warm weather.</li>
-                <li>Fosters a spirit of giving, unity, and togetherness within the community.</li>
-                <li>Sponsoring delivery ensures that balangs ordered by others can reach their destination without added cost to the recipients.</li>
+            <CardContent className="p-6 bg-[#FFFDF5]">
+              <ul className="space-y-3 font-medium text-black">
+                <li className="flex items-start"><Check className="mr-2 h-5 w-5 text-brand-green shrink-0" strokeWidth={3} /> Provides cool refreshments during prayers.</li>
+                <li className="flex items-start"><Check className="mr-2 h-5 w-5 text-brand-green shrink-0" strokeWidth={3} /> Supports religious events and functions.</li>
+                <li className="flex items-start"><Check className="mr-2 h-5 w-5 text-brand-green shrink-0" strokeWidth={3} /> Brings smiles and relief in warm weather.</li>
+                <li className="flex items-start"><Check className="mr-2 h-5 w-5 text-brand-green shrink-0" strokeWidth={3} /> Fosters a spirit of unity and togetherness.</li>
+                <li className="flex items-start"><Check className="mr-2 h-5 w-5 text-brand-green shrink-0" strokeWidth={3} /> Delivery sponsorship removes costs for recipients.</li>
               </ul>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <Separator className="my-12" />
+      <Separator className="my-12 bg-black h-1" />
 
       <div>
-        <SectionTitle className="flex items-center mb-8">
-            <ScrollText className="mr-3 h-8 w-8 text-primary" /> Community Infaq Board
-        </SectionTitle>
+        <div className="flex items-center justify-center mb-10">
+            <div className="bg-brand-yellow px-6 py-3 border-4 border-black shadow-[6px_6px_0px_0px_#000000] transform rotate-1 inline-flex items-center">
+                <ScrollText className="mr-3 h-8 w-8 text-black" strokeWidth={2.5} />
+                <h2 className="font-display text-3xl font-black uppercase tracking-tighter text-black">Community Infaq Board</h2>
+            </div>
+        </div>
         
         {fetchError && (
-          <Alert variant="destructive" className="mb-8">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Error Loading Infaq Board</AlertTitle>
-              <AlertDescription>
-                  <p className="mb-2">There was a problem fetching data from the database. This usually indicates a project configuration issue.</p>
-                  <pre className="mt-2 whitespace-pre-wrap rounded-md bg-destructive/10 p-4 font-mono text-xs text-destructive-foreground">
-                      {fetchError}
-                  </pre>
-              </AlertDescription>
-          </Alert>
+          <div className="mb-8 bg-red-100 border-4 border-black p-4 shadow-[4px_4px_0px_0px_#000000]">
+              <div className="flex items-center font-bold text-red-600 text-lg mb-2">
+                  <AlertTriangle className="h-6 w-6 mr-2" />
+                  Error Loading Infaq Board
+              </div>
+              <p className="mb-2 font-medium">There was a problem fetching data.</p>
+              <pre className="whitespace-pre-wrap bg-white border-2 border-red-200 p-2 font-mono text-xs">
+                  {fetchError}
+              </pre>
+          </div>
         )}
 
-        <p className="text-lg text-center text-muted-foreground mb-10 max-w-3xl mx-auto">
+        <p className="text-xl text-center text-black font-medium mb-10 max-w-3xl mx-auto">
             See which mosques have Infaq deliveries scheduled or slots open for contributions. 
-            This board is updated periodically. For the latest information, please contact us.
         </p>
         {!fetchError && infaqNoticeBoardSlots.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {infaqNoticeBoardSlots.map((slot) => (
                     <InfaqNoticeCard key={slot.id} slot={slot} />
                 ))}
             </div>
         ) : (
           !fetchError && (
-            <p className="text-center text-muted-foreground text-xl py-10">
-                The Infaq Board is currently empty. Check back soon or be the first to start an Infaq!
-            </p>
+            <div className="text-center py-16 bg-white border-4 border-black border-dashed">
+                <p className="text-2xl font-display font-black uppercase text-gray-400">
+                    Board Empty
+                </p>
+                <p className="text-lg font-medium text-gray-500 mt-2">Check back soon or be the first to start an Infaq!</p>
+            </div>
           )
         )}
       </div>

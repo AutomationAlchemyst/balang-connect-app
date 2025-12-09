@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,17 +18,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Send, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Send, Loader2, MessageSquarePlus } from 'lucide-react';
 import { useState } from 'react';
-// import type { Metadata } from 'next'; // Metadata should be in a layout or server component
-
-// This would typically be defined in layout.tsx or a parent, but for standalone page:
-// export const metadata: Metadata = {
-//   title: 'Share Your Story - BalangConnect',
-//   description: 'Share your experience with BalangConnect and become a part of our community stories.',
-// };
-
 
 const storyFormSchema = z.object({
   userName: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50),
@@ -71,11 +62,17 @@ export default function ShareStoryPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto">
-      <SectionTitle>Share Your BalangConnect Experience</SectionTitle>
-      <Card className="shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-primary">Tell Us Your Story</CardTitle>
+    <div className="space-y-12 max-w-2xl mx-auto pb-12">
+      <SectionTitle>Share Your Experience</SectionTitle>
+      
+      <Card>
+        <CardHeader className="bg-brand-cyan border-b-4 border-black">
+          <CardTitle className="flex items-center text-2xl">
+             <MessageSquarePlus className="mr-3 h-8 w-8 text-black" strokeWidth={2.5} /> Tell Us Your Story
+          </CardTitle>
+          <CardDescription className="text-black font-medium mt-2">
+             Share your experience with BalangConnect and become a part of our community stories.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -85,9 +82,9 @@ export default function ShareStoryPage() {
                 name="userName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Name</FormLabel>
+                    <FormLabel className="font-bold uppercase">Your Name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Siti & Ahmad" {...field} disabled={isLoading} />
+                      <Input placeholder="E.G., SITI & AHMAD" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -98,9 +95,9 @@ export default function ShareStoryPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Email</FormLabel>
+                    <FormLabel className="font-bold uppercase">Your Email *</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="your.email@example.com" {...field} disabled={isLoading} />
+                      <Input type="email" placeholder="YOUR.EMAIL@EXAMPLE.COM" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormDescription>Used for verification, will not be publicly displayed.</FormDescription>
                     <FormMessage />
@@ -112,9 +109,9 @@ export default function ShareStoryPage() {
                 name="eventName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Event Name (Optional)</FormLabel>
+                    <FormLabel className="font-bold uppercase">Event Name (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Our Wedding Day, Office Gathering" {...field} disabled={isLoading} />
+                      <Input placeholder="E.G., OUR WEDDING DAY" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -125,11 +122,11 @@ export default function ShareStoryPage() {
                 name="story"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Story</FormLabel>
+                    <FormLabel className="font-bold uppercase">Your Story *</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Share your experience with BalangConnect..."
-                        className="resize-y min-h-[120px]"
+                        placeholder="SHARE YOUR EXPERIENCE..."
+                        className="resize-y"
                         {...field}
                         disabled={isLoading}
                       />
@@ -143,9 +140,9 @@ export default function ShareStoryPage() {
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL (Optional)</FormLabel>
+                    <FormLabel className="font-bold uppercase">Image URL (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://example.com/your-image.jpg" {...field} disabled={isLoading} />
+                      <Input placeholder="HTTPS://EXAMPLE.COM/YOUR-IMAGE.JPG" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormDescription>Link to an image that captures your moment.</FormDescription>
                     <FormMessage />
@@ -154,17 +151,17 @@ export default function ShareStoryPage() {
               />
               <Button 
                 type="submit" 
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                className="w-full bg-brand-green text-white hover:bg-[#329A00] h-12 text-lg"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Submitting...
                   </>
                 ) : (
                   <>
-                    Submit Your Story <Send className="ml-2 h-4 w-4" />
+                    Submit Your Story <Send className="ml-2 h-5 w-5" strokeWidth={2.5} />
                   </>
                 )}
               </Button>

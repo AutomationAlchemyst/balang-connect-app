@@ -16,6 +16,18 @@ const nextConfig = {
       sizeLimit: '5mb',
     },
   },
+  serverExternalPackages: [
+    'genkit',
+    '@genkit-ai/googleai',
+    '@genkit-ai/core',
+    '@genkit-ai/ai',
+    '@genkit-ai/flow',
+    'dotprompt',
+    'handlebars',
+    '@opentelemetry/instrumentation',
+    '@opentelemetry/sdk-node',
+    'require-in-the-middle'
+  ],
 };
 
 module.exports = nextConfig;

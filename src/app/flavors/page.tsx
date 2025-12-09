@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -6,15 +5,9 @@ import { useRouter } from 'next/navigation';
 import SectionTitle from '@/components/ui/SectionTitle';
 import FlavorCard from '@/components/features/flavors/FlavorCard';
 import { mockFlavors } from '@/lib/data';
-// import type { Metadata } from 'next'; // Metadata should be in a layout or server component
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// export const metadata: Metadata = {
-//   title: 'Our Balang Flavors - BalangConnect',
-//   description: 'Explore a wide variety of delicious and refreshing balang flavors offered by BalangConnect.',
-// };
 
 export default function FlavorsPage() {
   const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([]);
@@ -49,23 +42,23 @@ export default function FlavorsPage() {
   const canProceed = selectedFlavorIds.length > 0;
 
   return (
-    <div className="space-y-8">
-      <SectionTitle>Our Delicious Balang Flavors</SectionTitle>
-      <p className="text-lg text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+    <div className="space-y-12 pb-12">
+      <SectionTitle>Our Delicious Flavors</SectionTitle>
+      <p className="text-xl text-center font-medium text-black mb-12 max-w-2xl mx-auto bg-white border-2 border-black p-4 shadow-[4px_4px_0px_0px_#000000]">
         Select your favorite flavors below. Once you're ready, proceed to build your event package.
       </p>
       
       {selectedFlavorIds.length > 0 && (
-        <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-sm p-4 rounded-lg shadow-lg mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-md font-semibold text-primary">
-            {selectedFlavorIds.length} flavor(s) selected.
+        <div className="sticky top-20 z-40 bg-brand-cyan border-4 border-black p-4 shadow-[8px_8px_0px_0px_#000000] mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 animate-in slide-in-from-top-4">
+          <p className="text-lg font-black uppercase text-black">
+            {selectedFlavorIds.length} flavor(s) selected
           </p>
           <Button 
             onClick={handleProceedToEventBuilder} 
-            className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto"
+            className="font-display font-bold uppercase bg-brand-yellow text-black border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] w-full sm:w-auto transition-all"
             disabled={!canProceed}
           >
-            <ShoppingCart className="mr-2 h-5 w-5" />
+            <ShoppingCart className="mr-2 h-5 w-5" strokeWidth={2.5} />
             Proceed to Event Builder
           </Button>
         </div>
@@ -82,20 +75,18 @@ export default function FlavorsPage() {
         ))}
       </div>
 
-      {/* Fallback button if no selections yet, or for users who scroll past the sticky one */}
-      {/* This button will now also be disabled if no flavors are selected */}
-      <div className="mt-12 text-center">
+      <div className="mt-16 text-center">
           <Button 
             onClick={handleProceedToEventBuilder} 
             size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            className={`font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] h-16 px-8 text-xl transition-all ${canProceed ? 'bg-brand-green text-white hover:bg-[#329A00]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
             disabled={!canProceed}
           >
-            <ShoppingCart className="mr-2 h-5 w-5" />
+            <ShoppingCart className="mr-2 h-6 w-6" strokeWidth={2.5} />
             {canProceed ? 'Proceed to Event Builder' : 'Select Flavors to Proceed'}
           </Button>
           {!canProceed && (
-            <p className="text-sm text-muted-foreground mt-2">Select flavors above to get started.</p>
+            <p className="text-base font-bold uppercase mt-4 text-black bg-white border-2 border-black inline-block px-2">Select flavors above to get started</p>
           )}
       </div>
     </div>

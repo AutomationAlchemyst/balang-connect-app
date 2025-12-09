@@ -2,12 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import SectionTitle from '@/components/ui/SectionTitle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { mockPackages, mockAddons, mockFlavors } from '@/lib/data';
-import type { EventPackage, Addon, Flavor } from '@/lib/types';
+import type { EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PlusCircle, MinusCircle, ShoppingCart, Zap, PackageIcon, Construction, Truck, XIcon, Check, CalendarDays, Loader2 } from 'lucide-react';
@@ -36,6 +35,12 @@ export interface EventConfig {
   eventDate?: Date;
   eventTime?: string;
 }
+
+// Neo-Brutalism Constants
+const CARD_STYLE = "bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none transition-all hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_#000000]";
+const BUTTON_BASE = "font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]";
+const INPUT_STYLE = "font-body border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] focus-visible:ring-0 focus-visible:border-black focus:shadow-none focus:translate-x-[4px] focus:translate-y-[4px] focus:bg-[#3CD3E8] transition-all";
+const CHECKBOX_STYLE = "border-2 border-black rounded-none w-5 h-5 data-[state=checked]:bg-black data-[state=checked]:text-white";
 
 export default function EventBuilderPage() {
   const searchParams = useSearchParams();
@@ -482,23 +487,26 @@ export default function EventBuilderPage() {
   const canProceed = packageRouteValid || addonsOnlyRouteValid;
 
   return (
-    <div className="space-y-8">
-      <SectionTitle>Build Your Custom Event Package</SectionTitle>
-      <p className="text-lg text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-      Create your perfect event! Choose from our tasty balang drinks and fun add-ons. Pick a base package or build your own from scratch.
-      </p>
+    <div className="space-y-12">
+      <div className="text-center space-y-4">
+         <h1 className="font-display text-4xl font-black uppercase tracking-tighter bg-brand-yellow inline-block px-4 py-2 border-4 border-black shadow-[6px_6px_0px_0px_#000000] transform -rotate-2">
+            Build Your Custom Event Package
+         </h1>
+         <p className="text-xl text-black font-body font-medium max-w-2xl mx-auto pt-4">
+            Create your perfect event! Choose from our tasty balang drinks and fun add-ons. Pick a base package or build your own from scratch.
+         </p>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-primary">1. Base Package</CardTitle>
-              <CardDescription>
-                Select a pre-defined package or choose 'None' to build from scratch. 
-                Note: A delivery fee applies if you only select add-ons without an all-inclusive base package.
+        <div className="lg:col-span-2 space-y-8">
+          <Card className={CARD_STYLE}>
+            <CardHeader className="bg-brand-cyan border-b-4 border-black py-4">
+              <CardTitle className="font-display font-black text-2xl uppercase">1. Base Package</CardTitle>
+              <CardDescription className="text-black font-medium">
+                Select a pre-defined package or choose 'None' to build from scratch.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6 space-y-4">
               <Select 
                 onValueChange={(pkgId) => {
                     if (pkgId === "none-option") {
@@ -510,35 +518,37 @@ export default function EventBuilderPage() {
                 }} 
                 value={selectedPackage?.id || "none-option"}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className={`${INPUT_STYLE} h-14 text-lg font-bold text-black`}>
                   <SelectValue placeholder="Select a package..." />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none-option">None (Build from scratch)</SelectItem>
+                <SelectContent className="border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000]">
+                  <SelectItem value="none-option" className="font-body font-medium text-black focus:bg-brand-yellow focus:text-black">None (Build from scratch)</SelectItem>
                   {mockPackages.map(pkg => (
-                    <SelectItem key={pkg.id} value={pkg.id}>{pkg.name} (${pkg.price.toFixed(2)})</SelectItem>
+                    <SelectItem key={pkg.id} value={pkg.id} className="font-body font-medium text-black focus:bg-brand-yellow focus:text-black">{pkg.name} (${pkg.price.toFixed(2)})</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {selectedPackage && (
-                <div className="mt-4 p-4 bg-secondary/30 rounded-md">
-                  <h4 className="font-semibold">{selectedPackage.name}</h4>
-                  <p className="text-sm text-muted-foreground">{selectedPackage.description}</p>
+                <div className="mt-4 p-6 bg-[#FFFDF5] border-2 border-black shadow-[4px_4px_0px_0px_#000000]">
+                  <h4 className="font-display font-bold text-xl uppercase mb-2">{selectedPackage.name}</h4>
+                  <p className="text-base text-gray-800 mb-2">{selectedPackage.description}</p>
                    {selectedPackage.isAllInclusive && (
-                      <p className="text-xs mt-1 text-muted-foreground">Note: Price is all-inclusive of setup (worth ${selectedPackage.setupFee.toFixed(2)}), 
-                      delivery (worth ${deliveryFee.toFixed(2)}), and unlimited cups.</p>
+                      <p className="text-sm font-bold bg-green-200 border border-green-800 text-green-900 p-2 inline-block mb-2">
+                        Includes Setup (${selectedPackage.setupFee.toFixed(2)}) + Delivery (${deliveryFee.toFixed(2)}) + Unlimited Cups!
+                      </p>
                    )}
-                  <ul className="text-xs mt-2">
-                    {selectedPackage.includedItems.map(item => <li key={item}>- {item}</li>)}
+                  <ul className="text-sm mt-2 space-y-1 font-mono">
+                    {selectedPackage.includedItems.map(item => <li key={item} className="flex items-center"><Check size={14} className="mr-2"/> {item}</li>)}
                   </ul>
                   {selectedPackage.id === 'pkg_17l_self_pickup' && (
-                    <div className="flex items-center space-x-2 mt-4">
+                    <div className="flex items-center space-x-2 mt-6 pt-4 border-t-2 border-black border-dashed">
                       <Checkbox
                         id="delivery-opt-out"
                         checked={isDeliveryOptOut}
                         onCheckedChange={() => setIsDeliveryOptOut(!isDeliveryOptOut)}
+                        className={CHECKBOX_STYLE}
                       />
-                      <Label htmlFor="delivery-opt-out" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      <Label htmlFor="delivery-opt-out" className="text-base font-bold cursor-pointer">
                         I want to opt-out from delivery (Self-pickup)
                       </Label>
                     </div>
@@ -549,64 +559,57 @@ export default function EventBuilderPage() {
           </Card>
 
           {selectedPackage && requiredFlavorCountForPackage > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-headline text-primary">2. Choose Your Package Flavors</CardTitle>
-                <CardDescription>
-                  Select up to {requiredFlavorCountForPackage} flavors for your chosen package. You can pick the same flavor multiple times if desired.
-                  You have selected {selectedPackageFlavors.length} / {requiredFlavorCountForPackage} flavors.
-                  {requiredFlavorCountForPackage > 0 && selectedPackageFlavors.length < requiredFlavorCountForPackage && (
-                    <span className="block mt-1 text-destructive text-xs font-semibold">
-                      Please select all {requiredFlavorCountForPackage} flavors for this package to proceed. You have currently selected {selectedPackageFlavors.length}.
-                    </span>
-                  )}
+            <Card className={CARD_STYLE}>
+              <CardHeader className="bg-[#FF90E8] border-b-4 border-black py-4">
+                <CardTitle className="font-display font-black text-2xl uppercase">2. Choose Flavors</CardTitle>
+                <CardDescription className="text-black font-medium">
+                   Pick {requiredFlavorCountForPackage} flavors. Repeated selections allowed.
+                   <span className="block mt-2 font-bold bg-white border-2 border-black p-1 inline-block">
+                     Selected: {selectedPackageFlavors.length} / {requiredFlavorCountForPackage}
+                   </span>
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="p-6 space-y-6">
                 {selectedPackageFlavors.length > 0 && (
-                  <div className="mb-4 space-y-2">
-                    <h4 className="font-medium text-sm text-muted-foreground">Your Selections:</h4>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="space-y-3">
+                    <h4 className="font-display font-bold uppercase text-sm">Your Selections:</h4>
+                    <div className="flex flex-wrap gap-3">
                       {selectedPackageFlavors.map((flavorId, index) => {
                         const flavor = mockFlavors.find(f => f.id === flavorId);
                         return (
-                          <Badge key={`selected-pkgflavor-${flavorId}-${index}`} variant="secondary" className="text-sm pl-3 pr-1 py-1">
-                            {flavor?.name || 'Unknown Flavor'}
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="ml-1 h-4 w-4 hover:bg-destructive/20"
+                          <div key={`selected-pkgflavor-${flavorId}-${index}`} className="flex items-center bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_#000000] px-3 py-1 font-bold text-sm">
+                            {flavor?.name || 'Unknown'}
+                            <button
+                              className="ml-2 hover:text-red-600 transition-colors"
                               onClick={() => handleRemovePackageFlavorByIndex(index)}
-                              aria-label={`Remove ${flavor?.name || 'flavor'} at position ${index + 1}`}
+                              aria-label={`Remove ${flavor?.name}`}
                             >
-                              <XIcon size={12} />
-                            </Button>
-                          </Badge>
+                              <XIcon size={16} strokeWidth={3} />
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
                   </div>
                 )}
-                {selectedPackageFlavors.length > 0 && <Separator className="my-3"/>}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {selectedPackageFlavors.length > 0 && <Separator className="bg-black h-0.5 my-4"/>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {mockFlavors.map(flavor => {
                     const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
                     const canAddMorePackageFlavors = selectedPackageFlavors.length < requiredFlavorCountForPackage;
                     return (
-                      <div key={`avail-pkgflavor-${flavor.id}`} className="p-3 border rounded-md flex flex-col justify-between gap-2 hover:bg-secondary/20 transition-colors">
+                      <div key={`avail-pkgflavor-${flavor.id}`} className="p-3 border-2 border-black flex flex-col justify-between gap-3 bg-white hover:bg-gray-50 transition-colors">
                         <div>
-                          <Label className="font-medium text-xs">{flavor.name}</Label>
-                          {count > 0 && <span className="ml-2 text-xs text-muted-foreground">(Selected x{count})</span>}
+                          <Label className="font-display font-bold uppercase text-sm block">{flavor.name}</Label>
+                          {count > 0 && <span className="text-xs font-bold text-green-600 bg-green-100 px-1 border border-green-600 inline-block mt-1">x{count} Selected</span>}
                         </div>
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="w-full"
+                          className={`${BUTTON_BASE} w-full text-xs h-8 bg-white hover:bg-brand-cyan text-black`}
                           onClick={() => handleAddPackageFlavor(flavor.id)}
                           disabled={!canAddMorePackageFlavors || !selectedPackage}
-                          aria-label={`Add ${flavor.name} to package`}
                         >
-                           <PlusCircle size={14} className="mr-1.5"/> Add Flavor
+                           <PlusCircle size={14} className="mr-1.5"/> Add
                         </Button>
                       </div>
                     );
@@ -616,27 +619,27 @@ export default function EventBuilderPage() {
             </Card>
           )}
           
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-primary">3. Select Add-ons</CardTitle>
-              <CardDescription>Enhance your event with these optional extras.</CardDescription>
+          <Card className={CARD_STYLE}>
+            <CardHeader className="bg-[#B8FF9F] border-b-4 border-black py-4">
+              <CardTitle className="font-display font-black text-2xl uppercase">3. Add-ons</CardTitle>
+              <CardDescription className="text-black font-medium">Enhance your event with extras.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6 space-y-4">
               {mockAddons.map(addon => (
-                <div key={addon.id} className="p-3 border rounded-md hover:bg-secondary/20 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor={`addon-${addon.id}`} className="flex-grow cursor-pointer pr-4">
-                       <span className="font-medium block">{addon.name}</span>
-                       <p className="text-xs text-muted-foreground">{addon.description} (+${addon.price.toFixed(2)})</p>
+                <div key={addon.id} className="p-4 border-2 border-black shadow-[4px_4px_0px_0px_#000000] bg-white transition-transform hover:-translate-y-1">
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor={`addon-${addon.id}`} className="flex-grow cursor-pointer">
+                       <span className="font-display font-bold uppercase text-lg block">{addon.name}</span>
+                       <p className="text-sm font-medium text-gray-600">{addon.description} (+${addon.price.toFixed(2)})</p>
                     </Label>
-                    <div className="flex items-center space-x-2 flex-shrink-0">
+                    <div className="flex items-center space-x-3 flex-shrink-0">
                       {selectedAddons[addon.id] > 0 && (
                         <>
-                          <Button variant="ghost" size="icon" onClick={() => handleAddonQuantityChange(addon.id, -1)} className="h-7 w-7" aria-label={`Decrease quantity of ${addon.name}`}>
+                          <Button variant="outline" size="icon" onClick={() => handleAddonQuantityChange(addon.id, -1)} className={`${BUTTON_BASE} h-8 w-8 bg-white`} aria-label="Decrease">
                             <MinusCircle size={16} />
                           </Button>
-                          <span className="w-6 text-center tabular-nums">{selectedAddons[addon.id]}</span>
-                           <Button variant="ghost" size="icon" onClick={() => handleAddonQuantityChange(addon.id, 1)} className="h-7 w-7" aria-label={`Increase quantity of ${addon.name}`}>
+                          <span className="w-8 text-center font-display font-bold text-xl">{selectedAddons[addon.id]}</span>
+                           <Button variant="outline" size="icon" onClick={() => handleAddonQuantityChange(addon.id, 1)} className={`${BUTTON_BASE} h-8 w-8 bg-brand-yellow`} aria-label="Increase">
                             <PlusCircle size={16} />
                           </Button>
                         </>
@@ -645,78 +648,75 @@ export default function EventBuilderPage() {
                          id={`addon-${addon.id}`} 
                          checked={!!selectedAddons[addon.id] && selectedAddons[addon.id] > 0}
                          onCheckedChange={(checked) => handleAddonToggle(addon.id, !!checked)}
-                         aria-label={`Select ${addon.name}`}
+                         className={CHECKBOX_STYLE}
                        />
                     </div>
                   </div>
                   { (addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l') && selectedAddons[addon.id] > 0 && (
-                    <div className="pl-0 mt-3 pt-3 border-t border-muted space-y-3">
-                      <h4 className="text-sm font-medium text-muted-foreground">Choose flavors for your {addon.name.toLowerCase()}:</h4>
+                    <div className="mt-4 pt-4 border-t-2 border-black border-dashed space-y-4">
+                      <h4 className="text-sm font-bold uppercase bg-black text-white px-2 py-1 inline-block transform -rotate-1">Choose Balang Flavors:</h4>
                       {[...Array(selectedAddons[addon.id])].map((_, balangIndex) => {
                         const currentSelectedFlavorId = addonFlavorSelections[addon.id]?.[balangIndex];
                         const currentSelectedFlavor = currentSelectedFlavorId ? mockFlavors.find(f => f.id === currentSelectedFlavorId) : null;
                         return (
-                          <div key={`${addon.id}-balang-${balangIndex}`} className="mt-2 p-3 border rounded-md space-y-2 bg-background/50">
-                              <div className="flex justify-between items-center">
-                                <Label className="text-sm">
-                                Flavor for {addon.name.replace('Additional 1 x ', '')} #{balangIndex + 1}:
-                                </Label>
+                          <div key={`${addon.id}-balang-${balangIndex}`} className="p-3 border-2 border-black bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <Label className="font-bold text-sm uppercase">
+                                {addon.name.replace('Additional 1 x ', '')} #{balangIndex + 1}
+                              </Label>
+                              <div className="flex items-center gap-2">
                                 {currentSelectedFlavor ? (
-                                    <Badge variant="secondary" className="text-sm pl-2 pr-1 py-0.5">
+                                    <div className="flex items-center bg-brand-cyan border-2 border-black px-2 py-1 text-xs font-bold shadow-[2px_2px_0px_0px_#000000]">
                                       {currentSelectedFlavor.name}
-                                      <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          className="ml-1 h-4 w-4 hover:bg-destructive/20 text-muted-foreground hover:text-destructive-foreground"
+                                      <button
+                                          className="ml-2 hover:text-white"
                                           onClick={() => handleRemoveAdditiveFlavor(addon.id, balangIndex)}
-                                          aria-label={`Remove ${currentSelectedFlavor.name} from ${addon.name.replace('Additional 1 x ', '')} #${balangIndex + 1}`}
                                       >
-                                          <XIcon size={12} />
-                                      </Button>
-                                    </Badge>
-                                ) : (
-                                  <p className="text-xs text-muted-foreground italic">No flavor selected</p>
-                                )}
-                              </div>
-                              
-                              <Popover 
-                                open={activeAddonFlavorPopover?.addonId === addon.id && activeAddonFlavorPopover?.balangIndex === balangIndex}
-                                onOpenChange={(isOpen) => {
-                                  if (isOpen) {
-                                    setActiveAddonFlavorPopover({ addonId: addon.id, balangIndex: balangIndex });
-                                  } else {
-                                    setActiveAddonFlavorPopover(null);
-                                  }
-                                }}
-                              >
-                                <PopoverTrigger asChild>
-                                  <Button variant="outline" size="sm" className="w-full text-xs">
-                                    {currentSelectedFlavorId ? "Change Flavor" : "Select Flavor"}
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[280px] p-0" side="bottom" align="start">
-                                  <div className="p-2">
-                                    <h4 className="text-xs font-medium mb-2 text-muted-foreground px-1">Available Flavors</h4>
-                                    <div className="max-h-48 overflow-y-auto space-y-1">
-                                      {mockFlavors.map(flavor => (
-                                        <Button
-                                          key={`${addon.id}-balang-${balangIndex}-popoverflavor-${flavor.id}`}
-                                          variant={currentSelectedFlavorId === flavor.id ? "default" : "ghost"}
-                                          size="sm"
-                                          className="w-full justify-start text-left h-auto py-1.5 text-xs"
-                                          onClick={() => {
-                                            handleAdditiveFlavorSelect(addon.id, balangIndex, flavor.id);
-                                            setActiveAddonFlavorPopover(null); 
-                                          }}
-                                        >
-                                          {currentSelectedFlavorId === flavor.id && <Check className="mr-2 h-3 w-3" />}
-                                          {flavor.name}
-                                        </Button>
-                                      ))}
+                                          <XIcon size={12} strokeWidth={3} />
+                                      </button>
                                     </div>
-                                  </div>
-                                </PopoverContent>
-                              </Popover>
+                                ) : (
+                                  <span className="text-xs font-bold text-red-500 bg-red-100 px-2 border border-red-500">REQUIRED</span>
+                                )}
+                              
+                                <Popover 
+                                  open={activeAddonFlavorPopover?.addonId === addon.id && activeAddonFlavorPopover?.balangIndex === balangIndex}
+                                  onOpenChange={(isOpen) => {
+                                    if (isOpen) {
+                                      setActiveAddonFlavorPopover({ addonId: addon.id, balangIndex: balangIndex });
+                                    } else {
+                                      setActiveAddonFlavorPopover(null);
+                                    }
+                                  }}
+                                >
+                                  <PopoverTrigger asChild>
+                                    <Button size="sm" className={`${BUTTON_BASE} h-7 text-xs bg-white hover:bg-gray-100 px-3`}>
+                                      {currentSelectedFlavorId ? "Change" : "Select"}
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-[280px] p-0 border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000]" side="bottom" align="end">
+                                    <div className="p-2 bg-white">
+                                      <h4 className="text-xs font-bold uppercase mb-2 px-1 bg-brand-yellow border-b-2 border-black">Available Flavors</h4>
+                                      <div className="max-h-48 overflow-y-auto space-y-1">
+                                        {mockFlavors.map(flavor => (
+                                          <Button
+                                            key={`${addon.id}-balang-${balangIndex}-popoverflavor-${flavor.id}`}
+                                            variant="ghost"
+                                            size="sm"
+                                            className={`w-full justify-start text-left h-auto py-2 text-xs font-bold uppercase hover:bg-brand-cyan rounded-none ${currentSelectedFlavorId === flavor.id ? "bg-brand-cyan" : ""}`}
+                                            onClick={() => {
+                                              handleAdditiveFlavorSelect(addon.id, balangIndex, flavor.id);
+                                              setActiveAddonFlavorPopover(null); 
+                                            }}
+                                          >
+                                            {currentSelectedFlavorId === flavor.id && <Check className="mr-2 h-3 w-3" strokeWidth={3} />}
+                                            {flavor.name}
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              </div>
                             </div>
                         );
                       })}
@@ -729,22 +729,23 @@ export default function EventBuilderPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <Card className="sticky top-24 shadow-xl">
-            <CardHeader>
-              <CardTitle className="font-headline text-accent flex items-center"><ShoppingCart className="mr-2" />Your Event Summary</CardTitle>
+          <Card className={`${CARD_STYLE} sticky top-24 bg-[#FFFDF5]`}>
+            <CardHeader className="bg-black text-white py-4 border-b-4 border-black">
+              <CardTitle className="font-display font-black text-2xl uppercase flex items-center gap-2">
+                  <ShoppingCart className="text-brand-yellow" size={24} /> Event Summary
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="p-6 space-y-4">
               {selectedPackage && (
                 <div className="text-sm">
-                  <h4 className="font-semibold flex items-center"><PackageIcon size={16} className="mr-2 text-primary" />{selectedPackage.name}</h4>
-                  <div className="pl-6">
-                    <p>
-                      Package Price: ${selectedPackage.price.toFixed(2)}
+                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><PackageIcon size={16} className="mr-2" /> {selectedPackage.name}</h4>
+                  <div className="pl-6 space-y-1">
+                    <p className="font-mono text-lg font-bold">
+                      ${selectedPackage.price.toFixed(2)}
                     </p>
                     {selectedPackage.isAllInclusive && (
-                      <p className="text-xs text-muted-foreground ml-0">
-                        (Includes setup worth ${selectedPackage.setupFee.toFixed(2)}, 
-                        delivery worth ${deliveryFee.toFixed(2)}, and unlimited cups)
+                      <p className="text-xs text-gray-600 italic">
+                        (Includes setup, delivery & unlimited cups)
                       </p>
                     )}
                   </div>
@@ -753,19 +754,17 @@ export default function EventBuilderPage() {
               
               {displayDeliveryFee > 0 && (
                 <div className="text-sm">
-                  <Separator className="my-2"/>
-                  <h4 className="font-semibold flex items-center"><Truck size={16} className="mr-2 text-primary" />Delivery &amp; Pickup</h4>
+                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><Truck size={16} className="mr-2" /> Delivery</h4>
                   <div className="pl-6">
-                     <p>${displayDeliveryFee.toFixed(2)} <span className="text-xs text-muted-foreground">(Applied for add-ons without an inclusive base package or non all-inclusive packages)</span></p>
+                     <p className="font-mono text-lg font-bold">${displayDeliveryFee.toFixed(2)}</p>
                   </div>
                 </div>
               )}
 
               {selectedPackageFlavors.length > 0 && selectedPackage && requiredFlavorCountForPackage > 0 && (
-                <div>
-                  <Separator className="my-2"/>
-                  <h4 className="font-semibold">Selected Package Flavors ({selectedPackageFlavors.length}/{requiredFlavorCountForPackage}):</h4>
-                  <ul className="list-disc list-inside text-sm pl-6">
+                <div className="bg-white border-2 border-black p-3 shadow-[4px_4px_0px_0px_#000000]">
+                  <h4 className="font-bold uppercase text-xs mb-2">Package Flavors:</h4>
+                  <ul className="text-xs space-y-1">
                     {(() => {
                       const packageFlavorCounts: Record<string, number> = {};
                       selectedPackageFlavors.forEach(id => {
@@ -773,7 +772,7 @@ export default function EventBuilderPage() {
                       });
                       return Object.entries(packageFlavorCounts).map(([flavorId, count]) => {
                         const flavor = mockFlavors.find(f => f.id === flavorId);
-                        return <li key={`pkgsummary-${flavorId}`}>{flavor?.name || 'Unknown Flavor'} {count > 1 ? `(x${count})` : ''}</li>;
+                        return <li key={`pkgsummary-${flavorId}`} className="flex justify-between border-b border-dashed border-gray-300 pb-1 last:border-0"><span>{flavor?.name}</span> <span className="font-bold">x{count}</span></li>;
                       });
                     })()}
                   </ul>
@@ -782,9 +781,8 @@ export default function EventBuilderPage() {
 
               {Object.keys(selectedAddons).filter(key => selectedAddons[key] > 0).length > 0 && (
                 <div>
-                  <Separator className="my-2"/>
-                  <h4 className="font-semibold flex items-center"><Construction size={16} className="mr-2 text-primary" />Add-ons:</h4>
-                  <div className="pl-6 space-y-1 mt-1">
+                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><Construction size={16} className="mr-2" /> Add-ons</h4>
+                  <div className="space-y-2 mt-2">
                     {Object.entries(selectedAddons).map(([addonId, quantity]) => {
                       if (quantity === 0) return null;
                       const addon = mockAddons.find(a => a.id === addonId);
@@ -796,15 +794,15 @@ export default function EventBuilderPage() {
                       );
 
                       return (
-                        <div key={addonId}>
-                          <div className="flex justify-between text-sm">
+                        <div key={addonId} className="bg-white border-2 border-black p-3 shadow-[4px_4px_0px_0px_#000000]">
+                          <div className="flex justify-between text-sm font-bold uppercase mb-1">
                             <span>{addon.name} (x{quantity})</span>
-                            <span>${(addon.price * quantity).toFixed(2)}</span>
+                            <span className="font-mono">${(addon.price * quantity).toFixed(2)}</span>
                           </div>
                           {isBalangAddon && flavorsForThisAddon && flavorsForThisAddon.some(name => name) && (
-                            <ul className="list-disc list-inside text-xs pl-4 text-muted-foreground">
+                            <ul className="list-disc list-inside text-xs pl-2 text-gray-600 bg-gray-50 border-t border-gray-200 mt-1 pt-1">
                               {flavorsForThisAddon.map((flavorName, index) => (
-                                flavorName ? <li key={`${addonId}-summaryflavor-${index}`}>{flavorName} (Balang #{index+1})</li> : null
+                                flavorName ? <li key={`${addonId}-summaryflavor-${index}`}>{flavorName}</li> : null
                               ))}
                             </ul>
                           )}
@@ -814,23 +812,25 @@ export default function EventBuilderPage() {
                   </div>
                 </div>
               )}
-              <Separator />
-              <div className="flex justify-between items-center text-2xl font-bold">
-                <span className="font-headline text-primary">Total:</span>
-                <span className="text-accent">${totalPrice.toFixed(2)}</span>
+              
+              <div className="border-t-4 border-black pt-4 mt-4">
+                <div className="flex justify-between items-center">
+                  <span className="font-display font-black uppercase text-xl">Total:</span>
+                  <span className="font-mono font-bold text-3xl bg-brand-yellow px-2 border-2 border-black shadow-[4px_4px_0px_0px_#000000]">${totalPrice.toFixed(2)}</span>
+                </div>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="p-6 pt-0">
               <Button 
                 size="lg" 
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                className={`${BUTTON_BASE} w-full bg-brand-cyan hover:bg-[#2BC0D5] text-black h-16 text-xl`}
                 onClick={handleProceedToBook}
                 disabled={!canProceed || isCalendarDataLoading}
               >
                 {isCalendarDataLoading ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading Dates...</>
+                  <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Loading Dates...</>
                 ) : (
-                  <>Proceed to Book <Zap className="ml-2" /></>
+                  <>Proceed to Book <Zap className="ml-2 h-6 w-6" strokeWidth={3} /></>
                 )}
               </Button>
             </CardFooter>
@@ -839,38 +839,40 @@ export default function EventBuilderPage() {
       </div>
 
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh]">
-          <DialogHeader className="p-6 pb-4 border-b shrink-0">
-            <DialogTitle className="font-headline text-primary flex items-center">
-              <CalendarDays className="mr-2 h-6 w-6" /> Select Event Date &amp; Time
+        <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh] bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000000] p-0 gap-0">
+          <DialogHeader className="p-6 border-b-4 border-black bg-brand-yellow">
+            <DialogTitle className="font-display font-black text-2xl uppercase flex items-center">
+              <CalendarDays className="mr-3 h-8 w-8" strokeWidth={2.5} /> Select Date &amp; Time
             </DialogTitle>
-            <ShadDialogDescription>
-              Choose your desired date and time for the event. Blocked dates are disabled.
-            </ShadDialogDescription>
           </DialogHeader>
 
-          {/* This new div makes the content area scrollable */}
-          <div className="flex-grow min-h-0 overflow-y-auto p-6">
-            <div className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] gap-4 items-start">
-              <div>
+          <div className="flex-grow min-h-0 overflow-y-auto p-6 bg-[#FFFDF5]">
+            <div className="flex flex-col gap-6">
+              <div className="border-4 border-black shadow-[4px_4px_0px_0px_#000000] bg-white p-2">
                 <Calendar
                   mode="single"
                   selected={selectedEventDate}
                   onSelect={setSelectedEventDate}
                   disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
-                  className="rounded-md border shadow-sm"
+                  className="w-full"
+                  classNames={{
+                    head_cell: "text-black font-bold uppercase",
+                    cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-yellow hover:font-bold hover:border-2 hover:border-black rounded-none transition-all",
+                    day_selected: "bg-brand-cyan text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_#000000]",
+                    day_today: "bg-gray-100 text-black font-bold",
+                  }}
                 />
               </div>
               <div className="space-y-3">
-                <Label className="font-medium text-sm">Available Time Slots:</Label>
-                <div className="grid grid-cols-2 gap-2 max-h-[260px] md:max-h-none overflow-y-auto pr-1">
+                <Label className="font-display font-bold uppercase text-lg block bg-black text-white px-2 py-1 transform -rotate-1 inline-block">Available Time Slots</Label>
+                <div className="grid grid-cols-3 gap-3">
                   {EVENT_TIME_SLOTS.map((time) => (
                     <Button
                       key={time}
-                      variant={selectedEventTime === time ? 'default' : 'outline'}
-                      size="sm"
+                      variant="ghost"
                       onClick={() => setSelectedEventTime(time)}
-                      className={cn("w-full justify-center text-xs", selectedEventTime === time && "bg-primary text-primary-foreground")}
+                      className={`${BUTTON_BASE} h-10 text-xs bg-white hover:bg-brand-cyan text-black ${selectedEventTime === time ? "bg-brand-cyan translate-x-[2px] translate-y-[2px] shadow-none" : ""}`}
                     >
                       {time}
                     </Button>
@@ -880,10 +882,10 @@ export default function EventBuilderPage() {
             </div>
           </div>
 
-          <DialogFooter className="border-t p-6 pt-4 shrink-0">
-            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)}>Back</Button>
+          <DialogFooter className="border-t-4 border-black p-6 bg-gray-50 flex-col sm:flex-row gap-3">
+            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)} className={`${BUTTON_BASE} bg-white hover:bg-gray-200 w-full sm:w-auto`}>Back</Button>
             <Button 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className={`${BUTTON_BASE} bg-brand-green text-white hover:bg-[#329A00] w-full sm:w-auto flex-1`}
               onClick={handleDateTimeSubmit}
               disabled={!selectedEventDate || !selectedEventTime}
             >
@@ -894,20 +896,10 @@ export default function EventBuilderPage() {
       </Dialog>
 
       <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-        <DialogContent className="sm:max-w-[525px] flex flex-col max-h-[85vh] overflow-hidden">
-          <DialogHeader className="shrink-0 p-6 pb-4 border-b">
-            <DialogTitle className="font-headline text-primary">Customer Details</DialogTitle>
-            <ShadDialogDescription>
-              Please fill in your details. All fields marked with * are required.
-            </ShadDialogDescription>
-            {currentEventConfig?.eventDate && currentEventConfig?.eventTime && (
-              <div className="text-sm text-muted-foreground mt-2">
-                <strong>Event scheduled for: {format(currentEventConfig.eventDate, "PPP")} at {currentEventConfig.eventTime}</strong>
-              </div>
-            )}
-          </DialogHeader>
-          <div className="flex-grow min-h-0 overflow-y-auto">
-            <CustomerDetailsForm 
+        <DialogContent className="sm:max-w-[600px] flex flex-col max-h-[90vh] overflow-hidden p-0 border-none bg-transparent shadow-none">
+          {/* We rely on the internal card styling of the form, but need to wrap it for the modal context */}
+          <div className="h-full overflow-y-auto">
+             <CustomerDetailsForm 
               onSubmit={handleCustomerDetailsSubmit} 
               onCancel={() => setIsCustomerDetailsModalOpen(false)}
               onBack={() => {
