@@ -23,40 +23,36 @@ export default function CommunityLeaderboard() {
   }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
-    <Card className="shadow-xl">
-      <CardHeader>
-        <CardTitle className="font-headline text-primary flex items-center">
-            <Trophy className="mr-3 h-7 w-7" />
-            Community Leaderboard
-        </CardTitle>
-        <CardDescription>
-            Recognizing our top contributors. Thank you for your immense generosity!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="monthly" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="monthly">This Month</TabsTrigger>
-            <TabsTrigger value="all-time">All-Time</TabsTrigger>
-          </TabsList>
-          <TabsContent value="monthly" className="mt-4 space-y-4 min-h-[200px]">
-            {isLoading ? (
-              <div className="flex justify-center items-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    <div className="w-full">
+      <Tabs defaultValue="monthly" className="w-full">
+        <div className="flex justify-center mb-6">
+            <TabsList className="bg-brand-blue/5 p-1 rounded-full border border-brand-blue/10">
+                <TabsTrigger value="monthly" className="rounded-full px-6 py-2 font-bold uppercase text-xs data-[state=active]:bg-brand-cyan data-[state=active]:text-white transition-all">This Month</TabsTrigger>
+                <TabsTrigger value="all-time" className="rounded-full px-6 py-2 font-bold uppercase text-xs data-[state=active]:bg-brand-cyan data-[state=active]:text-white transition-all">All-Time</TabsTrigger>
+            </TabsList>
+        </div>
+        
+        <TabsContent value="monthly" className="space-y-3 min-h-[200px]">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-brand-cyan" />
+            </div>
+          ) : (
+            monthlyLeaders.map((user, index) => (
+              <div key={`monthly-${user.id}`} className="bg-white/50 hover:bg-white rounded-2xl p-4 flex items-center justify-between transition-all duration-300 border border-brand-blue/5 shadow-sm">
+                 <LeaderboardItem user={user} rank={index + 1} />
               </div>
-            ) : (
-              monthlyLeaders.map((user, index) => (
-                <LeaderboardItem key={`monthly-${user.id}`} user={user} rank={index + 1} />
-              ))
-            )}
-          </TabsContent>
-          <TabsContent value="all-time" className="mt-4 space-y-4">
-             {allTimeLeaders.map((user, index) => (
-              <LeaderboardItem key={`alltime-${user.id}`} user={user} rank={index + 1} />
-            ))}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+            ))
+          )}
+        </TabsContent>
+        <TabsContent value="all-time" className="space-y-3">
+           {allTimeLeaders.map((user, index) => (
+            <div key={`alltime-${user.id}`} className="bg-white/50 hover:bg-white rounded-2xl p-4 flex items-center justify-between transition-all duration-300 border border-brand-blue/5 shadow-sm">
+                <LeaderboardItem user={user} rank={index + 1} />
+            </div>
+          ))}
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

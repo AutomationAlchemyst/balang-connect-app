@@ -111,24 +111,25 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
     }
   }, [filteredPickupTimeSlots, selectedPickupTime, setValue]);
 
-  // Neo-Brutalism Styles
-  const inputStyles = "font-body border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] focus-visible:ring-0 focus-visible:border-black focus:shadow-none focus:translate-x-[4px] focus:translate-y-[4px] focus:bg-[#3CD3E8] transition-all h-12";
-  const labelStyles = "font-display font-bold uppercase tracking-tight text-lg text-black mb-2";
-  const cardStyles = "bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] p-6 sm:p-8 -rotate-1 transition-transform hover:rotate-0";
-  const buttonBaseStyles = "font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]";
+  // MODERN COAST THEME STYLES
+  const inputStyles = "input-coast h-14 text-brand-blue font-medium placeholder:text-brand-blue/30";
+  const labelStyles = "font-display font-bold uppercase tracking-tight text-sm text-[#1C489E] mb-2 ml-1";
+  const cardStyles = "bg-transparent p-6 sm:p-10"; // Parent modal handles the glass effect
+  const buttonBaseStyles = "font-display font-bold uppercase rounded-full shadow-lg transition-all active:scale-95 hover:-translate-y-0.5";
   
   return (
     <Form {...form}>
-      <div className="p-4 md:p-8">
+      <div className="h-full">
         <form 
           onSubmit={form.handleSubmit(onSubmit)} 
-          className={`flex flex-col h-full gap-8 ${cardStyles}`}
+          className={`flex flex-col gap-8 ${cardStyles}`}
         >
           <div className="space-y-6">
-            <div className="text-center mb-6">
-               <h2 className="font-display text-3xl font-bold uppercase tracking-tighter bg-[#FDDD59] inline-block px-4 py-2 border-2 border-black shadow-[4px_4px_0px_0px_#000000] transform -rotate-2">
+            <div className="text-center mb-8">
+               <h2 className="text-coast-heading text-3xl font-bold uppercase tracking-tighter drop-shadow-sm">
                  Customer Details
                </h2>
+               <div className="h-1 w-24 bg-gradient-to-r from-brand-cyan to-brand-blue mx-auto mt-4 rounded-full opacity-30" />
             </div>
 
             <FormField
@@ -138,9 +139,9 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                 <FormItem>
                   <FormLabel className={labelStyles}>Full Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="YOUR FULL NAME" className={inputStyles} {...field} />
+                    <Input placeholder="Your Full Name" className={inputStyles} {...field} />
                   </FormControl>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -153,7 +154,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                   <FormControl>
                     <Input type="email" placeholder="YOUR.EMAIL@EXAMPLE.COM" className={inputStyles} {...field} />
                   </FormControl>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -166,7 +167,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                   <FormControl>
                     <Input type="tel" placeholder="WHATSAPP NUMBER" className={inputStyles} {...field} />
                   </FormControl>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -181,7 +182,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                     <FormControl>
                       <Input placeholder="123456" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                   </FormItem>
                 )}
               />
@@ -194,7 +195,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                     <FormControl>
                       <Input placeholder="BLK 123 / 45A JALAN BESAR" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                   </FormItem>
                 )}
               />
@@ -208,7 +209,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                     <FormControl>
                       <Input placeholder="#01-23" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                   </FormItem>
                 )}
               />
@@ -222,7 +223,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                   <FormControl>
                     <Input type="number" placeholder="50, 100, 200" className={inputStyles} {...field} />
                   </FormControl>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -235,11 +236,11 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                   <FormControl>
                     <Textarea
                       placeholder="WEDDING, GATHERING, BIRTHDAY..."
-                      className={`${inputStyles} h-32 pt-3`}
+                      className={`${inputStyles} h-32 pt-3 resize-none`}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -255,10 +256,10 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                         <SelectValue placeholder="SELECT A TIME" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000]">
+                    <SelectContent className="bg-white/90 backdrop-blur-xl border border-white/60 rounded-xl shadow-lg">
                       {filteredPickupTimeSlots.length > 0 ? (
                         filteredPickupTimeSlots.map((slot) => (
-                          <SelectItem key={slot} value={slot} className="focus:bg-[#FDDD59] focus:text-black font-body cursor-pointer border-b border-black/10 last:border-0">
+                          <SelectItem key={slot} value={slot} className="focus:bg-brand-yellow/30 focus:text-brand-blue font-body cursor-pointer text-[#1C489E]">
                             {slot}
                           </SelectItem>
                         ))
@@ -269,8 +270,8 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                       )}
                     </SelectContent>
                   </Select>
-                  <FormDescription className="font-bold text-xs uppercase tracking-wide">Time for us to collect empty balangs.</FormDescription>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormDescription className="font-bold text-xs uppercase tracking-wide text-[#1C489E]/60 ml-1">Time for us to collect empty balangs.</FormDescription>
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
@@ -286,40 +287,40 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                         <SelectValue placeholder="PLEASE SELECT ONE" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000]">
+                    <SelectContent className="bg-white/90 backdrop-blur-xl border border-white/60 rounded-xl shadow-lg">
                       {hearAboutUsOptions.map((option) => (
-                        <SelectItem key={option} value={option} className="focus:bg-[#FDDD59] focus:text-black font-body cursor-pointer border-b border-black/10 last:border-0">
+                        <SelectItem key={option} value={option} className="focus:bg-brand-yellow/30 focus:text-brand-blue font-body cursor-pointer text-[#1C489E]">
                           {option}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage className="font-bold text-red-600 bg-red-100 border border-red-600 p-1 mt-1 inline-block" />
+                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
                 </FormItem>
               )}
             />
           </div>
           
-          <div className="flex flex-col sm:flex-row sm:justify-end gap-4 border-t-2 border-black pt-6 mt-4">
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-4 border-t border-brand-blue/10 pt-8 mt-4">
             <Button 
               type="button" 
               onClick={onBack}
-              className={`${buttonBaseStyles} bg-white text-black hover:bg-gray-100 sm:w-auto w-full h-12`}
+              className={`${buttonBaseStyles} bg-white text-brand-blue hover:bg-gray-50 border border-brand-blue/10 sm:w-auto w-full h-12 shadow-sm`}
             >
               Back
             </Button>
             <Button 
               type="button" 
               onClick={onCancel}
-              className={`${buttonBaseStyles} bg-[#FF6B6B] text-white hover:bg-[#FF5252] sm:w-auto w-full h-12`}
+              className={`${buttonBaseStyles} bg-white text-red-500 hover:bg-red-50 border border-red-100 sm:w-auto w-full h-12 shadow-sm`}
             >
               Cancel
             </Button>
             <Button 
               type="submit" 
-              className={`${buttonBaseStyles} bg-[#FDDD59] text-black hover:bg-[#FFE580] sm:w-auto w-full h-14 text-xl px-8 flex-1 sm:flex-none`}
+              className={`btn-coast-primary sm:w-auto w-full h-14 text-xl px-10 flex-1 sm:flex-none shadow-xl`}
             >
-              Book Now <ArrowRight className="ml-2 h-5 w-5 border-black" />
+              Book Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </form>

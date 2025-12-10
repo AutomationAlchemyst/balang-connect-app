@@ -63,120 +63,134 @@ export default function AiStylistPage() {
   };
 
   return (
-    <div className="space-y-12">
-      <div className="text-center">
-        <SectionTitle className="flex items-center justify-center">
-            <Wand className="mr-4 h-10 w-10" /> AI Event Stylist
-        </SectionTitle>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Don't know where to start? Describe your dream event below, and let our AI create a personalized plan for you!
+    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24 px-4">
+      <div className="text-center space-y-4 max-w-3xl mx-auto mb-12">
+        <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-2">
+            <Wand size={14} /> AI Powered
+        </div>
+        <h1 className="text-coast-heading text-4xl md:text-6xl text-brand-blue drop-shadow-sm">
+            Event <span className="text-brand-cyan">Stylist</span>
+        </h1>
+        <p className="text-xl text-brand-blue/70 font-medium leading-relaxed">
+          Describe your dream event, and let our AI create a personalized plan for you!
         </p>
       </div>
 
-      <Card className="max-w-3xl mx-auto shadow-2xl">
-        <CardHeader>
-          <CardTitle>Describe Your Event</CardTitle>
-          <CardDescription>
-            Tell us about the occasion, the number of guests, the atmosphere you're going for, or any favorite colors or themes. The more detail, the better!
+      <Card className="glass-panel-wet border-none max-w-3xl mx-auto shadow-2xl">
+        <CardHeader className="p-8 pb-4">
+          <CardTitle className="text-coast-heading text-2xl text-brand-blue">Describe Your Event</CardTitle>
+          <CardDescription className="text-brand-blue/60 font-medium">
+            Tell us about the occasion, the number of guests, the atmosphere you're going for, or any favorite colors.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-8 pt-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Textarea
               value={eventDescription}
               onChange={(e) => setEventDescription(e.target.value)}
-              placeholder="e.g., 'A casual, fun-filled Hari Raya open house for about 50 friends and family. I want it to feel modern but traditional.' or 'A surprise 30th birthday party for my husband. He loves classy, minimalist themes and the color green.'"
-              className="min-h-[120px] resize-y"
+              placeholder="e.g., 'A casual, fun-filled Hari Raya open house for about 50 friends. I want it to feel modern but traditional.'"
+              className="input-coast min-h-[150px] resize-y p-4 text-lg"
               disabled={isLoading}
             />
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading || !eventDescription}>
+            <Button type="submit" className="w-full btn-coast-primary h-14 text-xl shadow-lg" disabled={isLoading || !eventDescription}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Styling Your Event...
+                  <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                  Brewing Ideas...
                 </>
               ) : (
                 <>
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-6 w-6" />
                   Generate Ideas
                 </>
               )}
             </Button>
           </form>
-          {error && <p className="text-sm text-destructive mt-4">{error}</p>}
+          {error && <p className="text-sm text-red-500 font-bold mt-4 text-center">{error}</p>}
         </CardContent>
       </Card>
 
+      {/* Loading State - Custom Styled */}
       {isLoading && (
-         <div className="text-center p-8">
-            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-            <p className="text-muted-foreground mt-4">Our AI is brewing up some fresh ideas...</p>
+         <div className="text-center p-12">
+            <div className="inline-block p-4 rounded-full bg-white/50 backdrop-blur-md border border-brand-cyan/20 animate-pulse">
+                <Loader2 className="h-12 w-12 animate-spin text-brand-cyan" />
+            </div>
+            <p className="text-brand-blue/60 font-bold uppercase tracking-widest mt-6">Styling your event...</p>
          </div>
       )}
 
       {aiResponse && (
-        <div className="mt-12 space-y-8 animate-in fade-in-50 duration-500">
-            <SectionTitle>Your Custom Event Plan</SectionTitle>
+        <div className="mt-16 space-y-8 animate-in fade-in-50 slide-in-from-bottom-10 duration-700 max-w-5xl mx-auto">
+            <div className="text-center">
+                <h2 className="text-coast-heading text-3xl text-brand-blue mb-2">Your Custom Plan</h2>
+                <div className="h-1 w-24 bg-gradient-to-r from-brand-cyan to-brand-blue mx-auto rounded-full opacity-30" />
+            </div>
             
-            <Alert variant="default" className="bg-primary/10 border-primary/30">
-                <Lightbulb className="h-5 w-5 text-primary" />
-                <AlertTitle className="text-primary font-semibold">Here's Your Plan!</AlertTitle>
-                <AlertDescription className="text-foreground/90">
-                    Below are the AI's suggestions based on your description. Use the button at the bottom to send these ideas straight to the Event Builder!
-                </AlertDescription>
-            </Alert>
+            <div className="glass-panel-static p-6 border-l-4 border-l-brand-cyan bg-brand-cyan/5">
+                <div className="flex items-start gap-4">
+                    <Lightbulb className="h-6 w-6 text-brand-cyan mt-1 shrink-0" />
+                    <div>
+                        <h3 className="font-display font-bold text-xl text-brand-blue mb-1">Here's the plan!</h3>
+                        <p className="text-brand-blue/80 font-medium">
+                            Below are the AI's suggestions based on your description.
+                        </p>
+                    </div>
+                </div>
+            </div>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-accent">{aiResponse.themeName}</CardTitle>
-                    <CardDescription>Vibe: <span className="font-semibold">{aiResponse.vibe}</span></CardDescription>
+            <Card className="glass-panel-wet border-none">
+                <CardHeader className="p-8 border-b border-brand-blue/5">
+                    <CardTitle className="font-display font-black text-4xl text-brand-cyan uppercase tracking-tight">{aiResponse.themeName}</CardTitle>
+                    <CardDescription className="text-lg text-brand-blue/70">Vibe: <span className="font-bold text-brand-blue">{aiResponse.vibe}</span></CardDescription>
                 </CardHeader>
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center"><Palette className="mr-2 h-6 w-6 text-primary" />Color Palette</CardTitle>
+                <Card className="glass-panel-static border-none">
+                    <CardHeader className="p-6 pb-2">
+                        <CardTitle className="flex items-center text-coast-heading text-xl text-brand-blue"><Palette className="mr-2 h-5 w-5 text-brand-cyan" />Color Palette</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-wrap gap-4">
+                    <CardContent className="p-6 flex flex-wrap gap-6">
                         {aiResponse.colorPalette.map(color => (
-                            <div key={color.hex} className="text-center">
-                                <div className="w-16 h-16 rounded-full border-4 border-card" style={{ backgroundColor: color.hex }}></div>
-                                <p className="text-xs mt-2 font-medium">{color.name}</p>
-                                <p className="text-xs text-muted-foreground">{color.hex}</p>
+                            <div key={color.hex} className="text-center group">
+                                <div className="w-20 h-20 rounded-full border-4 border-white shadow-md mx-auto group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: color.hex }}></div>
+                                <p className="text-xs mt-3 font-bold uppercase text-brand-blue">{color.name}</p>
+                                <p className="text-[10px] text-brand-blue/50 font-mono">{color.hex}</p>
                             </div>
                         ))}
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center"><Package className="mr-2 h-6 w-6 text-primary" />Suggested Package</CardTitle>
+                <Card className="glass-panel-static border-none">
+                    <CardHeader className="p-6 pb-2">
+                        <CardTitle className="flex items-center text-coast-heading text-xl text-brand-blue"><Package className="mr-2 h-5 w-5 text-brand-cyan" />Suggested Package</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                        <h3 className="font-bold text-lg text-accent">{aiResponse.suggestedPackage.name}</h3>
-                        <p className="text-sm text-muted-foreground italic">"{aiResponse.suggestedPackage.reason}"</p>
+                    <CardContent className="p-6 space-y-4">
+                        <div className="bg-white/60 p-4 rounded-2xl border border-brand-blue/10">
+                            <h3 className="font-display font-bold text-2xl text-brand-blue uppercase">{aiResponse.suggestedPackage.name}</h3>
+                            <p className="text-sm text-brand-blue/70 italic mt-2 leading-relaxed">"{aiResponse.suggestedPackage.reason}"</p>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center"><CupSoda className="mr-2 h-6 w-6 text-primary" />Flavor Recommendations</CardTitle>
+            <Card className="glass-panel-static border-none">
+                <CardHeader className="p-6 pb-2">
+                    <CardTitle className="flex items-center text-coast-heading text-xl text-brand-blue"><CupSoda className="mr-2 h-5 w-5 text-brand-cyan" />Flavor Recommendations</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                     {aiResponse.suggestedFlavors.map(flavor => (
-                        <div key={flavor.name} className="p-3 border-l-4 border-secondary rounded-r-md bg-secondary/20">
-                            <h4 className="font-semibold text-primary">{flavor.name}</h4>
-                            <p className="text-sm text-muted-foreground">{flavor.reason}</p>
+                        <div key={flavor.name} className="p-4 rounded-2xl bg-white/60 border border-brand-blue/5 hover:bg-white transition-colors">
+                            <h4 className="font-display font-bold text-lg text-brand-blue uppercase mb-2">{flavor.name}</h4>
+                            <p className="text-xs text-brand-blue/60 font-medium leading-relaxed">{flavor.reason}</p>
                         </div>
                     ))}
                 </CardContent>
             </Card>
 
-            <Separator />
-            <div className="text-center">
-                <Button size="lg" onClick={handleProceedToBuilder} className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                    Use These Ideas in Event Builder <ArrowRight className="ml-2 h-5 w-5" />
+            <div className="text-center pt-8">
+                <Button size="lg" onClick={handleProceedToBuilder} className="btn-coast-primary h-16 px-10 text-xl shadow-xl hover:scale-105 transition-transform">
+                    Use These Ideas <ArrowRight className="ml-2 h-6 w-6" />
                 </Button>
             </div>
         </div>

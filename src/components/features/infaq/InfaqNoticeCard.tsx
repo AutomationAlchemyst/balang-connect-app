@@ -82,71 +82,86 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
   };
 
   return (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+    <Card className="glass-panel-wet border-none overflow-hidden h-full flex flex-col group hover:scale-[1.01] transition-transform duration-300">
       {slot.imageUrl && (
-        <div className="w-full h-48">
+        <div className="relative w-full h-48 overflow-hidden">
           <Image
             src={slot.imageUrl}
             alt={`Infaq for ${slot.mosqueName}`}
             width={600}
             height={400}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             data-ai-hint={slot.dataAiHint || "community event"}
           />
+          <div className="absolute inset-0 bg-brand-blue/10 mix-blend-multiply"></div>
         </div>
       )}
-      <CardHeader>
-        <CardTitle className="font-headline text-xl text-primary mb-1.5">{slot.mosqueName}</CardTitle>
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start mb-2">
+            <CardTitle className="text-coast-heading text-lg text-brand-blue leading-tight">{slot.mosqueName}</CardTitle>
+        </div>
+        
         <Badge
           variant={getStatusBadgeVariant(slot.status)}
           className={cn(
-            "text-xs h-fit py-1 px-2.5 mb-2 w-full flex items-center justify-center"
+            "text-[10px] h-fit py-1 px-2 mb-2 w-full flex items-center justify-center font-bold uppercase tracking-wide rounded-full shadow-sm",
+            // Custom coloring overrides based on status logic if needed, but variants might suffice if defined well.
+            // For now, let's keep variants but maybe tweak opacity in globals if we were thorough. 
+            // Or just inline styles for specific statuses to match theme perfectly:
+            slot.status.includes("Secured") || slot.status.includes("Sponsored") ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200" :
+            slot.status.includes("Welcome") ? "bg-brand-yellow/20 text-brand-blue border-brand-yellow/50 hover:bg-brand-yellow/30" :
+            "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20 hover:bg-brand-cyan/20"
           )}
         >
           {getStatusIcon(slot.status)}
-          <span className="ml-1.5">{slot.status}</span>
+          <span className="ml-1.5 truncate">{slot.status}</span>
         </Badge>
-        <div className="text-xs text-muted-foreground space-y-0.5">
+
+        <div className="text-xs text-brand-blue/60 font-medium space-y-1">
             <p className="flex items-center">
-                <MapPin size={12} className="mr-1.5 shrink-0" /> {slot.mosqueAddress || 'Address not specified'}
+                <MapPin size={12} className="mr-2 shrink-0 text-brand-cyan" /> {slot.mosqueAddress || 'Address not specified'}
             </p>
             <p className="flex items-center">
-                <CalendarDays size={12} className="mr-1.5 shrink-0" /> Friday, {slot.displayDate}
+                <CalendarDays size={12} className="mr-2 shrink-0 text-brand-cyan" /> Friday, {slot.displayDate}
             </p>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow">
-        {slot.description && <p className="text-sm text-muted-foreground">{slot.description}</p>}
+      
+      <CardContent className="flex-grow py-2">
+        {slot.description && <p className="text-sm text-brand-blue/70 italic leading-relaxed">"{slot.description}"</p>}
          {slot.totalBalangsInfaqed && slot.totalBalangsInfaqed > 0 && (
-          <div className="mt-2">
-            <Badge variant="secondary">Balangs Infaqed: {slot.totalBalangsInfaqed}</Badge>
+          <div className="mt-3 inline-block">
+            <Badge variant="secondary" className="bg-brand-blue/5 text-brand-blue font-mono text-xs border-brand-blue/10">
+               Balangs Infaqed: {slot.totalBalangsInfaqed}
+            </Badge>
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex-col items-stretch space-y-2">
+      
+      <CardFooter className="flex-col items-stretch space-y-3 pt-2 pb-6 px-6">
         {slot.status !== 'Recently Fulfilled!' ? (
           <>
             <Button
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+              className="w-full btn-coast-primary h-10 text-sm shadow-md"
               onClick={handleContributeClick}
             >
-              <ShoppingBag className="mr-2 h-5 w-5" />
-              Contribute Balang(s)
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              Contribute
             </Button>
             
             {!slot.isDeliveryFeeCovered && (
               <Button
                 variant="outline"
-                className="w-full border-green-600 text-green-600 hover:bg-green-50 hover:text-green-700"
+                className="w-full rounded-full border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800 h-10 text-xs font-bold uppercase tracking-wide"
                 onClick={handleSponsorClick}
               >
-                <HeartHandshake className="mr-2 h-5 w-5" />
+                <HeartHandshake className="mr-2 h-4 w-4" />
                 Sponsor Delivery ($25)
               </Button>
             )}
           </>
         ) : (
-          <p className="text-sm text-green-600 font-semibold w-full text-center">Thank you for your generosity!</p>
+          <p className="text-xs text-green-600 font-bold uppercase tracking-widest w-full text-center py-2 bg-green-50 rounded-full">Fully Sponsored!</p>
         )}
       </CardFooter>
     </Card>

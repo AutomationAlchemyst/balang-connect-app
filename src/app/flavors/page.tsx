@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SectionTitle from '@/components/ui/SectionTitle';
 import FlavorCard from '@/components/features/flavors/FlavorCard';
 import { mockFlavors } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, ArrowRight, Waves } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function FlavorsPage() {
@@ -42,52 +41,71 @@ export default function FlavorsPage() {
   const canProceed = selectedFlavorIds.length > 0;
 
   return (
-    <div className="space-y-12 pb-12">
-      <SectionTitle>Our Delicious Flavors</SectionTitle>
-      <p className="text-xl text-center font-medium text-black mb-12 max-w-2xl mx-auto bg-white border-2 border-black p-4 shadow-[4px_4px_0px_0px_#000000]">
-        Select your favorite flavors below. Once you're ready, proceed to build your event package.
-      </p>
-      
-      {selectedFlavorIds.length > 0 && (
-        <div className="sticky top-20 z-40 bg-brand-cyan border-4 border-black p-4 shadow-[8px_8px_0px_0px_#000000] mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 animate-in slide-in-from-top-4">
-          <p className="text-lg font-black uppercase text-black">
-            {selectedFlavorIds.length} flavor(s) selected
-          </p>
-          <Button 
-            onClick={handleProceedToEventBuilder} 
-            className="font-display font-bold uppercase bg-brand-yellow text-black border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] w-full sm:w-auto transition-all"
-            disabled={!canProceed}
-          >
-            <ShoppingCart className="mr-2 h-5 w-5" strokeWidth={2.5} />
-            Proceed to Event Builder
-          </Button>
+    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
+      <div className="container mx-auto px-4 space-y-12">
+        
+        {/* Hero / Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+           <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-2">
+              <Waves size={14} /> Premium Selection
+           </div>
+           <h1 className="text-coast-heading text-5xl md:text-7xl drop-shadow-sm text-brand-blue">
+             Our <span className="text-brand-cyan">Flavors</span>
+           </h1>
+           <p className="text-xl text-brand-blue/70 font-medium leading-relaxed">
+             Hand-crafted, ice-blended perfection. Select your favorites below to kickstart your event package.
+           </p>
         </div>
-      )}
+        
+        {/* Sticky Selection Bar */}
+        <div className={`sticky top-24 z-40 transition-all duration-500 ease-in-out transform ${canProceed ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'}`}>
+          <div className="glass-panel-wet p-4 rounded-full flex flex-col sm:flex-row justify-between items-center gap-4 max-w-2xl mx-auto border-brand-cyan/30 shadow-2xl">
+            <div className="flex items-center gap-3 px-4">
+               <div className="bg-brand-cyan text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-sm">
+                  {selectedFlavorIds.length}
+               </div>
+               <span className="font-bold text-brand-blue uppercase text-sm tracking-wide">Flavors Selected</span>
+            </div>
+            <Button 
+              onClick={handleProceedToEventBuilder} 
+              className="btn-coast-primary h-10 px-6 rounded-full text-sm w-full sm:w-auto shadow-lg"
+              disabled={!canProceed}
+            >
+              Build Event <ArrowRight className="ml-2 h-4 w-4" strokeWidth={3} />
+            </Button>
+          </div>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {mockFlavors.map((flavor) => (
-          <FlavorCard 
-            key={flavor.id} 
-            flavor={flavor}
-            isSelected={selectedFlavorIds.includes(flavor.id)}
-            onToggleSelect={handleToggleFlavorSelection}
-          />
-        ))}
-      </div>
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {mockFlavors.map((flavor) => (
+            <FlavorCard 
+              key={flavor.id} 
+              flavor={flavor}
+              isSelected={selectedFlavorIds.includes(flavor.id)}
+              onToggleSelect={handleToggleFlavorSelection}
+            />
+          ))}
+        </div>
 
-      <div className="mt-16 text-center">
-          <Button 
-            onClick={handleProceedToEventBuilder} 
-            size="lg"
-            className={`font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] h-16 px-8 text-xl transition-all ${canProceed ? 'bg-brand-green text-white hover:bg-[#329A00]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-            disabled={!canProceed}
-          >
-            <ShoppingCart className="mr-2 h-6 w-6" strokeWidth={2.5} />
-            {canProceed ? 'Proceed to Event Builder' : 'Select Flavors to Proceed'}
-          </Button>
-          {!canProceed && (
-            <p className="text-base font-bold uppercase mt-4 text-black bg-white border-2 border-black inline-block px-2">Select flavors above to get started</p>
-          )}
+        {/* Bottom CTA */}
+        <div className="mt-20 text-center space-y-6">
+            <p className="text-brand-blue/40 font-bold uppercase text-xs tracking-widest">Ready to chill?</p>
+            <Button 
+              onClick={handleProceedToEventBuilder} 
+              size="lg"
+              className={`h-16 px-10 text-xl rounded-full transition-all duration-300 ${
+                canProceed 
+                ? 'btn-coast-primary shadow-xl hover:shadow-2xl hover:-translate-y-1' 
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }`}
+              disabled={!canProceed}
+            >
+              <ShoppingCart className="mr-2 h-5 w-5" strokeWidth={2.5} />
+              {canProceed ? 'Start Building Package' : 'Select Flavors First'}
+            </Button>
+        </div>
+
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -255,6 +254,10 @@ export default function InfaqForm() {
     setIsLoading(false);
   }
 
+  // Modern Coast Constants
+  const INPUT_STYLE = "input-coast h-12 text-brand-blue placeholder:text-brand-blue/30";
+  const LABEL_STYLE = "font-display font-bold uppercase text-brand-blue text-sm ml-1 mb-1 block";
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" ref={formRef} id="infaq-form-actual">
@@ -262,18 +265,19 @@ export default function InfaqForm() {
           control={form.control}
           name="anonymous"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-secondary/20">
+            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm bg-white/60">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="infaq-anonymous"
+                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel htmlFor="infaq-anonymous">Donate Anonymously</FormLabel>
-                <FormDescription>
+                <FormLabel htmlFor="infaq-anonymous" className="font-bold text-brand-blue cursor-pointer">Donate Anonymously</FormLabel>
+                <FormDescription className="text-brand-blue/50 text-xs">
                   Your name will be recorded as 'Anonymous Donor'.
                 </FormDescription>
               </div>
@@ -285,9 +289,9 @@ export default function InfaqForm() {
           name="donorName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Full Name (Donor) *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Your Full Name (Donor) *</FormLabel>
               <FormControl>
-                <Input placeholder="The person making this contribution" {...field} disabled={isLoading || isAnonymous} />
+                <Input placeholder="The person making this contribution" {...field} disabled={isLoading || isAnonymous} className={INPUT_STYLE} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -298,11 +302,11 @@ export default function InfaqForm() {
           name="dedicationName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Infaq On Behalf Of (Optional)</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Infaq On Behalf Of (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., A loved one, family name, an organization" {...field} disabled={isLoading} />
+                <Input placeholder="e.g., A loved one, family name, an organization" {...field} disabled={isLoading} className={INPUT_STYLE} />
               </FormControl>
-              <FormDescription>If this Infaq is dedicated to someone or a group.</FormDescription>
+              <FormDescription className="text-xs text-brand-blue/40">If this Infaq is dedicated to someone or a group.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -312,11 +316,11 @@ export default function InfaqForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Email Address *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Your Email Address *</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isLoading} />
+                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isLoading} className={INPUT_STYLE} />
               </FormControl>
-              <FormDescription>We'll send a confirmation to this email.</FormDescription>
+              <FormDescription className="text-xs text-brand-blue/40">We'll send a confirmation to this email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -326,9 +330,9 @@ export default function InfaqForm() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Phone Number *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Your Phone Number *</FormLabel>
               <FormControl>
-                <Input type="tel" placeholder="Your contact number (for WhatsApp coordination)" {...field} disabled={isLoading} />
+                <Input type="tel" placeholder="Your contact number (for WhatsApp coordination)" {...field} disabled={isLoading} className={INPUT_STYLE} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -339,16 +343,17 @@ export default function InfaqForm() {
           name="quantity"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Number of Balangs to Infaq *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Number of Balangs to Infaq *</FormLabel>
               <FormControl>
                 <Input type="number" min="1" placeholder="e.g., 1" {...field} onChange={(e) => {
                     const val = parseInt(e.target.value, 10);
                     field.onChange(val >= 1 ? val : 1);
                 }} 
                 disabled={isLoading} 
+                className={INPUT_STYLE}
                 />
               </FormControl>
-              <FormDescription>Each 23L balang is ${INFAQ_BALANG_PRICE.toFixed(2)} (approx. 60 cups).</FormDescription>
+              <FormDescription className="text-xs text-brand-blue/40">Each 23L balang is ${INFAQ_BALANG_PRICE.toFixed(2)} (approx. 60 cups).</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -357,20 +362,21 @@ export default function InfaqForm() {
           control={form.control}
           name="coverDeliveryFee"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-secondary/20">
+            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm bg-white/60">
               <FormControl>
                 <Checkbox
                   id="infaq-cover-delivery" 
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading || currentQuantity < 1}
+                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel htmlFor="infaq-cover-delivery" className={cn(currentQuantity < 1 && "text-muted-foreground/50", "cursor-pointer")}>
+                <FormLabel htmlFor="infaq-cover-delivery" className={cn(currentQuantity < 1 ? "text-muted-foreground/50" : "text-brand-blue font-bold", "cursor-pointer")}>
                   Also sponsor the ${DELIVERY_FEE.toFixed(2)} delivery fee for this slot?
                 </FormLabel>
-                <FormDescription className={cn(currentQuantity < 1 && "text-muted-foreground/50")}>
+                <FormDescription className={cn(currentQuantity < 1 ? "text-muted-foreground/50" : "text-brand-blue/50 text-xs")}>
                   If not selected, the delivery fee will be shared among all contributors. We will contact you separately for this portion of the payment.
                 </FormDescription>
               </div>
@@ -382,7 +388,7 @@ export default function InfaqForm() {
           name="mosqueName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mosque Name / Venue *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Mosque Name / Venue *</FormLabel>
               <Select 
                 onValueChange={(value) => {
                   field.onChange(value);
@@ -393,22 +399,21 @@ export default function InfaqForm() {
                 disabled={isLoading}
               >
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className={INPUT_STYLE}>
                     <SelectValue placeholder="Select a mosque" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="glass-panel-static border-none">
                   {mosqueDataList.map((mosque) => (
-                    <SelectItem key={mosque.name} value={mosque.name}>
+                    <SelectItem key={mosque.name} value={mosque.name} className="focus:bg-brand-cyan/20 cursor-pointer">
                       {mosque.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>Please select the mosque or venue for delivery.</FormDescription>
               <FormMessage />
               {selectedMosqueAddress && (
-                <p className="text-sm text-muted-foreground mt-1 pt-1 border-t border-border">
+                <p className="text-xs text-brand-blue/60 mt-1 pt-1 ml-1 font-medium">
                   Address: {selectedMosqueAddress}
                 </p>
               )}
@@ -420,7 +425,7 @@ export default function InfaqForm() {
           name="deliveryDate"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Preferred Delivery Date (Fridays Only) *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Preferred Delivery Date (Fridays Only) *</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -428,7 +433,8 @@ export default function InfaqForm() {
                       variant={"outline"}
                       className={cn(
                         "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        !field.value && "text-muted-foreground",
+                        INPUT_STYLE
                       )}
                       disabled={isLoading || isCalendarLoading}
                     >
@@ -441,7 +447,7 @@ export default function InfaqForm() {
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 glass-panel-static border-none" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}
@@ -452,12 +458,16 @@ export default function InfaqForm() {
                         { dayOfWeek: [0, 1, 2, 3, 4, 6] }
                     ]}
                     initialFocus
+                    classNames={{
+                        head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
+                        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                        day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
+                        day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
+                        day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
+                    }}
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                Select the date you'd like the Infaq Balangs to be delivered. Deliveries are only available on Fridays.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -468,16 +478,16 @@ export default function InfaqForm() {
           name="howHeard"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>How did you hear about us? *</FormLabel>
+              <FormLabel className={LABEL_STYLE}>How did you hear about us? *</FormLabel>
               <Select onValueChange={field.onChange} value={field.value || ""} disabled={isLoading}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className={INPUT_STYLE}>
                     <SelectValue placeholder="Please select one" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="glass-panel-static border-none">
                   {hearAboutUsOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
+                    <SelectItem key={option} value={option} className="focus:bg-brand-cyan/20 cursor-pointer">
                       {option}
                     </SelectItem>
                   ))}
@@ -493,29 +503,29 @@ export default function InfaqForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message / Niat / On Behalf Of (Optional)</FormLabel>
+              <FormLabel className={LABEL_STYLE}>Message / Niat / On Behalf Of (Optional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Any special requests, messages for recipients, your Niat, or if this is on behalf of someone not covered in 'Dedication Name'." className="resize-y" {...field} disabled={isLoading} />
+                <Textarea placeholder="Any special requests, messages for recipients, your Niat, or if this is on behalf of someone not covered in 'Dedication Name'." className={`${INPUT_STYLE} h-24 pt-3 resize-none`} {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="p-4 border rounded-md bg-secondary/30 space-y-1 mt-4">
-            <div className="flex justify-between text-sm">
+        <div className="p-6 rounded-2xl bg-brand-blue/5 border border-brand-blue/5 space-y-2 mt-4">
+            <div className="flex justify-between text-sm text-brand-blue/70">
                 <span>Balangs Subtotal:</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-bold">${subtotal.toFixed(2)}</span>
             </div>
             {calculatedDeliveryFee > 0 && (
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm text-brand-blue/70">
                   <span>Delivery Fee:</span>
-                  <span className="font-medium">${calculatedDeliveryFee.toFixed(2)}</span>
+                  <span className="font-bold">${calculatedDeliveryFee.toFixed(2)}</span>
               </div>
             )}
-            <hr className="my-1 border-border" />
-            <div className="flex justify-between text-lg font-bold text-primary">
-                <span>Estimated Total:</span>
+            <div className="h-px bg-brand-blue/10 my-2" />
+            <div className="flex justify-between text-xl font-black text-brand-blue uppercase tracking-tight">
+                <span>Total:</span>
                 <span>${totalPrice.toFixed(2)}</span>
             </div>
         </div>
@@ -524,17 +534,18 @@ export default function InfaqForm() {
           control={form.control}
           name="consent"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="infaq-consent"
+                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded mt-1"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <Label htmlFor="infaq-consent" className="cursor-pointer">
+                <Label htmlFor="infaq-consent" className="cursor-pointer text-sm text-brand-blue/80 font-medium leading-snug block">
                   By submitting this form, I consent to BalangConnect using my personal data to respond to my inquiry and process my request. My data will be handled in compliance with Singapore's PDPA. I acknowledge that BalangConnect will follow up by contacting me via WhatsApp/Email. *
                 </Label>
                 <FormMessage />
@@ -545,17 +556,17 @@ export default function InfaqForm() {
         
         <Button 
             type="submit" 
-            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+            className="w-full btn-coast-primary h-14 text-lg shadow-lg"
             disabled={isLoading || currentQuantity < 1 || !form.formState.isValid}
         >
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               Submitting...
             </>
           ) : (
             <>
-              Confirm Infaq Order <Send className="ml-2 h-4 w-4" />
+              Confirm Infaq Order <Send className="ml-2 h-5 w-5" strokeWidth={2.5} />
             </>
           )}
         </Button>

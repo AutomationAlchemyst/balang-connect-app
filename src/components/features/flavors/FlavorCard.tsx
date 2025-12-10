@@ -2,7 +2,7 @@ import Image from 'next/image';
 import type { Flavor } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tag, CheckCircle, PlusCircle } from 'lucide-react';
+import { Tag, Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FlavorCardProps {
@@ -13,55 +13,72 @@ interface FlavorCardProps {
 
 export default function FlavorCard({ flavor, isSelected, onToggleSelect }: FlavorCardProps) {
   return (
-    <Card className={cn(
-      "flex flex-col border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000] transition-all hover:-translate-y-2 hover:shadow-[12px_12px_0px_0px_#000000] bg-white h-full group",
-      isSelected ? "border-brand-green" : ""
-    )}>
-      <div className={cn("w-full h-4 border-b-4 border-black", flavor.color || "bg-gray-200")} />
-      <div className="relative w-full h-64 border-b-4 border-black overflow-hidden">
+    <Card 
+      className={cn(
+        "glass-panel-wet border-none overflow-hidden h-full group transition-all duration-300",
+        isSelected ? "ring-2 ring-brand-cyan shadow-lg shadow-brand-cyan/20 scale-[1.02]" : "hover:scale-[1.02]"
+      )}
+    >
+      <div className="relative w-full h-64 overflow-hidden">
         <Image
           src={flavor.imageUrl}
           alt={flavor.name}
           width={400}
           height={300}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           data-ai-hint={flavor.dataAiHint || "colorful drink"}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 to-transparent opacity-60 transition-opacity group-hover:opacity-40" />
+        
+        {/* Color Stripe Indicator */}
+        <div className={cn("absolute top-0 w-full h-1.5", flavor.color || "bg-white/20")} />
+
         {isSelected && (
-           <div className="absolute top-0 left-0 w-full h-full bg-brand-green/20 flex items-center justify-center backdrop-blur-[1px]">
-              <div className="bg-brand-green text-white border-2 border-black p-2 shadow-[4px_4px_0px_0px_#000000] transform rotate-3">
-                <CheckCircle size={32} strokeWidth={3} />
+           <div className="absolute inset-0 bg-brand-cyan/20 backdrop-blur-[2px] flex items-center justify-center animate-in fade-in duration-300">
+              <div className="bg-white text-brand-cyan rounded-full p-3 shadow-xl transform scale-110">
+                <Check size={32} strokeWidth={4} />
               </div>
            </div>
         )}
       </div>
-      <CardHeader className="flex-grow p-6 bg-[#FFFDF5]">
-        <CardTitle className="font-display font-black text-2xl uppercase mb-2">{flavor.name}</CardTitle>
-        <CardDescription className="text-black font-medium text-base">{flavor.description}</CardDescription>
+      
+      <CardHeader className="p-6 pb-2 relative z-10">
+        <CardTitle className="text-coast-heading text-xl uppercase tracking-wide leading-tight min-h-[3.5rem] flex items-end">
+           {flavor.name}
+        </CardTitle>
+        <CardDescription className="text-brand-blue/60 font-medium text-sm leading-relaxed mt-2 min-h-[3rem]">
+           {flavor.description}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="px-6 pb-2">
+      
+      <CardContent className="px-6 pb-4">
         {flavor.tags && flavor.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap gap-2">
             {flavor.tags.map((tag) => (
-              <span key={tag} className="text-xs font-bold uppercase bg-white border-2 border-black px-2 py-1 shadow-[2px_2px_0px_0px_#000000] flex items-center">
-                <Tag size={12} className="mr-1" /> {tag}
+              <span key={tag} className="text-[10px] font-bold uppercase bg-brand-blue/5 text-brand-blue px-2 py-1 rounded-full border border-brand-blue/10 flex items-center tracking-wider">
+                <Tag size={10} className="mr-1 opacity-50" /> {tag}
               </span>
             ))}
           </div>
         )}
       </CardContent>
-      <CardFooter className="p-6 pt-0">
+      
+      <CardFooter className="p-6 pt-0 mt-auto">
         <Button 
           onClick={() => onToggleSelect(flavor.id)} 
+          variant={isSelected ? "default" : "secondary"}
           className={cn(
-            "w-full font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] transition-all hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] h-12 text-base",
+            "w-full rounded-full font-bold uppercase tracking-widest h-12 text-xs transition-all duration-300 shadow-sm hover:shadow-md",
             isSelected 
-              ? "bg-brand-green text-white hover:bg-[#329A00]" 
-              : "bg-brand-cyan text-black hover:bg-[#2BC0D5]"
+              ? "bg-brand-cyan text-white hover:bg-brand-cyan/90" 
+              : "bg-white text-brand-blue hover:bg-brand-blue hover:text-white border border-brand-blue/10"
           )}
         >
-          {isSelected ? <CheckCircle className="mr-2 h-5 w-5" strokeWidth={3} /> : <PlusCircle className="mr-2 h-5 w-5" strokeWidth={3} />}
-          {isSelected ? 'Selected' : 'Add to Selection'}
+          {isSelected ? (
+             <span className="flex items-center"><Check className="mr-2 h-4 w-4" strokeWidth={3} /> Selected</span>
+          ) : (
+             <span className="flex items-center"><Plus className="mr-2 h-4 w-4" strokeWidth={3} /> Add Flavor</span>
+          )}
         </Button>
       </CardFooter>
     </Card>

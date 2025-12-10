@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogIn } from 'lucide-react';
@@ -16,9 +17,18 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex justify-center items-center py-12">
-      <Card className="w-full max-w-sm shadow-2xl">
-        <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Admin Access</CardTitle>
+      <Card className="w-full max-w-sm shadow-2xl glass-panel-wet">
+        <CardHeader className="text-center flex flex-col items-center">
+          <div className="relative h-16 w-32 mb-4">
+             <Image 
+               src="/logo.png" 
+               alt="Balang Kepalang Logo" 
+               fill 
+               className="object-contain"
+               sizes="200px"
+             />
+          </div>
+          <CardTitle className="font-headline text-3xl text-brand-blue uppercase">Admin Access</CardTitle>
           <CardDescription>Prototype Admin Login</CardDescription>
         </CardHeader>
         <CardContent>

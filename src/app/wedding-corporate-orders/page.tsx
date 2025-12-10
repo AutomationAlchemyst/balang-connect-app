@@ -10,12 +10,12 @@ import { mockFlavors } from '@/lib/data';
 import type { EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PlusCircle, MinusCircle, ShoppingCart, Zap, PackageIcon, Construction, Truck, XIcon, Check, CalendarDays, Loader2 } from 'lucide-react';
+import { PlusCircle, MinusCircle, ShoppingCart, Zap, PackageIcon, Construction, Truck, XIcon, Check, CalendarDays, Loader2, Wrench, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription as ShadDialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogDescription as ShadDialogDescription } from '@/components/ui/dialog';
 import CustomerDetailsForm from '@/components/features/event-builder/CustomerDetailsForm';
 import type { CustomerDetailsFormValues } from '@/components/features/event-builder/CustomerDetailsForm';
 import PaymentConfirmationDialog from '@/components/features/event-builder/PaymentConfirmationDialog';
@@ -37,11 +37,13 @@ export interface EventConfig {
   eventTime?: string;
 }
 
-// Neo-Brutalism Constants
-const CARD_STYLE = "bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none transition-all hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_#000000]";
-const BUTTON_BASE = "font-display font-bold uppercase border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]";
-const INPUT_STYLE = "font-body border-2 border-black rounded-none shadow-[4px_4px_0px_0px_#000000] focus-visible:ring-0 focus-visible:border-black focus:shadow-none focus:translate-x-[4px] focus:translate-y-[4px] focus:bg-[#3CD3E8] transition-all";
-const CHECKBOX_STYLE = "border-2 border-black rounded-none w-5 h-5 data-[state=checked]:bg-black data-[state=checked]:text-white";
+// MODERN COAST THEME CONSTANTS
+const CARD_STYLE = "glass-panel-wet border-none p-0 overflow-hidden";
+const CARD_HEADER_STYLE = "bg-brand-blue/5 border-b border-brand-blue/5 py-4";
+const CARD_TITLE_STYLE = "text-coast-heading text-2xl uppercase text-brand-blue";
+const BUTTON_BASE = "font-display font-bold uppercase rounded-full shadow-sm transition-all hover:shadow-md active:scale-95";
+const INPUT_STYLE = "input-coast border-brand-blue/10 bg-white/60 focus:bg-white";
+const CHECKBOX_STYLE = "border-brand-blue/30 rounded w-5 h-5 data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white";
 
 export default function CorporateOrdersPage() {
   const searchParams = useSearchParams();
@@ -480,26 +482,30 @@ export default function CorporateOrdersPage() {
   const canProceed = packageRouteValid || addonsOnlyRouteValid;
 
   return (
-    <div className="space-y-12">
-      <div className="text-center space-y-4">
-         <h1 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tighter bg-brand-cyan inline-block px-4 py-2 border-4 border-black shadow-[6px_6px_0px_0px_#000000] transform rotate-1">
-            Build Your Wedding & Corporate Package
-         </h1>
-         <p className="text-xl text-black font-body font-medium max-w-2xl mx-auto pt-4 bg-white border-2 border-black p-4 shadow-[4px_4px_0px_0px_#000000]">
-            Create the perfect beverage experience for your special event. Choose from our tailored packages and add-ons.
-         </p>
-      </div>
+    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
+      <div className="container mx-auto px-4 space-y-12">
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+           <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-2">
+              <Wrench size={14} /> Corporate & Weddings
+           </div>
+           <h1 className="text-coast-heading text-4xl md:text-6xl text-brand-blue drop-shadow-sm">
+              Tailored <span className="text-brand-cyan">Events</span>
+           </h1>
+           <p className="text-xl text-brand-blue/70 font-medium leading-relaxed">
+              Create the perfect beverage experience for your special day. Select from our premium packages below.
+           </p>
+        </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <Card className={CARD_STYLE}>
-            <CardHeader className="bg-brand-yellow border-b-4 border-black py-4">
-              <CardTitle className="font-display font-black text-2xl uppercase">1. Base Package</CardTitle>
-              <CardDescription className="text-black font-medium">
+            <CardHeader className={CARD_HEADER_STYLE}>
+              <CardTitle className={CARD_TITLE_STYLE}>1. Base Package</CardTitle>
+              <CardDescription className="text-brand-blue/60 font-medium">
                 Select a corporate/wedding package or choose 'None' to build from scratch.
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-8 space-y-4">
               <Select 
                 onValueChange={(pkgId) => {
                     if (pkgId === "none-option") {
@@ -511,37 +517,37 @@ export default function CorporateOrdersPage() {
                 }} 
                 value={selectedPackage?.id || "none-option"}
               >
-                <SelectTrigger className={`${INPUT_STYLE} h-14 text-lg font-bold text-black`}>
+                <SelectTrigger className={`${INPUT_STYLE} h-16 text-lg font-bold text-brand-blue rounded-xl`}>
                   <SelectValue placeholder="Select a package..." />
                 </SelectTrigger>
-                <SelectContent className="border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000]">
-                  <SelectItem value="none-option" className="font-body font-medium text-black focus:bg-brand-yellow focus:text-black">None (Build from scratch)</SelectItem>
+                <SelectContent className="glass-panel-wet border-none">
+                  <SelectItem value="none-option" className="font-body font-medium text-brand-blue focus:bg-brand-cyan/20">None (Build from scratch)</SelectItem>
                   {mockCorporatePackages.map(pkg => (
-                    <SelectItem key={pkg.id} value={pkg.id} className="font-body font-medium text-black focus:bg-brand-yellow focus:text-black">{pkg.name} (${pkg.price.toFixed(2)})</SelectItem>
+                    <SelectItem key={pkg.id} value={pkg.id} className="font-body font-medium text-brand-blue focus:bg-brand-cyan/20">{pkg.name} (${pkg.price.toFixed(2)})</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {selectedPackage && (
-                <div className="mt-4 p-6 bg-[#FFFDF5] border-2 border-black shadow-[4px_4px_0px_0px_#000000]">
-                  <h4 className="font-display font-bold text-xl uppercase mb-2">{selectedPackage.name}</h4>
-                  <p className="text-base text-gray-800 mb-2">{selectedPackage.description}</p>
+                <div className="mt-4 p-6 bg-brand-blue/5 rounded-2xl border border-brand-blue/10">
+                  <h4 className="font-display font-bold text-xl uppercase mb-2 text-brand-blue">{selectedPackage.name}</h4>
+                  <p className="text-base text-brand-blue/70 mb-2">{selectedPackage.description}</p>
                    {selectedPackage.isAllInclusive && (
-                      <p className="text-sm font-bold bg-green-200 border border-green-800 text-green-900 p-2 inline-block mb-2">
+                      <p className="text-sm font-bold bg-green-100 text-green-700 px-3 py-1 rounded-full inline-block mb-3 border border-green-200">
                         Includes Setup (${selectedPackage.setupFee.toFixed(2)}) + Delivery + Unlimited Cups!
                       </p>
                    )}
-                  <ul className="text-sm mt-2 space-y-1 font-mono">
-                    {selectedPackage.includedItems.map(item => <li key={item} className="flex items-center"><Check size={14} className="mr-2"/> {item}</li>)}
+                  <ul className="text-sm mt-2 space-y-2 font-medium text-brand-blue/80">
+                    {selectedPackage.includedItems.map(item => <li key={item} className="flex items-center"><Check size={14} className="mr-2 text-brand-cyan" strokeWidth={3}/> {item}</li>)}
                   </ul>
                   {selectedPackage.id === 'pkg_17l_self_pickup' && (
-                    <div className="flex items-center space-x-2 mt-6 pt-4 border-t-2 border-black border-dashed">
+                    <div className="flex items-center space-x-2 mt-6 pt-4 border-t border-brand-blue/10 border-dashed">
                       <Checkbox
                         id="delivery-opt-out"
                         checked={isDeliveryOptOut}
                         onCheckedChange={() => setIsDeliveryOptOut(!isDeliveryOptOut)}
                         className={CHECKBOX_STYLE}
                       />
-                      <Label htmlFor="delivery-opt-out" className="text-base font-bold cursor-pointer">
+                      <Label htmlFor="delivery-opt-out" className="text-base font-bold cursor-pointer text-brand-blue">
                         I want to opt-out from delivery (Self-pickup)
                       </Label>
                     </div>
@@ -553,31 +559,31 @@ export default function CorporateOrdersPage() {
 
           {selectedPackage && requiredFlavorCountForPackage > 0 && (
             <Card className={CARD_STYLE}>
-              <CardHeader className="bg-[#FF90E8] border-b-4 border-black py-4">
-                <CardTitle className="font-display font-black text-2xl uppercase">2. Choose Flavors</CardTitle>
-                <CardDescription className="text-black font-medium">
+              <CardHeader className={CARD_HEADER_STYLE}>
+                <CardTitle className={CARD_TITLE_STYLE}>2. Choose Flavors</CardTitle>
+                <CardDescription className="text-brand-blue/60 font-medium">
                    Pick {requiredFlavorCountForPackage} flavors. Repeated selections allowed.
-                   <span className="block mt-2 font-bold bg-white border-2 border-black p-1 inline-block">
+                   <span className="block mt-2 font-bold bg-brand-cyan/10 text-brand-cyan px-2 py-0.5 rounded-full inline-block text-xs uppercase tracking-wide">
                      Selected: {selectedPackageFlavors.length} / {requiredFlavorCountForPackage}
                    </span>
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="p-8 space-y-6">
                 {selectedPackageFlavors.length > 0 && (
                   <div className="space-y-3">
-                    <h4 className="font-display font-bold uppercase text-sm">Your Selections:</h4>
+                    <h4 className="font-display font-bold uppercase text-sm text-brand-blue">Your Selections:</h4>
                     <div className="flex flex-wrap gap-3">
                       {selectedPackageFlavors.map((flavorId, index) => {
                         const flavor = mockFlavors.find(f => f.id === flavorId);
                         return (
-                          <div key={`selected-pkgflavor-${flavorId}-${index}`} className="flex items-center bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_#000000] px-3 py-1 font-bold text-sm">
+                          <div key={`selected-pkgflavor-${flavorId}-${index}`} className="flex items-center bg-brand-blue text-white rounded-full px-4 py-1 font-bold text-sm shadow-md">
                             {flavor?.name || 'Unknown'}
                             <button
-                              className="ml-2 hover:text-red-600 transition-colors"
+                              className="ml-2 hover:bg-white/20 rounded-full p-0.5 transition-colors"
                               onClick={() => handleRemovePackageFlavorByIndex(index)}
                               aria-label={`Remove ${flavor?.name}`}
                             >
-                              <XIcon size={16} strokeWidth={3} />
+                              <XIcon size={14} strokeWidth={3} />
                             </button>
                           </div>
                         );
@@ -585,20 +591,20 @@ export default function CorporateOrdersPage() {
                     </div>
                   </div>
                 )}
-                {selectedPackageFlavors.length > 0 && <Separator className="bg-black h-0.5 my-4"/>}
+                {selectedPackageFlavors.length > 0 && <Separator className="bg-brand-blue/10 h-px my-4"/>}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {mockFlavors.map(flavor => {
                     const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
                     const canAddMorePackageFlavors = selectedPackageFlavors.length < requiredFlavorCountForPackage;
                     return (
-                      <div key={`avail-pkgflavor-${flavor.id}`} className="p-3 border-2 border-black flex flex-col justify-between gap-3 bg-white hover:bg-gray-50 transition-colors">
+                      <div key={`avail-pkgflavor-${flavor.id}`} className="p-4 border border-brand-blue/10 rounded-2xl flex flex-col justify-between gap-3 bg-white/50 hover:bg-white transition-all shadow-sm">
                         <div>
-                          <Label className="font-display font-bold uppercase text-sm block">{flavor.name}</Label>
-                          {count > 0 && <span className="text-xs font-bold text-green-600 bg-green-100 px-1 border border-green-600 inline-block mt-1">x{count} Selected</span>}
+                          <Label className="font-display font-bold uppercase text-sm block text-brand-blue">{flavor.name}</Label>
+                          {count > 0 && <span className="text-xs font-bold text-brand-cyan bg-brand-cyan/10 px-2 py-0.5 rounded-full inline-block mt-1">x{count}</span>}
                         </div>
                         <Button
                           size="sm"
-                          className={`${BUTTON_BASE} w-full text-xs h-8 bg-white hover:bg-brand-cyan text-black`}
+                          className={`${BUTTON_BASE} w-full text-xs h-8 bg-white border border-brand-blue/10 hover:bg-brand-cyan hover:text-white text-brand-blue`}
                           onClick={() => handleAddPackageFlavor(flavor.id)}
                           disabled={!canAddMorePackageFlavors || !selectedPackage}
                         >
@@ -613,26 +619,26 @@ export default function CorporateOrdersPage() {
           )}
           
           <Card className={CARD_STYLE}>
-            <CardHeader className="bg-[#B8FF9F] border-b-4 border-black py-4">
-              <CardTitle className="font-display font-black text-2xl uppercase">3. Add-ons</CardTitle>
-              <CardDescription className="text-black font-medium">Enhance your event with extras.</CardDescription>
+            <CardHeader className={CARD_HEADER_STYLE}>
+              <CardTitle className={CARD_TITLE_STYLE}>3. Add-ons</CardTitle>
+              <CardDescription className="text-brand-blue/60 font-medium">Enhance your event with extras.</CardDescription>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-8 space-y-4">
               {mockCorporateAddons.map(addon => (
-                <div key={addon.id} className="p-4 border-2 border-black shadow-[4px_4px_0px_0px_#000000] bg-white transition-transform hover:-translate-y-1">
+                <div key={addon.id} className="p-6 border border-brand-blue/10 rounded-2xl bg-white/40 transition-all hover:bg-white hover:shadow-lg hover:border-brand-cyan/20">
                   <div className="flex items-center justify-between gap-4">
-                    <Label htmlFor={`addon-${addon.id}`} className="flex-grow cursor-pointer">
-                       <span className="font-display font-bold uppercase text-lg block">{addon.name}</span>
-                       <p className="text-sm font-medium text-gray-600">{addon.description} (+${addon.price.toFixed(2)})</p>
+                    <Label htmlFor={`addon-${addon.id}`} className="flex-grow cursor-pointer group">
+                       <span className="font-display font-bold uppercase text-lg block text-brand-blue group-hover:text-brand-cyan transition-colors">{addon.name}</span>
+                       <p className="text-sm font-medium text-brand-blue/60">{addon.description} (+${addon.price.toFixed(2)})</p>
                     </Label>
-                    <div className="flex items-center space-x-3 flex-shrink-0">
+                    <div className="flex items-center space-x-3 flex-shrink-0 bg-white/50 p-1.5 rounded-xl border border-white">
                       {selectedAddons[addon.id] > 0 && (
                         <>
-                          <Button variant="outline" size="icon" onClick={() => handleAddonQuantityChange(addon.id, -1)} className={`${BUTTON_BASE} h-8 w-8 bg-white`} aria-label="Decrease">
+                          <Button variant="ghost" size="icon" onClick={() => handleAddonQuantityChange(addon.id, -1)} className={`${BUTTON_BASE} h-8 w-8 hover:bg-red-50 hover:text-red-500`} aria-label="Decrease">
                             <MinusCircle size={16} />
                           </Button>
-                          <span className="w-8 text-center font-display font-bold text-xl">{selectedAddons[addon.id]}</span>
-                           <Button variant="outline" size="icon" onClick={() => handleAddonQuantityChange(addon.id, 1)} className={`${BUTTON_BASE} h-8 w-8 bg-brand-yellow`} aria-label="Increase">
+                          <span className="w-8 text-center font-display font-bold text-xl text-brand-blue">{selectedAddons[addon.id]}</span>
+                           <Button variant="ghost" size="icon" onClick={() => handleAddonQuantityChange(addon.id, 1)} className={`${BUTTON_BASE} h-8 w-8 hover:bg-brand-cyan/10 hover:text-brand-cyan`} aria-label="Increase">
                             <PlusCircle size={16} />
                           </Button>
                         </>
@@ -646,29 +652,29 @@ export default function CorporateOrdersPage() {
                     </div>
                   </div>
                   { (addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l') && selectedAddons[addon.id] > 0 && (
-                    <div className="mt-4 pt-4 border-t-2 border-black border-dashed space-y-4">
-                      <h4 className="text-sm font-bold uppercase bg-black text-white px-2 py-1 inline-block transform -rotate-1">Choose Balang Flavors:</h4>
+                    <div className="mt-4 pt-4 border-t border-brand-blue/10 border-dashed space-y-4">
+                      <h4 className="text-xs font-bold uppercase bg-brand-blue/5 text-brand-blue px-2 py-1 inline-block rounded-md">Choose Balang Flavors:</h4>
                       {[...Array(selectedAddons[addon.id])].map((_, balangIndex) => {
                         const currentSelectedFlavorId = addonFlavorSelections[addon.id]?.[balangIndex];
                         const currentSelectedFlavor = currentSelectedFlavorId ? mockFlavors.find(f => f.id === currentSelectedFlavorId) : null;
                         return (
-                          <div key={`${addon.id}-balang-${balangIndex}`} className="p-3 border-2 border-black bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                              <Label className="font-bold text-sm uppercase">
+                          <div key={`${addon.id}-balang-${balangIndex}`} className="p-3 border border-brand-blue/5 rounded-xl bg-white/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <Label className="font-bold text-sm uppercase text-brand-blue">
                                 {addon.name.replace('Additional 1 x ', '')} #{balangIndex + 1}
                               </Label>
                               <div className="flex items-center gap-2">
                                 {currentSelectedFlavor ? (
-                                    <div className="flex items-center bg-brand-cyan border-2 border-black px-2 py-1 text-xs font-bold shadow-[2px_2px_0px_0px_#000000]">
+                                    <div className="flex items-center bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan px-3 py-1 text-xs font-bold rounded-full">
                                       {currentSelectedFlavor.name}
                                       <button
-                                          className="ml-2 hover:text-white"
+                                          className="ml-2 hover:text-red-500"
                                           onClick={() => handleRemoveAdditiveFlavor(addon.id, balangIndex)}
                                       >
                                           <XIcon size={12} strokeWidth={3} />
                                       </button>
                                     </div>
                                 ) : (
-                                  <span className="text-xs font-bold text-red-500 bg-red-100 px-2 border border-red-500">REQUIRED</span>
+                                  <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md border border-red-100">REQUIRED</span>
                                 )}
                               
                                 <Popover 
@@ -682,20 +688,20 @@ export default function CorporateOrdersPage() {
                                   }}
                                 >
                                   <PopoverTrigger asChild>
-                                    <Button size="sm" className={`${BUTTON_BASE} h-7 text-xs bg-white hover:bg-gray-100 px-3`}>
+                                    <Button size="sm" className={`${BUTTON_BASE} h-8 text-xs bg-white hover:bg-brand-cyan/5 px-4 rounded-full border border-brand-blue/10`}>
                                       {currentSelectedFlavorId ? "Change" : "Select"}
                                     </Button>
                                   </PopoverTrigger>
-                                  <PopoverContent className="w-[280px] p-0 border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000]" side="bottom" align="end">
-                                    <div className="p-2 bg-white">
-                                      <h4 className="text-xs font-bold uppercase mb-2 px-1 bg-brand-yellow border-b-2 border-black">Available Flavors</h4>
-                                      <div className="max-h-48 overflow-y-auto space-y-1">
+                                  <PopoverContent className="w-[280px] p-0 glass-panel-wet rounded-xl overflow-hidden" side="bottom" align="end">
+                                    <div className="p-2">
+                                      <h4 className="text-xs font-bold uppercase mb-2 px-2 py-1 bg-brand-blue/5 text-brand-blue rounded-md">Available Flavors</h4>
+                                      <div className="max-h-48 overflow-y-auto space-y-1 custom-scrollbar">
                                         {mockFlavors.map(flavor => (
                                           <Button
                                             key={`${addon.id}-balang-${balangIndex}-popoverflavor-${flavor.id}`}
                                             variant="ghost"
                                             size="sm"
-                                            className={`w-full justify-start text-left h-auto py-2 text-xs font-bold uppercase hover:bg-brand-cyan rounded-none ${currentSelectedFlavorId === flavor.id ? "bg-brand-cyan" : ""}`}
+                                            className={`w-full justify-start text-left h-auto py-2 text-xs font-bold uppercase hover:bg-brand-cyan/10 hover:text-brand-cyan rounded-lg ${currentSelectedFlavorId === flavor.id ? "bg-brand-cyan text-white hover:bg-brand-cyan hover:text-white" : "text-brand-blue/70"}`}
                                             onClick={() => {
                                               handleAdditiveFlavorSelect(addon.id, balangIndex, flavor.id);
                                               setActiveAddonFlavorPopover(null); 
@@ -722,22 +728,22 @@ export default function CorporateOrdersPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <Card className={`${CARD_STYLE} sticky top-24 bg-[#FFFDF5]`}>
-            <CardHeader className="bg-black text-white py-4 border-b-4 border-black">
+          <Card className={`${CARD_STYLE} sticky top-24 bg-white/80 backdrop-blur-md shadow-2xl`}>
+            <CardHeader className="bg-brand-blue text-white py-4">
               <CardTitle className="font-display font-black text-2xl uppercase flex items-center gap-2">
-                  <ShoppingCart className="text-brand-yellow" size={24} /> Event Summary
+                  <ShoppingCart className="text-brand-cyan" size={24} /> Summary
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
               {selectedPackage && (
                 <div className="text-sm">
-                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><PackageIcon size={16} className="mr-2" /> {selectedPackage.name}</h4>
+                  <h4 className="font-bold uppercase border-b border-brand-blue/10 pb-1 mb-2 flex items-center text-brand-blue"><PackageIcon size={16} className="mr-2" /> {selectedPackage.name}</h4>
                   <div className="pl-6 space-y-1">
-                    <p className="font-mono text-lg font-bold">
+                    <p className="font-mono text-lg font-bold text-brand-blue">
                       ${selectedPackage.price.toFixed(2)}
                     </p>
                     {selectedPackage.isAllInclusive && (
-                      <p className="text-xs text-gray-600 italic">
+                      <p className="text-xs text-brand-blue/60 italic">
                         (Includes setup, delivery & unlimited cups)
                       </p>
                     )}
@@ -747,17 +753,17 @@ export default function CorporateOrdersPage() {
               
               {displayDeliveryFee > 0 && (
                 <div className="text-sm">
-                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><Truck size={16} className="mr-2" /> Delivery</h4>
+                  <h4 className="font-bold uppercase border-b border-brand-blue/10 pb-1 mb-2 flex items-center text-brand-blue"><Truck size={16} className="mr-2" /> Delivery</h4>
                   <div className="pl-6">
-                     <p className="font-mono text-lg font-bold">${displayDeliveryFee.toFixed(2)}</p>
+                     <p className="font-mono text-lg font-bold text-brand-blue">${displayDeliveryFee.toFixed(2)}</p>
                   </div>
                 </div>
               )}
 
               {selectedPackageFlavors.length > 0 && selectedPackage && requiredFlavorCountForPackage > 0 && (
-                <div className="bg-white border-2 border-black p-3 shadow-[4px_4px_0px_0px_#000000]">
-                  <h4 className="font-bold uppercase text-xs mb-2">Package Flavors:</h4>
-                  <ul className="text-xs space-y-1">
+                <div className="bg-brand-blue/5 rounded-xl p-3 border border-brand-blue/5">
+                  <h4 className="font-bold uppercase text-xs mb-2 text-brand-blue">Package Flavors:</h4>
+                  <ul className="text-xs space-y-1 text-brand-blue/70">
                     {(() => {
                       const packageFlavorCounts: Record<string, number> = {};
                       selectedPackageFlavors.forEach(id => {
@@ -765,7 +771,7 @@ export default function CorporateOrdersPage() {
                       });
                       return Object.entries(packageFlavorCounts).map(([flavorId, count]) => {
                         const flavor = mockFlavors.find(f => f.id === flavorId);
-                        return <li key={`pkgsummary-${flavorId}`} className="flex justify-between border-b border-dashed border-gray-300 pb-1 last:border-0"><span>{flavor?.name}</span> <span className="font-bold">x{count}</span></li>;
+                        return <li key={`pkgsummary-${flavorId}`} className="flex justify-between border-b border-dashed border-brand-blue/10 pb-1 last:border-0"><span>{flavor?.name}</span> <span className="font-bold">x{count}</span></li>;
                       });
                     })()}
                   </ul>
@@ -774,7 +780,7 @@ export default function CorporateOrdersPage() {
 
               {Object.keys(selectedAddons).filter(key => selectedAddons[key] > 0).length > 0 && (
                 <div>
-                  <h4 className="font-bold uppercase border-b-2 border-black pb-1 mb-2 flex items-center"><Construction size={16} className="mr-2" /> Add-ons</h4>
+                  <h4 className="font-bold uppercase border-b border-brand-blue/10 pb-1 mb-2 flex items-center text-brand-blue"><Construction size={16} className="mr-2" /> Add-ons</h4>
                   <div className="space-y-2 mt-2">
                     {Object.entries(selectedAddons).map(([addonId, quantity]) => {
                       if (quantity === 0) return null;
@@ -787,13 +793,13 @@ export default function CorporateOrdersPage() {
                       );
 
                       return (
-                        <div key={addonId} className="bg-white border-2 border-black p-3 shadow-[4px_4px_0px_0px_#000000]">
-                          <div className="flex justify-between text-sm font-bold uppercase mb-1">
+                        <div key={addonId} className="bg-white border border-brand-blue/10 rounded-xl p-3 shadow-sm">
+                          <div className="flex justify-between text-sm font-bold uppercase mb-1 text-brand-blue">
                             <span>{addon.name} (x{quantity})</span>
                             <span className="font-mono">${(addon.price * quantity).toFixed(2)}</span>
                           </div>
                           {isBalangAddon && flavorsForThisAddon && flavorsForThisAddon.some(name => name) && (
-                            <ul className="list-disc list-inside text-xs pl-2 text-gray-600 bg-gray-50 border-t border-gray-200 mt-1 pt-1">
+                            <ul className="list-disc list-inside text-xs pl-2 text-brand-blue/60 bg-gray-50 rounded-lg p-2 mt-1">
                               {flavorsForThisAddon.map((flavorName, index) => (
                                 flavorName ? <li key={`${addonId}-summaryflavor-${index}`}>{flavorName}</li> : null
                               ))}
@@ -806,17 +812,17 @@ export default function CorporateOrdersPage() {
                 </div>
               )}
               
-              <div className="border-t-4 border-black pt-4 mt-4">
+              <div className="border-t border-brand-blue/10 pt-4 mt-4">
                 <div className="flex justify-between items-center">
-                  <span className="font-display font-black uppercase text-xl">Total:</span>
-                  <span className="font-mono font-bold text-3xl bg-brand-yellow px-2 border-2 border-black shadow-[4px_4px_0px_0px_#000000]">${totalPrice.toFixed(2)}</span>
+                  <span className="font-display font-black uppercase text-xl text-brand-blue">Total:</span>
+                  <span className="font-mono font-bold text-3xl bg-brand-yellow px-3 py-1 rounded-xl text-brand-blue shadow-sm">${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="p-6 pt-0">
               <Button 
                 size="lg" 
-                className={`${BUTTON_BASE} w-full bg-brand-cyan hover:bg-[#2BC0D5] text-black h-16 text-xl`}
+                className={`${BUTTON_BASE} w-full btn-coast-primary h-14 text-xl shadow-lg`}
                 onClick={handleProceedToBook}
                 disabled={!canProceed || isCalendarDataLoading}
               >
@@ -832,16 +838,19 @@ export default function CorporateOrdersPage() {
       </div>
 
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh] bg-white border-4 border-black shadow-[12px_12px_0px_0px_#000000] p-0 gap-0">
-          <DialogHeader className="p-6 border-b-4 border-black bg-brand-yellow">
-            <DialogTitle className="font-display font-black text-2xl uppercase flex items-center">
-              <CalendarDays className="mr-3 h-8 w-8" strokeWidth={2.5} /> Select Date &amp; Time
+        <DialogContent className="sm:max-w-md md:max-w-lg flex flex-col max-h-[90vh] glass-panel-static border-none p-0 gap-0 overflow-hidden">
+          <DialogHeader className="p-6 bg-brand-blue/5 border-b border-brand-blue/5">
+            <DialogTitle className="font-display font-black text-2xl uppercase flex items-center text-brand-blue">
+              <CalendarDays className="mr-3 h-8 w-8 text-brand-cyan" strokeWidth={2.5} /> Select Date
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Choose a date and time slot for your event.
+            </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-grow min-h-0 overflow-y-auto p-6 bg-[#FFFDF5]">
+          <div className="flex-grow min-h-0 overflow-y-auto p-6 bg-white/50">
             <div className="flex flex-col gap-6">
-              <div className="border-4 border-black shadow-[4px_4px_0px_0px_#000000] bg-white p-2">
+              <div className="bg-white rounded-3xl p-4 shadow-sm border border-brand-blue/5">
                 <Calendar
                   mode="single"
                   selected={selectedEventDate}
@@ -849,23 +858,23 @@ export default function CorporateOrdersPage() {
                   disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
                   className="w-full"
                   classNames={{
-                    head_cell: "text-black font-bold uppercase",
-                    cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-yellow hover:font-bold hover:border-2 hover:border-black rounded-none transition-all",
-                    day_selected: "bg-brand-cyan text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_#000000]",
-                    day_today: "bg-gray-100 text-black font-bold",
+                    head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
+                    cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
+                    day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
+                    day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
                   }}
                 />
               </div>
               <div className="space-y-3">
-                <Label className="font-display font-bold uppercase text-lg block bg-black text-white px-2 py-1 transform -rotate-1 inline-block">Available Time Slots</Label>
+                <Label className="font-display font-bold uppercase text-xs text-brand-blue/60 tracking-widest block ml-2">Available Time Slots</Label>
                 <div className="grid grid-cols-3 gap-3">
                   {EVENT_TIME_SLOTS.map((time) => (
                     <Button
                       key={time}
                       variant="ghost"
                       onClick={() => setSelectedEventTime(time)}
-                      className={`${BUTTON_BASE} h-10 text-xs bg-white hover:bg-brand-cyan text-black ${selectedEventTime === time ? "bg-brand-cyan translate-x-[2px] translate-y-[2px] shadow-none" : ""}`}
+                      className={`${BUTTON_BASE} h-10 text-xs bg-white border border-brand-blue/10 hover:bg-brand-cyan hover:text-white text-brand-blue rounded-xl ${selectedEventTime === time ? "bg-brand-cyan text-white shadow-md border-transparent" : ""}`}
                     >
                       {time}
                     </Button>
@@ -875,10 +884,10 @@ export default function CorporateOrdersPage() {
             </div>
           </div>
 
-          <DialogFooter className="border-t-4 border-black p-6 bg-gray-50 flex-col sm:flex-row gap-3">
-            <Button variant="outline" onClick={() => setIsDateTimeModalOpen(false)} className={`${BUTTON_BASE} bg-white hover:bg-gray-200 w-full sm:w-auto`}>Back</Button>
+          <DialogFooter className="border-t border-brand-blue/5 p-6 bg-white/50 flex-col sm:flex-row gap-3">
+            <Button variant="ghost" onClick={() => setIsDateTimeModalOpen(false)} className={`${BUTTON_BASE} hover:bg-white text-brand-blue w-full sm:w-auto`}>Back</Button>
             <Button 
-              className={`${BUTTON_BASE} bg-brand-green text-white hover:bg-[#329A00] w-full sm:w-auto flex-1`}
+              className={`btn-coast-primary w-full sm:w-auto flex-1`}
               onClick={handleDateTimeSubmit}
               disabled={!selectedEventDate || !selectedEventTime}
             >
@@ -889,8 +898,12 @@ export default function CorporateOrdersPage() {
       </Dialog>
 
       <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-        <DialogContent className="sm:max-w-[600px] flex flex-col max-h-[90vh] overflow-hidden p-0 border-none bg-transparent shadow-none">
-          <div className="h-full overflow-y-auto">
+        <DialogContent className="sm:max-w-[600px] flex flex-col p-0 border-none bg-transparent shadow-none max-h-[90vh] overflow-hidden">
+          <DialogHeader className="sr-only">
+              <DialogTitle>Customer Details</DialogTitle>
+              <DialogDescription>Please enter your contact information to complete the booking.</DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto glass-panel-static rounded-[2rem]">
              <CustomerDetailsForm 
               onSubmit={handleCustomerDetailsSubmit} 
               onCancel={() => setIsCustomerDetailsModalOpen(false)}
@@ -917,6 +930,7 @@ export default function CorporateOrdersPage() {
           customerDetails={customerDetailsForPayment}
         />
       )}
+    </div>
     </div>
   );
 }

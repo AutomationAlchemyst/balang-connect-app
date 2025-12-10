@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import SectionTitle from '@/components/ui/SectionTitle';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -19,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Send, Loader2, MessageSquarePlus } from 'lucide-react';
+import { Send, Loader2, MessageSquarePlus, PenTool } from 'lucide-react';
 import { useState } from 'react';
 
 const storyFormSchema = z.object({
@@ -58,117 +57,136 @@ export default function ShareStoryPage() {
     });
     form.reset();
     setIsLoading(false);
-    router.push('/community'); // Redirect to community page after submission
+    router.push('/community'); 
   }
 
+  // Modern Coast Theme Constants
+  const INPUT_STYLE = "input-coast h-12 text-brand-blue placeholder:text-brand-blue/30";
+  const LABEL_STYLE = "font-display font-bold uppercase text-brand-blue text-sm ml-1";
+
   return (
-    <div className="space-y-12 max-w-2xl mx-auto pb-12">
-      <SectionTitle>Share Your Experience</SectionTitle>
-      
-      <Card>
-        <CardHeader className="bg-brand-cyan border-b-4 border-black">
-          <CardTitle className="flex items-center text-2xl">
-             <MessageSquarePlus className="mr-3 h-8 w-8 text-black" strokeWidth={2.5} /> Tell Us Your Story
-          </CardTitle>
-          <CardDescription className="text-black font-medium mt-2">
-             Share your experience with BalangConnect and become a part of our community stories.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="userName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold uppercase">Your Name *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="E.G., SITI & AHMAD" {...field} disabled={isLoading} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold uppercase">Your Email *</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="YOUR.EMAIL@EXAMPLE.COM" {...field} disabled={isLoading} />
-                    </FormControl>
-                    <FormDescription>Used for verification, will not be publicly displayed.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="eventName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold uppercase">Event Name (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="E.G., OUR WEDDING DAY" {...field} disabled={isLoading} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="story"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold uppercase">Your Story *</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="SHARE YOUR EXPERIENCE..."
-                        className="resize-y"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-bold uppercase">Image URL (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="HTTPS://EXAMPLE.COM/YOUR-IMAGE.JPG" {...field} disabled={isLoading} />
-                    </FormControl>
-                    <FormDescription>Link to an image that captures your moment.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button 
-                type="submit" 
-                className="w-full bg-brand-green text-white hover:bg-[#329A00] h-12 text-lg"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    Submit Your Story <Send className="ml-2 h-5 w-5" strokeWidth={2.5} />
-                  </>
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
+      <div className="container mx-auto px-4">
+        
+        <div className="max-w-2xl mx-auto space-y-8">
+           <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-4">
+                  <PenTool size={14} /> Write to us
+              </div>
+              <h1 className="text-coast-heading text-4xl md:text-5xl text-brand-blue">Share Your <span className="text-brand-cyan">Experience</span></h1>
+           </div>
+
+           <Card className="glass-panel-wet border-none shadow-2xl p-4 md:p-8">
+            <CardHeader className="text-center pb-8 border-b border-brand-blue/5 mb-8">
+              <CardTitle className="font-display font-black text-2xl text-brand-blue uppercase flex items-center justify-center gap-3">
+                 <MessageSquarePlus className="text-brand-cyan h-8 w-8" /> Tell Us Your Story
+              </CardTitle>
+              <CardDescription className="text-brand-blue/60 font-medium mt-2 max-w-md mx-auto">
+                 Share your experience with BalangConnect and become a part of our community stories.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="userName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className={LABEL_STYLE}>Your Name *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="E.G., SITI & AHMAD" className={INPUT_STYLE} {...field} disabled={isLoading} />
+                          </FormControl>
+                          <FormMessage className="text-red-500 font-bold text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className={LABEL_STYLE}>Your Email *</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="YOUR.EMAIL@EXAMPLE.COM" className={INPUT_STYLE} {...field} disabled={isLoading} />
+                          </FormControl>
+                          <FormMessage className="text-red-500 font-bold text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="eventName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={LABEL_STYLE}>Event Name (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="E.G., OUR WEDDING DAY" className={INPUT_STYLE} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormMessage className="text-red-500 font-bold text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="story"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={LABEL_STYLE}>Your Story *</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="SHARE YOUR EXPERIENCE..."
+                            className={`${INPUT_STYLE} h-40 pt-4 resize-none`}
+                            {...field}
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-500 font-bold text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={LABEL_STYLE}>Image URL (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="HTTPS://EXAMPLE.COM/YOUR-IMAGE.JPG" className={INPUT_STYLE} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormDescription className="text-brand-blue/40 text-xs font-bold uppercase tracking-wide">Link to an image that captures your moment.</FormDescription>
+                        <FormMessage className="text-red-500 font-bold text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="pt-4">
+                    <Button 
+                      type="submit" 
+                      className="btn-coast-primary w-full h-14 text-lg shadow-lg"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Submit Your Story <Send className="ml-2 h-5 w-5" strokeWidth={2.5} />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

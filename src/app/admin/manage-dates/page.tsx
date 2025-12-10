@@ -110,8 +110,8 @@ export default function ManageDatesPage() {
 
     if (isAdmin !== true) {
         return (
-            <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="flex justify-center items-center py-12 min-h-screen bg-coast-gradient">
+                <Loader2 className="h-8 w-8 animate-spin text-brand-cyan" />
             </div>
         );
     }
@@ -119,104 +119,113 @@ export default function ManageDatesPage() {
     const blockedDateObjects = blockedDates.map(d => d.date);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 bg-coast-gradient min-h-screen -mt-4 pt-8 pb-12 px-4">
             <SectionTitle>Manage Blocked Dates</SectionTitle>
-             <Alert>
-                <Ban className="h-4 w-4" />
-                <AlertTitle>How to use this page</AlertTitle>
-                <AlertDescription>
-                    Select one or more dates on the calendar below. Blocked dates will appear in red. You can select existing red dates to unblock them, or select available dates to block them. Use the buttons to confirm your action. You can also manage all blocked dates in the list view at the bottom.
-                </AlertDescription>
-            </Alert>
+             <div className="glass-panel-static p-6 flex items-start gap-4">
+                <div className="bg-brand-blue/10 p-2 rounded-full text-brand-blue">
+                    <Ban className="h-5 w-5" />
+                </div>
+                <div>
+                    <h4 className="font-display font-bold uppercase text-brand-blue text-sm mb-1">How to use this page</h4>
+                    <p className="text-brand-blue/70 text-sm leading-relaxed">
+                        Select dates on the calendar to block/unblock. Red dates are blocked. Use the list below to remove specific blocks.
+                    </p>
+                </div>
+            </div>
 
             {fetchError && (
-                <Alert variant="destructive">
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>Error Loading Data</AlertTitle>
-                    <AlertDescription>
-                        <p className="mb-2">There was a problem fetching the blocked dates from your Firestore database.</p>
-                        <pre className="mt-2 whitespace-pre-wrap rounded-md bg-destructive/10 p-4 font-mono text-xs text-destructive-foreground">
-                            {fetchError}
-                        </pre>
-                    </AlertDescription>
-                </Alert>
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-600">
+                    <div className="flex items-center gap-2 font-bold mb-2">
+                        <AlertTriangle className="h-5 w-5" /> Error Loading Data
+                    </div>
+                    <p className="text-sm">{fetchError}</p>
+                </div>
             )}
 
-            <Card>
+            <Card className="glass-panel-static border-none">
                 <CardHeader>
-                    <CardTitle>Date Selection</CardTitle>
-                    <CardDescription>Select dates to block or unblock. Currently blocked dates are highlighted.</CardDescription>
+                    <CardTitle className="text-coast-heading text-xl">Date Selection</CardTitle>
+                    <CardDescription className="text-brand-blue/60">Select dates to block or unblock.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col md:flex-row gap-8 items-start">
-                     <Calendar
-                        mode="multiple"
-                        selected={selectedDates}
-                        onSelect={setSelectedDates}
-                        disabled={isLoading || !!fetchError}
-                        modifiers={{ blocked: blockedDateObjects }}
-                        modifiersStyles={{
-                            blocked: {
-                                color: 'hsl(var(--destructive-foreground))',
-                                backgroundColor: 'hsl(var(--destructive))',
-                                opacity: 1,
-                            }
-                        }}
-                        className="rounded-md border"
-                    />
+                     <div className="p-4 bg-white/60 rounded-3xl border border-brand-blue/5 shadow-sm">
+                         <Calendar
+                            mode="multiple"
+                            selected={selectedDates}
+                            onSelect={setSelectedDates}
+                            disabled={isLoading || !!fetchError}
+                            modifiers={{ blocked: blockedDateObjects }}
+                            modifiersStyles={{
+                                blocked: {
+                                    color: 'white',
+                                    backgroundColor: '#ef4444', // Red-500
+                                    opacity: 1,
+                                    borderRadius: '100%',
+                                }
+                            }}
+                            className="rounded-md"
+                            classNames={{
+                                head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
+                                cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                                day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
+                                day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
+                                day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
+                            }}
+                        />
+                     </div>
                     <div className="space-y-4 flex-grow w-full">
                         <div>
-                            <Label htmlFor="reason">Reason for Blocking (Optional)</Label>
+                            <Label htmlFor="reason" className="font-display font-bold uppercase text-brand-blue text-sm ml-1">Reason (Optional)</Label>
                             <Input 
                                 id="reason" 
                                 value={reason} 
                                 onChange={(e) => setReason(e.target.value)} 
-                                placeholder="e.g., Public Holiday, Fully Booked"
+                                placeholder="e.g., Public Holiday"
                                 disabled={isLoading || !!fetchError}
+                                className="input-coast h-12 mt-1"
                             />
                         </div>
-                        <Button onClick={handleBlockDates} className="w-full" disabled={isLoading || !selectedDates?.length || !!fetchError}>
+                        <Button onClick={handleBlockDates} className="w-full btn-coast-primary h-12 shadow-md" disabled={isLoading || !selectedDates?.length || !!fetchError}>
                             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Ban className="mr-2 h-4 w-4" />}
-                            Block Selected Dates
+                            Block Selected
                         </Button>
-                        <Button onClick={handleUnblockDates} variant="outline" className="w-full" disabled={isLoading || !selectedDates?.length || !!fetchError}>
+                        <Button onClick={handleUnblockDates} variant="outline" className="w-full rounded-full border-brand-blue/20 text-brand-blue hover:bg-white h-12 font-bold uppercase" disabled={isLoading || !selectedDates?.length || !!fetchError}>
                             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
-                            Unblock Selected Dates
+                            Unblock Selected
                         </Button>
                     </div>
                 </CardContent>
             </Card>
 
-            <Separator />
+            <Separator className="bg-brand-blue/10" />
 
-            <Card>
+            <Card className="glass-panel-static border-none">
                 <CardHeader>
-                    <CardTitle className="flex items-center"><CalendarOff className="mr-2 h-6 w-6"/>Currently Blocked Dates</CardTitle>
-                    <CardDescription>A list of all dates currently blocked in the system. Unblock them individually here.</CardDescription>
+                    <CardTitle className="text-coast-heading text-xl flex items-center gap-2"><CalendarOff className="h-5 w-5"/> Currently Blocked</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {blockedDates.length > 0 ? (
-                        <ul className="space-y-2 max-h-96 overflow-y-auto pr-2">
+                        <ul className="space-y-2 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                             {blockedDates.sort((a, b) => a.date.getTime() - b.date.getTime()).map((blockedDate) => (
-                                <li key={blockedDate.id} className="flex items-center justify-between p-3 border rounded-md bg-secondary/30 hover:bg-secondary/50">
+                                <li key={blockedDate.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/40 border border-brand-blue/5 hover:bg-white/60 transition-colors">
                                     <div>
-                                        <p className="font-semibold text-primary">{format(blockedDate.date, "PPP")}</p>
-                                        <p className="text-sm text-muted-foreground">{blockedDate.reason || "No reason provided"}</p>
+                                        <p className="font-bold text-brand-blue">{format(blockedDate.date, "PPP")}</p>
+                                        <p className="text-xs text-brand-blue/60 uppercase tracking-wide">{blockedDate.reason || "No reason"}</p>
                                     </div>
                                     <Button
-                                        variant="destructive"
+                                        variant="ghost"
                                         size="sm"
                                         onClick={() => handleUnblockSingleDate(blockedDate.id)}
                                         disabled={isLoading}
-                                        aria-label={`Unblock ${format(blockedDate.date, "PPP")}`}
+                                        className="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full"
                                     >
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        Unblock
+                                        <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-muted-foreground text-center py-4">No dates are currently blocked.</p>
+                        <p className="text-brand-blue/40 font-medium text-center py-8">No dates are currently blocked.</p>
                     )}
                 </CardContent>
             </Card>
