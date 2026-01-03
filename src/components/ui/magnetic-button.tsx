@@ -1,13 +1,13 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const MagneticButton = ({
     children,
     className,
     ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+}: HTMLMotionProps<"button">) => {
     const ref = useRef<HTMLButtonElement>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
