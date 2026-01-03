@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -9,14 +9,32 @@ import { mockPackages, mockAddons, mockFlavors } from '@/lib/data';
 import type { EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PlusCircle, MinusCircle, ShoppingCart, Zap, PackageIcon, Construction, Truck, XIcon, Check, CalendarDays, Loader2, ArrowRight, Info, Waves } from 'lucide-react';
+import {
+  PlusCircle,
+  MinusCircle,
+  ShoppingCart,
+  Zap,
+  XIcon,
+  Check,
+  CalendarDays,
+  Loader2,
+  ArrowRight,
+  Info,
+  Waves,
+  Sparkles,
+  Droplets,
+  ChevronRight,
+  Package as PackageIcon, // Renamed to avoid conflict with type EventPackage
+  Truck
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogDescription as ShadDialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import CustomerDetailsForm from '@/components/features/event-builder/CustomerDetailsForm';
 import type { CustomerDetailsFormValues } from '@/components/features/event-builder/CustomerDetailsForm';
+import { WavyBackground } from '@/components/ui/wavy-background';
 import PaymentConfirmationDialog from '@/components/features/event-builder/PaymentConfirmationDialog';
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -45,7 +63,7 @@ export default function EventBuilderPage() {
   const { toast } = useToast();
 
   const [selectedPackage, setSelectedPackage] = useState<EventPackage | null>(null);
-  const [selectedPackageFlavors, setSelectedPackageFlavors] = useState<string[]>([]); 
+  const [selectedPackageFlavors, setSelectedPackageFlavors] = useState<string[]>([]);
   const [selectedAddons, setSelectedAddons] = useState<Record<string, number>>({});
   const [addonFlavorSelections, setAddonFlavorSelections] = useState<Record<string, (string | undefined)[]>>({});
   const [totalPrice, setTotalPrice] = useState(0);
@@ -56,16 +74,16 @@ export default function EventBuilderPage() {
   const [isDateTimeModalOpen, setIsDateTimeModalOpen] = useState(false);
   const [selectedEventDate, setSelectedEventDate] = useState<Date | undefined>(undefined);
   const [selectedEventTime, setSelectedEventTime] = useState<string | undefined>(undefined);
-  
+
   const [isCustomerDetailsModalOpen, setIsCustomerDetailsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentEventConfig, setCurrentEventConfig] = useState<EventConfig | null>(null);
 
   const [customerDetailsForPayment, setCustomerDetailsForPayment] = useState<CustomerDetailsFormValues | null>(null);
-  const [isDeliveryOptOut, setIsDeliveryOptOut] = useState(false);
+  const [isDeliveryRequested, setIsDeliveryRequested] = useState(false);
 
   useEffect(() => {
-    setIsDeliveryOptOut(false);
+    setIsDeliveryRequested(false);
   }, [selectedPackage]);
 
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
@@ -73,20 +91,20 @@ export default function EventBuilderPage() {
 
   useEffect(() => {
     const fetchBlockedDates = async () => {
-        setIsCalendarDataLoading(true);
-        try {
-            const dates = await getBlockedDates();
-            setBlockedDates(dates.map(d => d.date));
-        } catch (error) {
-            console.error("Failed to fetch blocked dates for event builder:", error);
-            toast({
-                title: "Could not load calendar",
-                description: "Failed to fetch blocked dates. Please try refreshing.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsCalendarDataLoading(false);
-        }
+      setIsCalendarDataLoading(true);
+      try {
+        const dates = await getBlockedDates();
+        setBlockedDates(dates.map(d => d.date));
+      } catch (error) {
+        console.error("Failed to fetch blocked dates for event builder:", error);
+        toast({
+          title: "Could not load calendar",
+          description: "Failed to fetch blocked dates. Please try refreshing.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsCalendarDataLoading(false);
+      }
     };
 
     fetchBlockedDates();
@@ -96,18 +114,18 @@ export default function EventBuilderPage() {
     if (selectedPackage) {
       const flavorChoiceItem = selectedPackage.includedItems.find(item => /choice of (\d+) flavor/i.test(item.toLowerCase()));
       if (flavorChoiceItem) {
-          const match = flavorChoiceItem.match(/choice of (\d+) flavor/i);
-          if (match && match[1]) return parseInt(match[1], 10);
+        const match = flavorChoiceItem.match(/choice of (\d+) flavor/i);
+        if (match && match[1]) return parseInt(match[1], 10);
       }
       const balangCountItem = selectedPackage.includedItems.find(item => item.toLowerCase().includes('balang'));
       if (balangCountItem) {
-          const match = balangCountItem.match(/(\d+)\s*x\s*\d+L\s*Balang/i);
-          if (match && match[1]) return parseInt(match[1], 10);
+        const match = balangCountItem.match(/(\d+)\s*x\s*\d+L\s*Balang/i);
+        if (match && match[1]) return parseInt(match[1], 10);
       }
     }
     return 0;
   }, [selectedPackage]);
-  
+
   const handleAddPackageFlavor = useCallback((flavorId: string) => {
     setSelectedPackageFlavors(prevFlavors => {
       const currentMaxFlavors = getMaxFlavors();
@@ -115,12 +133,12 @@ export default function EventBuilderPage() {
         return [...prevFlavors, flavorId];
       } else {
         const flavorDetails = mockFlavors.find(f => f.id === flavorId);
-         setTimeout(() => { 
-            toast({
-                title: "Package Flavor Limit Reached",
-                description: `Cannot add '${flavorDetails?.name || 'Unknown Flavor'}'. Your selected package allows a maximum of ${currentMaxFlavors} flavors.`,
-                variant: "destructive",
-            });
+        setTimeout(() => {
+          toast({
+            title: "Package Flavor Limit Reached",
+            description: `Cannot add '${flavorDetails?.name || 'Unknown Flavor'}'. Your selected package allows a maximum of ${currentMaxFlavors} flavors.`,
+            variant: "destructive",
+          });
         }, 0);
         return prevFlavors;
       }
@@ -130,7 +148,7 @@ export default function EventBuilderPage() {
   const handleRemovePackageFlavorByIndex = (indexToRemove: number) => {
     setSelectedPackageFlavors(prev => prev.filter((_, index) => index !== indexToRemove));
   };
-  
+
   useEffect(() => {
     setSelectedPackageFlavors([]);
   }, [selectedPackage]);
@@ -143,7 +161,7 @@ export default function EventBuilderPage() {
       if (packageToSet && selectedPackage?.id !== packageToSet.id) {
         setSelectedPackage(packageToSet);
       }
-      
+
       const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
       if (currentParams.has('defaultPackageId')) {
         currentParams.delete('defaultPackageId');
@@ -151,62 +169,62 @@ export default function EventBuilderPage() {
         router.replace(`/event-builder${queryString ? `?${queryString}` : ''}`, { scroll: false });
       }
     }
-  }, [searchParams, router, selectedPackage?.id]); 
+  }, [searchParams, router, selectedPackage?.id]);
 
   useEffect(() => {
     const flavorIdsToAddParam = searchParams.get('addFlavorIds');
     const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
-    
-    if (flavorIdsToAddParam && selectedPackage) {
-        const flavorIdsFromUrl = flavorIdsToAddParam.split(',');
-        const maxPackageFlavors = getMaxFlavors();
-        const couldNotAddFlavors: string[] = [];
-        
-        setSelectedPackageFlavors(currentFlavors => {
-            let newFlavorsState = [...currentFlavors]; 
-            for (const idFromUrl of flavorIdsFromUrl) {
-                if (newFlavorsState.length < maxPackageFlavors) {
-                    if (!newFlavorsState.includes(idFromUrl)) { 
-                        newFlavorsState.push(idFromUrl);
-                    } else {
-                        newFlavorsState.push(idFromUrl);
-                    }
-                } else {
-                    const flavorDetails = mockFlavors.find(f => f.id === idFromUrl);
-                    couldNotAddFlavors.push(flavorDetails?.name || idFromUrl);
-                }
-            }
-            return newFlavorsState.slice(0, maxPackageFlavors);
-        });
 
-        if (couldNotAddFlavors.length > 0) {
-            setTimeout(() => {
-                toast({
-                    title: `Package Flavor Limit Reached`,
-                    description: `Could not add: ${couldNotAddFlavors.join(', ')}. '${selectedPackage.name}' allows ${maxPackageFlavors} flavor(s). Others were added if space allowed.`,
-                    variant: "destructive",
-                });
-            }, 0);
+    if (flavorIdsToAddParam && selectedPackage) {
+      const flavorIdsFromUrl = flavorIdsToAddParam.split(',');
+      const maxPackageFlavors = getMaxFlavors();
+      const couldNotAddFlavors: string[] = [];
+
+      setSelectedPackageFlavors(currentFlavors => {
+        let newFlavorsState = [...currentFlavors];
+        for (const idFromUrl of flavorIdsFromUrl) {
+          if (newFlavorsState.length < maxPackageFlavors) {
+            if (!newFlavorsState.includes(idFromUrl)) {
+              newFlavorsState.push(idFromUrl);
+            } else {
+              newFlavorsState.push(idFromUrl);
+            }
+          } else {
+            const flavorDetails = mockFlavors.find(f => f.id === idFromUrl);
+            couldNotAddFlavors.push(flavorDetails?.name || idFromUrl);
+          }
         }
-        
-        if (currentParams.has('addFlavorIds')) {
-            currentParams.delete('addFlavorIds');
-            const queryString = currentParams.toString();
-            router.replace(`/event-builder${queryString ? `?${queryString}` : ''}`, { scroll: false });
-        }
-    } else if (flavorIdsToAddParam && !selectedPackage && !currentParams.has('defaultPackageId')) {
+        return newFlavorsState.slice(0, maxPackageFlavors);
+      });
+
+      if (couldNotAddFlavors.length > 0) {
         setTimeout(() => {
-            toast({
-                title: "Select a Package",
-                description: "Please select a base package to add these flavors.",
-                variant: "default", 
-            });
+          toast({
+            title: `Package Flavor Limit Reached`,
+            description: `Could not add: ${couldNotAddFlavors.join(', ')}. '${selectedPackage.name}' allows ${maxPackageFlavors} flavor(s). Others were added if space allowed.`,
+            variant: "destructive",
+          });
         }, 0);
-        if (currentParams.has('addFlavorIds')) {
-            currentParams.delete('addFlavorIds');
-            const queryString = currentParams.toString();
-            router.replace(`/event-builder${queryString ? `?${queryString}` : ''}`, { scroll: false });
-        }
+      }
+
+      if (currentParams.has('addFlavorIds')) {
+        currentParams.delete('addFlavorIds');
+        const queryString = currentParams.toString();
+        router.replace(`/event-builder${queryString ? `?${queryString}` : ''}`, { scroll: false });
+      }
+    } else if (flavorIdsToAddParam && !selectedPackage && !currentParams.has('defaultPackageId')) {
+      setTimeout(() => {
+        toast({
+          title: "Select a Package",
+          description: "Please select a base package to add these flavors.",
+          variant: "default",
+        });
+      }, 0);
+      if (currentParams.has('addFlavorIds')) {
+        currentParams.delete('addFlavorIds');
+        const queryString = currentParams.toString();
+        router.replace(`/event-builder${queryString ? `?${queryString}` : ''}`, { scroll: false });
+      }
     }
   }, [searchParams, router, selectedPackage, getMaxFlavors, toast]);
 
@@ -235,16 +253,16 @@ export default function EventBuilderPage() {
         }
       });
     }
-    
+
     if (addonsSelectedList.length > 0 && (!selectedPackage || (selectedPackage && !selectedPackage.isAllInclusive))) {
-      if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
+      if (selectedPackage?.id === 'pkg_17l_self_pickup' && !isDeliveryRequested) {
         // Do not add delivery fee
       } else {
         currentTotal += deliveryFee;
         deliveryFeeApplied = true;
       }
-    } else if (selectedPackage && !selectedPackage.isAllInclusive) { 
-      if(selectedPackage?.id === 'pkg_17l_self_pickup' && isDeliveryOptOut) {
+    } else if (selectedPackage && !selectedPackage.isAllInclusive) {
+      if (selectedPackage?.id === 'pkg_17l_self_pickup' && !isDeliveryRequested) {
         // Do not add delivery fee
       } else {
         currentTotal += deliveryFee;
@@ -254,8 +272,8 @@ export default function EventBuilderPage() {
 
 
     setTotalPrice(currentTotal);
-    setDisplayDeliveryFee(deliveryFeeApplied ? deliveryFee : 0); 
-  }, [selectedPackage, selectedAddons, deliveryFee, isDeliveryOptOut]);
+    setDisplayDeliveryFee(deliveryFeeApplied ? deliveryFee : 0);
+  }, [selectedPackage, selectedAddons, deliveryFee, isDeliveryRequested]);
 
   useEffect(() => {
     setAddonFlavorSelections(prevSelections => {
@@ -277,31 +295,31 @@ export default function EventBuilderPage() {
           nextState[addonId] = newFlavorsForAddon;
         }
       }
-      
+
       for (const addonId in prevSelections) {
-          if (balangAddonIds.includes(addonId) && (!selectedAddons[addonId] || selectedAddons[addonId] === 0)) {
-              hasChanged = true; 
-          } else if (balangAddonIds.includes(addonId) && selectedAddons[addonId] && prevSelections[addonId]?.length !== selectedAddons[addonId]) {
-             hasChanged = true;
-          }
+        if (balangAddonIds.includes(addonId) && (!selectedAddons[addonId] || selectedAddons[addonId] === 0)) {
+          hasChanged = true;
+        } else if (balangAddonIds.includes(addonId) && selectedAddons[addonId] && prevSelections[addonId]?.length !== selectedAddons[addonId]) {
+          hasChanged = true;
+        }
       }
-      
+
       if (!hasChanged) {
-          let structureMatch = Object.keys(prevSelections).filter(key => balangAddonIds.includes(key)).length === Object.keys(nextState).filter(key => balangAddonIds.includes(key)).length;
-          if (structureMatch) {
-            for(const key in nextState) { 
-                if (balangAddonIds.includes(key) && (!prevSelections[key] || JSON.stringify(prevSelections[key]) !== JSON.stringify(nextState[key]))) {
-                    structureMatch = false;
-                    break;
-                }
+        let structureMatch = Object.keys(prevSelections).filter(key => balangAddonIds.includes(key)).length === Object.keys(nextState).filter(key => balangAddonIds.includes(key)).length;
+        if (structureMatch) {
+          for (const key in nextState) {
+            if (balangAddonIds.includes(key) && (!prevSelections[key] || JSON.stringify(prevSelections[key]) !== JSON.stringify(nextState[key]))) {
+              structureMatch = false;
+              break;
             }
-            if (structureMatch && Object.keys(prevSelections).filter(key => balangAddonIds.includes(key)).every(key => nextState.hasOwnProperty(key))) return prevSelections; 
           }
+          if (structureMatch && Object.keys(prevSelections).filter(key => balangAddonIds.includes(key)).every(key => nextState.hasOwnProperty(key))) return prevSelections;
+        }
       }
-      const finalState = {...prevSelections};
+      const finalState = { ...prevSelections };
       balangAddonIds.forEach(id => {
-          if(nextState[id]) finalState[id] = nextState[id];
-          else if(selectedAddons[id] === 0 || !selectedAddons[id]) delete finalState[id]; 
+        if (nextState[id]) finalState[id] = nextState[id];
+        else if (selectedAddons[id] === 0 || !selectedAddons[id]) delete finalState[id];
       });
       return finalState;
     });
@@ -332,7 +350,7 @@ export default function EventBuilderPage() {
         const { [addonId]: _, ...rest } = prev;
         if (addonId === 'addon_balang_23l' || addonId === 'addon_balang_40l') {
           setAddonFlavorSelections(currentSelections => {
-            const { [addonId]: _val, ...otherSelections } = currentSelections; 
+            const { [addonId]: _val, ...otherSelections } = currentSelections;
             return otherSelections;
           });
         }
@@ -341,7 +359,7 @@ export default function EventBuilderPage() {
       return { ...prev, [addonId]: newQuantity };
     });
   };
-  
+
   const handleAdditiveFlavorSelect = (addonId: string, balangIndex: number, selectedFlavorId: string) => {
     setAddonFlavorSelections(prev => {
       const newSelectionsForAddon = [...(prev[addonId] || [])];
@@ -372,7 +390,7 @@ export default function EventBuilderPage() {
       });
       return;
     }
-    
+
     const requiredFlavorCountForPackage = selectedPackage ? getMaxFlavors() : 0;
     if (selectedPackage && requiredFlavorCountForPackage > 0 && selectedPackageFlavors.length < requiredFlavorCountForPackage) {
       toast({
@@ -384,8 +402,8 @@ export default function EventBuilderPage() {
     }
 
     const packageFlavorDetails = selectedPackageFlavors
-        .map(id => mockFlavors.find(f => f.id === id)?.name)
-        .filter((name): name is string => !!name);
+      .map(id => mockFlavors.find(f => f.id === id)?.name)
+      .filter((name): name is string => !!name);
 
 
     const addonsDetails = Object.entries(selectedAddons)
@@ -393,7 +411,7 @@ export default function EventBuilderPage() {
         if (quantity === 0) return null;
         const addon = mockAddons.find(a => a.id === addonId);
         if (!addon) return null;
-        
+
         const flavorsForThisAddon = (addonFlavorSelections[addonId] || [])
           .map(fId => fId ? mockFlavors.find(f => f.id === fId)?.name : undefined)
           .filter((name): name is string => !!name);
@@ -419,7 +437,7 @@ export default function EventBuilderPage() {
     };
 
     setCurrentEventConfig(initialConfig as EventConfig);
-    setIsDateTimeModalOpen(true); 
+    setIsDateTimeModalOpen(true);
   };
 
   const handleDateTimeSubmit = () => {
@@ -444,12 +462,12 @@ export default function EventBuilderPage() {
 
   const handleCustomerDetailsSubmit = (customerData: CustomerDetailsFormValues) => {
     if (!currentEventConfig) {
-        toast({
-            title: "Error",
-            description: "Event configuration is missing. Please try again.",
-            variant: "destructive",
-        });
-        return;
+      toast({
+        title: "Error",
+        description: "Event configuration is missing. Please try again.",
+        variant: "destructive",
+      });
+      return;
     }
     setCustomerDetailsForPayment(customerData);
     setIsCustomerDetailsModalOpen(false);
@@ -469,13 +487,13 @@ export default function EventBuilderPage() {
   };
   const packageIsSelected = !!selectedPackage;
   const requiredFlavorCountForPackage = packageIsSelected ? getMaxFlavors() : 0;
-  
+
   let packageRouteValid = false;
   if (packageIsSelected) {
     if (requiredFlavorCountForPackage > 0) {
       packageRouteValid = selectedPackageFlavors.length === requiredFlavorCountForPackage;
     } else {
-      packageRouteValid = true; 
+      packageRouteValid = true;
     }
   }
 
@@ -484,106 +502,133 @@ export default function EventBuilderPage() {
   const canProceed = packageRouteValid || addonsOnlyRouteValid;
 
   return (
-    <div className="bg-coast-gradient min-h-screen -mt-8 pt-12 pb-24">
-      <div className="container mx-auto px-4">
+    <div className="relative min-h-screen">
+      <WavyBackground
+        className="fixed inset-0 z-0"
+        colors={["#004F59", "#00E0C6", "#FF6F61", "#F4EBD0", "#FFB347"]}
+        waveWidth={60}
+        speed="slow"
+      />
+
+      <div className="container mx-auto px-4 relative z-10 pt-32 pb-32">
         {/* HERO SECTION */}
-        <div className="text-center space-y-4 mb-16 relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-brand-cyan/20 rounded-full blur-sm"></div>
-          <h1 className="text-coast-heading text-4xl md:text-5xl lg:text-6xl drop-shadow-sm">
-             Design Your<br />
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-cyan">Perfect Event</span>
+        <div className="text-center space-y-8 mb-24 max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-3 bg-brand-teal text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-4 shadow-xl rotate-1">
+            <Sparkles size={16} className="text-brand-aqua" strokeWidth={4} />
+            Instant Booking
+          </div>
+
+          <h1 className="font-display font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-[0.85] tracking-tighter text-brand-teal drop-shadow-2xl">
+            Event<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-aqua to-brand-cyan">Architect</span>
           </h1>
-          <p className="text-lg text-brand-blue/70 font-body font-medium max-w-2xl mx-auto leading-relaxed">
-             Bring the surf vibes to your office or party. <br className="hidden sm:block"/>
-             Select premium Balang packages, curated flavors, and essential add-ons.
+
+          <p className="text-xl md:text-2xl text-brand-teal/60 font-bold leading-relaxed max-w-2xl mx-auto border-t border-brand-teal/10 pt-8 uppercase tracking-widest">
+            Construct your "Liquid Paradise" experience. Select premium packages and hand-crafted flavors.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* LEFT COLUMN: BUILDER STEPS */}
           <div className="lg:col-span-8 space-y-10">
-            
+
             {/* STEP 1: PACKAGE */}
-            <section className="relative">
-              <Card className="glass-panel-wet bg-white/95 border-white/40 shadow-xl">
-                <CardHeader className="pb-4 border-b border-brand-blue/5">
-                  <div className="flex items-center gap-3 mb-2">
-                     <span className="bg-brand-cyan text-white font-bold px-3 py-1 rounded-full text-xs uppercase tracking-widest shadow-sm">Step 1</span>
+            <section className="relative group/step">
+              <div className="absolute -left-12 top-0 bottom-0 w-px bg-white/10 hidden xl:block"></div>
+              <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
+
+              <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
+                <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <PackageIcon size={120} className="text-brand-teal" />
                   </div>
-                  <CardTitle className="text-coast-heading text-3xl">Select Base Package</CardTitle>
-                  <CardDescription className="text-brand-blue/60 font-medium text-base">
-                    Choose a curated setup or start from scratch.
-                  </CardDescription>
+                  <div className="flex items-center gap-4 mb-4 relative z-10">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center font-black text-xl shadow-lg rotate-3 overflow-hidden">
+                      <div className="absolute inset-0 bg-brand-aqua/20 animate-pulse"></div>
+                      <span className="relative z-10">01</span>
+                    </div>
+                    <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.3em]">Foundation</span>
+                  </div>
+                  <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
+                    Select Base <br />
+                    <span className="text-brand-teal/40">Package</span>
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 space-y-6">
-                  <Select 
-                    onValueChange={(pkgId) => {
+                <CardContent className="p-10 space-y-10">
+                  <div className="space-y-4">
+                    <Label className="text-brand-teal/40 font-black uppercase text-[10px] tracking-[0.3em] pl-6">Curated Selection</Label>
+                    <Select
+                      onValueChange={(pkgId) => {
                         if (pkgId === "none-option") {
                           setSelectedPackage(null);
                         } else {
                           const newSelectedPackage = mockPackages.find(p => p.id === pkgId) || null;
                           setSelectedPackage(newSelectedPackage);
                         }
-                    }} 
-                    value={selectedPackage?.id || "none-option"}
-                  >
-                    <SelectTrigger className="input-coast h-16 text-xl font-bold text-brand-blue shadow-sm">
-                      <SelectValue placeholder="Choose your package..." />
-                    </SelectTrigger>
-                    <SelectContent className="glass-panel-wet border-white/50">
-                      <SelectItem value="none-option" className="font-body font-medium text-brand-blue focus:bg-brand-cyan/10 py-3">None (Build Custom)</SelectItem>
-                      {mockPackages.map(pkg => (
-                        <SelectItem key={pkg.id} value={pkg.id} className="font-body font-medium text-brand-blue focus:bg-brand-cyan/10 py-3">
-                          {pkg.name} — <span className="font-bold">${pkg.price.toFixed(2)}</span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      }}
+                      value={selectedPackage?.id || "none-option"}
+                    >
+                      <SelectTrigger className="bg-white/40 border-white/60 h-20 text-xl font-display font-black text-brand-teal rounded-[2rem] px-8 shadow-inner hover:bg-white/60 focus:ring-brand-aqua/50 transition-all">
+                        <SelectValue placeholder="Choose your package..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white/90 backdrop-blur-2xl border-white/50 rounded-[2rem] p-4">
+                        <SelectItem value="none-option" className="font-bold text-brand-teal py-4 rounded-2xl focus:bg-brand-aqua/20">None (Build Custom)</SelectItem>
+                        <Separator className="my-2 bg-brand-teal/5" />
+                        {mockPackages.map(pkg => (
+                          <SelectItem key={pkg.id} value={pkg.id} className="font-bold text-brand-teal py-4 rounded-2xl focus:bg-brand-aqua/20">
+                            {pkg.name} — <span className="text-brand-aqua">${pkg.price.toFixed(2)}</span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
                   {selectedPackage && (
-                    <div className="mt-6 p-8 bg-gradient-to-br from-white/60 to-white/30 border border-white rounded-3xl shadow-inner">
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                        <div>
-                          <h4 className="text-coast-heading text-2xl mb-1">{selectedPackage.name}</h4>
-                          <p className="text-brand-blue/70 text-sm leading-relaxed max-w-md">{selectedPackage.description}</p>
-                        </div>
-                        <div className="text-right">
-                           <span className="block font-display font-bold text-3xl text-brand-blue">${selectedPackage.price.toFixed(2)}</span>
-                           {selectedPackage.isAllInclusive && (
-                              <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200 mt-1">
-                                All Inclusive
-                              </Badge>
-                           )}
-                        </div>
-                      </div>
-                      
-                      <Separator className="bg-brand-blue/10 mb-6" />
+                    <div className="animate-in slide-in-from-bottom-6 duration-700">
+                      <div className="bg-brand-teal/5 border border-brand-teal/10 p-10 rounded-[3rem] relative overflow-hidden group">
+                        <div className="absolute top-[-50px] left-[-50px] w-64 h-64 bg-brand-aqua/5 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-aqua/10 transition-colors duration-700"></div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedPackage.includedItems.map((item, idx) => (
-                          <div key={idx} className="flex items-start gap-3 text-brand-blue/80 text-sm font-medium">
-                            <div className="mt-0.5 bg-brand-cyan/20 p-1 rounded-full text-brand-blue">
-                              <Check size={10} strokeWidth={4} />
-                            </div>
-                            {item}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 relative z-10">
+                          <div className="space-y-4">
+                            <h4 className="text-brand-teal text-3xl font-display font-black uppercase tracking-tight">{selectedPackage.name}</h4>
+                            <p className="text-brand-teal/60 text-lg font-medium leading-relaxed max-w-md border-l-4 border-brand-aqua/30 pl-6 italic">"{selectedPackage.description}"</p>
                           </div>
-                        ))}
-                      </div>
-
-                      {selectedPackage.id === 'pkg_17l_self_pickup' && (
-                        <div className="flex items-center space-x-3 mt-8 pt-6 border-t border-brand-blue/10 border-dashed bg-brand-yellow/10 p-4 rounded-xl">
-                          <Checkbox
-                            id="delivery-opt-out"
-                            checked={isDeliveryOptOut}
-                            onCheckedChange={() => setIsDeliveryOptOut(!isDeliveryOptOut)}
-                            className="border-brand-blue/40 data-[state=checked]:bg-brand-blue data-[state=checked]:text-white w-6 h-6 rounded-md"
-                          />
-                          <Label htmlFor="delivery-opt-out" className="text-base font-bold cursor-pointer text-brand-blue select-none">
-                            I will pick up the order myself (Opt-out of delivery)
-                          </Label>
+                          <div className="text-right">
+                            <span className="block font-display font-black text-5xl text-brand-teal tracking-tighter">${selectedPackage.price.toFixed(2)}</span>
+                            {selectedPackage.isAllInclusive && (
+                              <Badge className="bg-brand-coral text-white border-none mt-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                                Ultimate Tier
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                      )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 pt-8 border-t border-brand-teal/10">
+                          {selectedPackage.includedItems.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-4 text-brand-teal font-bold text-sm tracking-tight group/item">
+                              <div className="w-8 h-8 bg-brand-aqua/20 text-brand-aqua rounded-xl flex items-center justify-center group-hover/item:bg-brand-aqua group-hover/item:text-white transition-all duration-300">
+                                <Check size={16} strokeWidth={4} />
+                              </div>
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+
+                        {selectedPackage.id === 'pkg_17l_self_pickup' && (
+                          <div className="mt-10 p-6 bg-white/40 border border-white/60 rounded-3xl backdrop-blur-md relative z-10 flex items-center gap-4 group/optout cursor-pointer" onClick={() => setIsDeliveryRequested(!isDeliveryRequested)}>
+                            <div className={cn(
+                              "w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all",
+                              isDeliveryRequested ? "bg-brand-teal border-brand-teal text-white shadow-lg rotate-6" : "border-brand-teal/20 bg-white"
+                            )}>
+                              {isDeliveryRequested && <Check size={16} strokeWidth={4} />}
+                            </div>
+                            <Label className="text-brand-teal font-black uppercase text-xs tracking-widest cursor-pointer select-none">
+                              I want delivery ($20.00 Delivery Fee Applied)
+                            </Label>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </CardContent>
@@ -592,171 +637,235 @@ export default function EventBuilderPage() {
 
             {/* STEP 2: FLAVORS */}
             {selectedPackage && requiredFlavorCountForPackage > 0 && (
-              <section className="relative">
-                <Card className="glass-panel-wet bg-white/95 border-white/40 shadow-xl">
-                  <CardHeader className="pb-4 border-b border-brand-blue/5">
-                    <div className="flex justify-between items-center">
+              <section className="relative group/step">
+                <div className="absolute -left-12 top-0 bottom-0 w-px bg-white/10 hidden xl:block"></div>
+                <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
+
+                <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
+                  <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-5">
+                      <Droplets size={120} className="text-brand-teal" />
+                    </div>
+                    <div className="flex justify-between items-center relative z-10">
                       <div>
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="bg-brand-cyan text-white font-bold px-3 py-1 rounded-full text-xs uppercase tracking-widest shadow-sm">Step 2</span>
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center font-black text-xl shadow-lg -rotate-3 overflow-hidden">
+                            <div className="absolute inset-0 bg-brand-aqua/20 animate-pulse"></div>
+                            <span className="relative z-10">02</span>
+                          </div>
+                          <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Curation</span>
                         </div>
-                        <CardTitle className="text-coast-heading text-3xl">Curate Flavors</CardTitle>
-                        <CardDescription className="text-brand-blue/60 font-medium text-base">
-                          Select {requiredFlavorCountForPackage} premium flavors for your Balang.
-                        </CardDescription>
+                        <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight">
+                          Pick Your <br />
+                          <span className="text-brand-teal/40">Flavors</span>
+                        </CardTitle>
                       </div>
-                      <div className="hidden md:block">
-                         <div className={`px-4 py-2 rounded-2xl font-bold text-sm border ${selectedPackageFlavors.length === requiredFlavorCountForPackage ? 'bg-green-100 text-green-700 border-green-200' : 'bg-brand-yellow/20 text-brand-blue border-brand-yellow/40'}`}>
-                           {selectedPackageFlavors.length} / {requiredFlavorCountForPackage} Selected
-                         </div>
+                      <div className="hidden lg:block">
+                        <div className={cn(
+                          "px-8 py-4 rounded-[2rem] font-black text-sm border-2 transition-all duration-500",
+                          selectedPackageFlavors.length === requiredFlavorCountForPackage
+                            ? "bg-brand-aqua border-brand-aqua text-brand-teal shadow-[0_0_30px_rgba(32,224,198,0.3)]"
+                            : "bg-white/40 border-white/60 text-brand-teal"
+                        )}>
+                          <span className="opacity-40 uppercase tracking-widest mr-3">Status:</span>
+                          {selectedPackageFlavors.length} / {requiredFlavorCountForPackage} Complete
+                        </div>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-8">
-                     {/* Selected Flavors Chips */}
-                     <div className="flex flex-wrap gap-3 mb-8 min-h-[40px]">
-                        {selectedPackageFlavors.length === 0 && (
-                          <span className="text-brand-blue/40 italic text-sm py-2">No flavors selected yet. Pick from below.</span>
-                        )}
-                        {selectedPackageFlavors.map((flavorId, index) => {
-                          const flavor = mockFlavors.find(f => f.id === flavorId);
-                          return (
-                            <div key={`selected-pkgflavor-${flavorId}-${index}`} className="group flex items-center pl-4 pr-2 py-2 bg-brand-blue text-white text-sm font-bold rounded-full shadow-lg hover:bg-brand-blue/90 transition-all cursor-default animate-in fade-in zoom-in duration-200">
-                              {flavor?.name}
-                              <button
-                                className="ml-2 bg-white/20 hover:bg-white/40 rounded-full p-1 transition-colors"
-                                onClick={() => handleRemovePackageFlavorByIndex(index)}
-                              >
-                                <XIcon size={12} strokeWidth={3} />
-                              </button>
-                            </div>
-                          );
-                        })}
-                     </div>
-
-                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {mockFlavors.map(flavor => {
-                          const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
-                          const canAdd = selectedPackageFlavors.length < requiredFlavorCountForPackage;
-                          
-                          return (
+                  <CardContent className="p-10">
+                    {/* Selected Flavors Chips */}
+                    <div className="flex flex-wrap gap-4 mb-12 min-h-[60px] p-6 bg-brand-teal/5 border border-brand-teal/10 rounded-[2.5rem] relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-aqua/5 rounded-full blur-2xl pointer-events-none"></div>
+                      {selectedPackageFlavors.length === 0 && (
+                        <div className="flex items-center gap-3 text-brand-teal/40 font-bold italic py-2">
+                          <Waves size={16} className="animate-pulse" />
+                          <span>Your Balang is currently empty...</span>
+                        </div>
+                      )}
+                      {selectedPackageFlavors.map((flavorId, index) => {
+                        const flavor = mockFlavors.find(f => f.id === flavorId);
+                        return (
+                          <div key={`selected-pkgflavor-${flavorId}-${index}`} className="group flex items-center pl-6 pr-3 py-3 bg-brand-teal text-white text-sm font-black rounded-2xl shadow-xl hover:shadow-brand-teal/20 hover:scale-105 transition-all cursor-default animate-in zoom-in duration-300 border border-white/20">
+                            <span className="uppercase tracking-tight">{flavor?.name}</span>
                             <button
-                              key={`avail-pkgflavor-${flavor.id}`}
-                              onClick={() => canAdd && handleAddPackageFlavor(flavor.id)}
-                              disabled={!canAdd}
-                              className={`
-                                relative p-4 rounded-2xl border text-left transition-all duration-200 group
-                                ${!canAdd ? 'opacity-50 cursor-not-allowed bg-gray-50 border-gray-100' : 'hover:-translate-y-1 hover:shadow-md cursor-pointer bg-white/60 border-brand-blue/10 hover:border-brand-cyan/50'}
-                              `}
+                              className="ml-4 bg-white/10 hover:bg-brand-coral rounded-xl p-2 transition-all"
+                              onClick={() => handleRemovePackageFlavorByIndex(index)}
                             >
-                               <div className="font-display font-bold text-brand-blue uppercase text-sm mb-2 group-hover:text-brand-cyan transition-colors">{flavor.name}</div>
-                               <div className="flex justify-between items-end">
-                                  <div className={`text-xs font-medium px-2 py-0.5 rounded-md ${count > 0 ? 'bg-brand-yellow text-brand-blue' : 'text-brand-blue/40 bg-brand-blue/5'}`}>
-                                    {count > 0 ? `${count} Selected` : 'Add'}
-                                  </div>
-                                  <PlusCircle size={18} className={`text-brand-blue/20 group-hover:text-brand-cyan ${count > 0 ? 'opacity-0' : 'opacity-100'}`} />
-                               </div>
-                               {count > 0 && (
-                                 <div className="absolute top-0 right-0 -mt-2 -mr-2 bg-brand-cyan text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full shadow-sm border-2 border-white">
-                                   {count}
-                                 </div>
-                               )}
+                              <XIcon size={14} strokeWidth={4} />
                             </button>
-                          );
-                        })}
-                     </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                      {mockFlavors.map(flavor => {
+                        const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
+                        const canAdd = selectedPackageFlavors.length < requiredFlavorCountForPackage;
+
+                        return (
+                          <button
+                            key={`avail-pkgflavor-${flavor.id}`}
+                            onClick={() => canAdd && handleAddPackageFlavor(flavor.id)}
+                            disabled={!canAdd}
+                            className={cn(
+                              "group relative p-6 rounded-[2rem] border-2 text-left transition-all duration-500 overflow-hidden",
+                              !canAdd && count === 0
+                                ? "opacity-40 cursor-not-allowed bg-white/10 border-white/20 pb-8"
+                                : "bg-white/40 border-white/60 hover:border-brand-aqua/50 hover:bg-white/60 hover:-translate-y-2 hover:shadow-2xl shadow-lg"
+                            )}
+                          >
+                            <div className="space-y-1 relative z-10 mb-6">
+                              <span className="text-brand-aqua font-display font-black text-[10px] uppercase tracking-[0.3em]">Tropical Mix</span>
+                              <h4 className="text-brand-teal text-xl font-display font-black uppercase leading-none group-hover:text-brand-aqua transition-colors">
+                                {flavor.name}
+                              </h4>
+                            </div>
+
+                            <div className="flex justify-between items-center relative z-10">
+                              <div className={cn(
+                                "text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all",
+                                count > 0 ? "bg-brand-coral text-white shadow-lg" : "text-brand-teal/30 bg-brand-teal/5"
+                              )}>
+                                {count > 0 ? `${count} Selected` : 'Add Selection'}
+                              </div>
+                              <div className={cn(
+                                "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                                count > 0 ? "bg-brand-aqua text-brand-teal rotate-12 scale-110" : "bg-white/40 text-brand-teal/20 group-hover:bg-brand-aqua group-hover:text-brand-teal group-hover:rotate-12"
+                              )}>
+                                <PlusCircle size={20} strokeWidth={3} />
+                              </div>
+                            </div>
+
+                            {/* Progress Indicator inside button if multiple */}
+                            {count > 0 && (
+                              <div className="absolute bottom-0 left-0 h-1 bg-brand-coral transition-all duration-500" style={{ width: `${(count / requiredFlavorCountForPackage) * 100}%` }}></div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </CardContent>
                 </Card>
               </section>
             )}
 
             {/* STEP 3: ADD-ONS */}
-            <section className="relative">
-              <Card className="glass-panel-wet bg-white/95 border-white/40 shadow-xl">
-                <CardHeader className="pb-4 border-b border-brand-blue/5">
-                  <div className="flex items-center gap-3 mb-2">
-                     <span className="bg-brand-cyan text-white font-bold px-3 py-1 rounded-full text-xs uppercase tracking-widest shadow-sm">Step 3</span>
-                  </div>
-                  <CardTitle className="text-coast-heading text-3xl">Enhancements</CardTitle>
-                  <CardDescription className="text-brand-blue/60 font-medium text-base">
-                    Upgrade your event with extra capacity or service.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-8 space-y-4">
-                  {mockAddons.map(addon => {
-                    const isSelected = selectedAddons[addon.id] > 0;
-                    return (
-                      <div 
-                        key={addon.id} 
-                        className={`
-                           p-6 rounded-3xl border transition-all duration-300
-                           ${isSelected ? 'bg-white border-brand-cyan/30 shadow-lg' : 'bg-white/40 border-transparent hover:bg-white/60'}
-                        `}
-                      >
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div className="flex-grow cursor-pointer" onClick={() => !isSelected && handleAddonToggle(addon.id, true)}>
-                             <div className="flex items-center gap-3">
-                                <h4 className={`font-display font-bold uppercase text-lg ${isSelected ? 'text-brand-blue' : 'text-brand-blue/80'}`}>{addon.name}</h4>
-                                {isSelected && <Badge variant="outline" className="text-brand-cyan border-brand-cyan/30 bg-brand-cyan/5">Selected</Badge>}
-                             </div>
-                             <p className="text-brand-blue/60 text-sm mt-1 max-w-lg">{addon.description}</p>
-                             <p className="font-mono font-bold text-brand-blue mt-2">+${addon.price.toFixed(2)}</p>
-                          </div>
-                          
-                          <div className="flex items-center space-x-4 bg-white/50 p-2 rounded-2xl border border-white/60">
-                             {isSelected ? (
-                               <>
-                                <Button size="icon" variant="ghost" onClick={() => handleAddonQuantityChange(addon.id, -1)} className="hover:bg-red-50 hover:text-red-500 rounded-xl h-10 w-10">
-                                  <MinusCircle size={20} />
-                                </Button>
-                                <span className="w-8 text-center font-display font-bold text-xl text-brand-blue">{selectedAddons[addon.id]}</span>
-                                <Button size="icon" variant="ghost" onClick={() => handleAddonQuantityChange(addon.id, 1)} className="hover:bg-brand-cyan/10 hover:text-brand-cyan rounded-xl h-10 w-10">
-                                  <PlusCircle size={20} />
-                                </Button>
-                               </>
-                             ) : (
-                               <Button variant="ghost" onClick={() => handleAddonToggle(addon.id, true)} className="text-brand-blue/60 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl">
-                                 Add to Event
-                               </Button>
-                             )}
-                          </div>
-                        </div>
+            {selectedPackage?.id !== 'pkg_17l_self_pickup' && (
+              <section className="relative group/step">
+                <div className="absolute -left-12 top-0 bottom-0 w-px bg-white/10 hidden xl:block"></div>
+                <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
 
-                        {/* Balang Flavor Selection Logic for Addons */}
-                        { (addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l') && isSelected && (
-                          <div className="mt-6 pt-6 border-t border-dashed border-brand-blue/10 animate-in slide-in-from-top-2 duration-300">
-                             <div className="flex items-center gap-2 mb-4">
-                                <Waves size={16} className="text-brand-cyan"/>
-                                <span className="text-xs font-bold uppercase tracking-widest text-brand-blue/70">Select Flavors for Extra Balang</span>
-                             </div>
-                             <div className="space-y-3">
+                <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
+                  <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-5">
+                      <Zap size={120} className="text-brand-teal" />
+                    </div>
+                    <div className="flex items-center gap-4 mb-4 relative z-10">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center font-black text-xl shadow-lg rotate-12 overflow-hidden">
+                        <div className="absolute inset-0 bg-brand-aqua/20 animate-pulse"></div>
+                        <span className="relative z-10">03</span>
+                      </div>
+                      <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Amplification</span>
+                    </div>
+                    <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
+                      Enhance Your <br />
+                      <span className="text-brand-teal/40">Event</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-10 space-y-6">
+                    {mockAddons.map(addon => {
+                      const isSelected = selectedAddons[addon.id] > 0;
+                      return (
+                        <div
+                          key={addon.id}
+                          className={cn(
+                            "p-8 rounded-[2.5rem] border-2 transition-all duration-500 relative overflow-hidden group/addon",
+                            isSelected
+                              ? "bg-white border-brand-aqua shadow-[0_20px_50px_rgba(0,40,80,0.1)] scale-[1.02]"
+                              : "bg-white/40 border-white/60 hover:border-brand-aqua/30 hover:bg-white/60"
+                          )}
+                        >
+                          <div className="absolute top-[-30px] right-[-30px] w-32 h-32 bg-brand-aqua/5 rounded-full blur-2xl pointer-events-none group-hover/addon:bg-brand-aqua/10 transition-colors"></div>
+
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="flex-grow cursor-pointer" onClick={() => !isSelected && handleAddonToggle(addon.id, true)}>
+                              <div className="flex items-center gap-4 mb-2">
+                                <h4 className="font-display font-black uppercase text-xl text-brand-teal tracking-tight">{addon.name}</h4>
+                                {isSelected && (
+                                  <Badge className="bg-brand-aqua text-brand-teal border-none px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                    Enhanced
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-brand-teal/60 text-base font-medium leading-relaxed max-w-lg mb-4">{addon.description}</p>
+                              <p className="font-display font-black text-2xl text-brand-aqua tracking-tighter">+${addon.price.toFixed(2)}</p>
+                            </div>
+
+                            <div className="flex items-center space-x-4 bg-brand-teal/5 p-3 rounded-[1.5rem] border border-brand-teal/10 shadow-inner">
+                              {isSelected ? (
+                                <>
+                                  <Button size="icon" variant="ghost" onClick={() => handleAddonQuantityChange(addon.id, -1)} className="hover:bg-brand-coral hover:text-white rounded-[1rem] h-12 w-12 transition-all shadow-sm">
+                                    <MinusCircle size={24} strokeWidth={2.5} />
+                                  </Button>
+                                  <span className="w-10 text-center font-display font-black text-2xl text-brand-teal">{selectedAddons[addon.id]}</span>
+                                  <Button size="icon" variant="ghost" onClick={() => handleAddonQuantityChange(addon.id, 1)} className="hover:bg-brand-teal hover:text-white rounded-[1rem] h-12 w-12 transition-all shadow-sm">
+                                    <PlusCircle size={24} strokeWidth={2.5} />
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button
+                                  variant="ghost"
+                                  onClick={() => handleAddonToggle(addon.id, true)}
+                                  className="text-brand-teal font-black uppercase tracking-widest text-xs px-8 h-12 hover:bg-brand-teal hover:text-white rounded-[1rem] transition-all"
+                                >
+                                  Integrate
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Balang Flavor Selection Logic for Addons */}
+                          {(addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l') && isSelected && (
+                            <div className="mt-8 pt-8 border-t-2 border-dashed border-brand-teal/10 animate-in slide-in-from-top-4 duration-500 relative z-10">
+                              <div className="flex items-center gap-3 mb-6">
+                                <div className="w-8 h-8 rounded-lg bg-brand-aqua/20 flex items-center justify-center text-brand-aqua">
+                                  <Droplets size={16} strokeWidth={3} />
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-teal/40">Select Flavors for Extra Units</span>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {[...Array(selectedAddons[addon.id])].map((_, balangIndex) => {
                                   const currentSelectedFlavorId = addonFlavorSelections[addon.id]?.[balangIndex];
                                   const currentSelectedFlavor = currentSelectedFlavorId ? mockFlavors.find(f => f.id === currentSelectedFlavorId) : null;
-                                  
+
                                   return (
-                                    <div key={`${addon.id}-balang-${balangIndex}`} className="flex items-center justify-between p-3 bg-brand-blue/5 rounded-xl border border-brand-blue/5">
-                                      <span className="text-sm font-bold text-brand-blue pl-2">Balang #{balangIndex + 1}</span>
-                                      
-                                      <Popover 
+                                    <div key={`${addon.id}-balang-${balangIndex}`} className="flex items-center justify-between p-4 bg-white/60 rounded-2xl border border-white hover:border-brand-aqua/50 transition-all group/pop">
+                                      <span className="text-xs font-black text-brand-teal uppercase tracking-widest opacity-60">Unit {balangIndex + 1}</span>
+
+                                      <Popover
                                         open={activeAddonFlavorPopover?.addonId === addon.id && activeAddonFlavorPopover?.balangIndex === balangIndex}
                                         onOpenChange={(isOpen) => isOpen ? setActiveAddonFlavorPopover({ addonId: addon.id, balangIndex }) : setActiveAddonFlavorPopover(null)}
                                       >
                                         <PopoverTrigger asChild>
-                                          <Button variant="outline" className={`min-w-[140px] justify-between border-brand-blue/10 bg-white hover:bg-white hover:border-brand-cyan/50 ${!currentSelectedFlavorId && "text-brand-blue/50"}`}>
-                                            {currentSelectedFlavor ? currentSelectedFlavor.name : "Select Flavor"}
-                                            <ArrowRight size={14} className="ml-2 opacity-50"/>
+                                          <Button variant="outline" className={cn(
+                                            "min-w-[160px] justify-between border-brand-teal/10 bg-white/80 backdrop-blur-md rounded-xl font-bold transition-all px-4",
+                                            currentSelectedFlavor ? "text-brand-teal border-brand-aqua/30" : "text-brand-teal/40"
+                                          )}>
+                                            <span className="truncate">{currentSelectedFlavor ? currentSelectedFlavor.name : "Choose Flavor"}</span>
+                                            <ChevronRight size={14} className={cn("ml-2 transition-transform", activeAddonFlavorPopover ? "rotate-90" : "")} strokeWidth={3} />
                                           </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-[200px] p-1 bg-white/90 backdrop-blur-xl border border-white/50 shadow-xl rounded-xl" align="end">
-                                          <div className="max-h-60 overflow-y-auto p-1 custom-scrollbar">
+                                        <PopoverContent className="w-[200px] p-2 bg-white/95 backdrop-blur-2xl border-white/50 shadow-2xl rounded-2xl overflow-hidden" align="end">
+                                          <div className="max-h-60 overflow-y-auto p-1 custom-scrollbar space-y-1">
                                             {mockFlavors.map(flavor => (
-                                              <div 
+                                              <div
                                                 key={flavor.id}
-                                                className={`
-                                                  px-3 py-2 text-sm font-bold text-brand-blue rounded-lg cursor-pointer hover:bg-brand-cyan/10 transition-colors
-                                                  ${currentSelectedFlavorId === flavor.id ? 'bg-brand-cyan/20 text-brand-blue' : ''}
-                                                `}
+                                                className={cn(
+                                                  "px-4 py-3 text-sm font-black text-brand-teal rounded-xl cursor-pointer transition-all",
+                                                  currentSelectedFlavorId === flavor.id ? 'bg-brand-aqua text-brand-teal' : 'hover:bg-brand-teal/5'
+                                                )}
                                                 onClick={() => {
                                                   handleAdditiveFlavorSelect(addon.id, balangIndex, flavor.id);
                                                   setActiveAddonFlavorPopover(null);
@@ -771,131 +880,174 @@ export default function EventBuilderPage() {
                                     </div>
                                   );
                                 })}
-                             </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
-            </section>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+              </section>
+            )}
+
           </div>
 
           {/* RIGHT COLUMN: SUMMARY STICKY */}
           <div className="lg:col-span-4 relative">
-             <div className="sticky top-24 space-y-6">
-                <Card className="glass-panel-wet bg-white/90 border-white/60 shadow-2xl overflow-hidden backdrop-blur-xl">
-                   <div className="bg-brand-blue p-6 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 -mr-6 -mt-6 w-24 h-24 bg-brand-cyan rounded-full opacity-20 blur-2xl"></div>
-                      <div className="absolute bottom-0 left-0 -ml-6 -mb-6 w-24 h-24 bg-brand-yellow rounded-full opacity-20 blur-2xl"></div>
-                      <h3 className="text-white font-display font-bold text-xl uppercase tracking-widest flex items-center gap-2 relative z-10">
-                        <ShoppingCart size={20} /> Event Summary
-                      </h3>
-                   </div>
-                   
-                   <CardContent className="p-6 space-y-6">
-                      {/* Line Items */}
-                      <div className="space-y-4">
-                        {/* Package */}
-                        {selectedPackage ? (
-                          <div className="flex justify-between items-start group">
-                             <div>
-                               <p className="font-bold text-brand-blue uppercase text-sm">{selectedPackage.name}</p>
-                               {selectedPackage.isAllInclusive && <span className="text-[10px] text-green-600 bg-green-100 px-1.5 py-0.5 rounded uppercase font-bold tracking-wide">All Inclusive</span>}
-                             </div>
-                             <p className="font-mono font-bold text-brand-blue">${selectedPackage.price.toFixed(2)}</p>
+            <div className="sticky top-32 space-y-8">
+              <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-[0_40px_100px_rgba(0,40,80,0.1)] overflow-hidden rounded-[3rem]">
+                <div className="bg-brand-teal p-10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 bg-brand-aqua rounded-full opacity-20 blur-3xl animate-pulse"></div>
+                  <div className="absolute bottom-0 left-0 -ml-12 -mb-12 w-48 h-48 bg-brand-coral rounded-full opacity-10 blur-3xl"></div>
+                  <h3 className="text-white font-display font-black text-2xl uppercase tracking-[0.2em] flex items-center gap-4 relative z-10">
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-md">
+                      <ShoppingCart size={20} strokeWidth={3} />
+                    </div>
+                    Manifest
+                  </h3>
+                </div>
+
+                <CardContent className="p-10 space-y-8">
+                  {/* Line Items */}
+                  <div className="space-y-6">
+                    {/* Package */}
+                    {selectedPackage ? (
+                      <div className="space-y-3 group/item">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-1">
+                            <p className="font-display font-black text-brand-teal uppercase text-lg leading-none tracking-tight">{selectedPackage.name}</p>
+                            {selectedPackage.isAllInclusive && <span className="text-[10px] text-white bg-brand-coral px-2 py-1 rounded-lg uppercase font-black tracking-widest shadow-sm">Ultimate Tier</span>}
                           </div>
-                        ) : (
-                          <div className="text-center py-4 border-2 border-dashed border-brand-blue/10 rounded-xl">
-                            <p className="text-brand-blue/40 text-sm font-medium">No package selected</p>
-                          </div>
-                        )}
+                          <p className="font-display font-black text-xl text-brand-teal tracking-tighter">${selectedPackage.price.toFixed(2)}</p>
+                        </div>
 
                         {/* Flavors Summary (Compact) */}
                         {selectedPackageFlavors.length > 0 && (
-                          <div className="pl-3 border-l-2 border-brand-cyan/30 text-xs space-y-1 py-1">
-                             <p className="text-brand-blue/50 font-bold uppercase text-[10px] tracking-wider mb-1">Selections</p>
-                             {(() => {
-                                const counts: Record<string,number> = {};
-                                selectedPackageFlavors.forEach(id => counts[id] = (counts[id] || 0) + 1);
-                                return Object.entries(counts).map(([id, n]) => (
-                                  <div key={id} className="flex justify-between text-brand-blue/80">
-                                    <span>{mockFlavors.find(f => f.id === id)?.name}</span>
-                                    <span className="font-mono opacity-50">x{n}</span>
-                                  </div>
-                                ));
-                             })()}
-                          </div>
-                        )}
-
-                        {/* Addons */}
-                        {Object.entries(selectedAddons).map(([id, qty]) => {
-                           if (qty === 0) return null;
-                           const addon = mockAddons.find(a => a.id === id);
-                           if (!addon) return null;
-                           return (
-                             <div key={id} className="flex justify-between items-start text-sm">
-                                <div className="text-brand-blue/80">
-                                  <span>{addon.name}</span> <span className="text-brand-blue/40 font-mono text-xs">x{qty}</span>
+                          <div className="bg-brand-teal/5 p-4 rounded-2xl border border-brand-teal/5 space-y-2">
+                            <p className="text-brand-teal/40 font-black uppercase text-[9px] tracking-[0.3em] mb-1">Curation List</p>
+                            {(() => {
+                              const counts: Record<string, number> = {};
+                              selectedPackageFlavors.forEach(id => counts[id] = (counts[id] || 0) + 1);
+                              return Object.entries(counts).map(([id, n]) => (
+                                <div key={id} className="flex justify-between text-brand-teal font-bold text-sm">
+                                  <span className="truncate pr-4">{mockFlavors.find(f => f.id === id)?.name}</span>
+                                  <span className="text-brand-aqua opacity-60">x{n}</span>
                                 </div>
-                                <span className="font-mono font-bold text-brand-blue/80">${(addon.price * qty).toFixed(2)}</span>
-                             </div>
-                           );
-                        })}
-
-                        {/* Delivery */}
-                        {displayDeliveryFee > 0 && (
-                          <div className="flex justify-between items-start text-sm pt-2 border-t border-brand-blue/5">
-                            <span className="text-brand-blue/60 uppercase text-xs font-bold tracking-wider">Delivery & Setup</span>
-                            <span className="font-mono font-bold text-brand-blue/60">${displayDeliveryFee.toFixed(2)}</span>
+                              ));
+                            })()}
                           </div>
                         )}
                       </div>
-
-                      {/* Total */}
-                      <div className="pt-6 border-t border-brand-blue/10">
-                         <div className="flex justify-between items-end">
-                            <span className="font-display font-bold uppercase text-brand-blue text-lg">Total Estimate</span>
-                            <span className="font-display font-black text-4xl text-brand-blue">${totalPrice.toFixed(2)}</span>
-                         </div>
+                    ) : (
+                      <div className="text-center py-10 border-4 border-dashed border-brand-teal/5 rounded-[2rem] bg-brand-teal/5">
+                        <PackageIcon size={40} className="mx-auto text-brand-teal/10 mb-3" />
+                        <p className="text-brand-teal/30 text-xs font-black uppercase tracking-widest">No base selected</p>
                       </div>
-                   </CardContent>
-                   <CardFooter className="p-6 pt-0">
-                      <Button 
-                        className="w-full btn-coast-primary h-14 text-lg group"
-                        onClick={handleProceedToBook}
-                        disabled={!canProceed || isCalendarDataLoading}
-                      >
-                         {isCalendarDataLoading ? <Loader2 className="animate-spin" /> : "Proceed to Book"}
-                         <Zap className="ml-2 group-hover:fill-current transition-all" size={20} />
-                      </Button>
-                   </CardFooter>
-                </Card>
+                    )}
 
-                {/* Trust Badge */}
-                <div className="flex items-center justify-center gap-2 text-brand-blue/40 text-xs font-bold uppercase tracking-widest">
-                   <Info size={14} /> Secure Booking • Instant Confirmation
+                    {/* Addons */}
+                    {Object.entries(selectedAddons).some(([_, qty]) => qty > 0) && (
+                      <div className="space-y-4 pt-4 border-t border-brand-teal/10">
+                        <p className="text-brand-teal/40 font-black uppercase text-[10px] tracking-[0.4em]">Amplifications</p>
+                        {Object.entries(selectedAddons).map(([id, qty]) => {
+                          if (qty === 0) return null;
+                          const addon = mockAddons.find(a => a.id === id);
+                          if (!addon) return null;
+                          return (
+                            <div key={id} className="flex justify-between items-start group/additive">
+                              <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-brand-aqua shadow-sm group-hover/additive:scale-150 transition-transform"></div>
+                                <span className="text-brand-teal font-bold text-sm truncate max-w-[140px]">{addon.name}</span>
+                                <span className="text-white bg-brand-teal px-1.5 py-0.5 rounded-md font-black text-[10px] tracking-tight">x{qty}</span>
+                              </div>
+                              <span className="font-display font-black text-brand-teal/80 text-sm tracking-tighter">${(addon.price * qty).toFixed(2)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Delivery */}
+                    {displayDeliveryFee > 0 && (
+                      <div className="flex justify-between items-center pt-6 border-t border-brand-teal/10">
+                        <div className="flex items-center gap-3 text-brand-teal/40 font-black uppercase text-[10px] tracking-[0.2em]">
+                          <Truck size={14} /> Logistics
+                        </div>
+                        <span className="font-display font-black text-brand-teal/60 text-sm tracking-tighter">${displayDeliveryFee.toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Total */}
+                  <div className="pt-10 border-t-4 border-brand-teal/10 relative">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-6">
+                      <Zap size={24} className="text-brand-aqua animate-pulse fill-brand-aqua" />
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="font-display font-black uppercase text-brand-teal/20 text-xs tracking-[0.5em]">Total Valuation</span>
+                      <span className="font-display font-black text-6xl text-brand-teal tracking-tighter drop-shadow-sm">
+                        <span className="text-brand-aqua opacity-50">$</span>{totalPrice.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-10 pt-0">
+                  <Button
+                    className="w-full bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-20 text-xl font-display font-black uppercase tracking-[0.2em] rounded-[1.5rem] shadow-2xl transition-all hover:scale-[1.03] active:scale-[0.98] group"
+                    onClick={handleProceedToBook}
+                    disabled={!canProceed || isCalendarDataLoading}
+                  >
+                    {isCalendarDataLoading ? <Loader2 className="animate-spin" /> : (
+                      <div className="flex items-center gap-4">
+                        Execute Booking <ArrowRight className="group-hover:translate-x-2 transition-transform" strokeWidth={4} />
+                      </div>
+                    )}
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Trust Badge */}
+              <div className="flex flex-col items-center gap-4 py-8 px-10 bg-white/20 backdrop-blur-xl border border-white/30 rounded-[2rem] text-center">
+                <div className="flex items-center gap-2 text-brand-teal font-black uppercase text-[10px] tracking-[0.3em]">
+                  <Info size={16} className="text-brand-aqua" strokeWidth={3} /> Verified Logistics
                 </div>
-             </div>
+                <p className="text-brand-teal/60 text-xs font-bold leading-relaxed">
+                  Instant confirmation upon payment. All rentals include setup, ice, and premium presentation.
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>
       </div>
 
-      {/* MODALS - Keeping logic same, just updating basic container styles if needed */}
+      {/* MODALS */}
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="glass-panel-static p-0 overflow-hidden sm:max-w-md border-white/50">
-          <DialogHeader className="p-6 bg-brand-blue text-white">
-            <DialogTitle className="font-display font-bold text-2xl uppercase tracking-wide flex items-center gap-3">
-              <CalendarDays className="text-brand-cyan" /> Select Date
+        <DialogContent className="glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl rounded-[3rem] shadow-2xl">
+          <DialogHeader className="p-10 bg-brand-teal text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <CalendarDays size={120} className="text-white" />
+            </div>
+            <div className="flex items-center gap-4 mb-2 relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-brand-aqua text-brand-teal flex items-center justify-center font-black shadow-lg">
+                <span className="relative z-10">04</span>
+              </div>
+              <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Logistics</span>
+            </div>
+            <DialogTitle className="font-display font-black text-4xl uppercase tracking-tight relative z-10">
+              Select <br />
+              <span className="text-white/40">Your Date</span>
             </DialogTitle>
-            <DialogDescription className="sr-only">
-              Choose a date and time slot for your event.
+            <DialogDescription className="text-white/60 font-medium text-sm mt-2 relative z-10">
+              Choose a temporal slot for your premium experience.
             </DialogDescription>
           </DialogHeader>
-          <div className="p-6 bg-[#FFFDF5]">
-             <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-blue/5 mb-6">
+
+          <div className="p-10 space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+              {/* Calendar Side */}
+              <div className="bg-white/40 border border-white/60 rounded-[2.5rem] p-6 shadow-xl backdrop-blur-md">
                 <Calendar
                   mode="single"
                   selected={selectedEventDate}
@@ -903,57 +1055,89 @@ export default function EventBuilderPage() {
                   disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
                   className="w-full"
                   classNames={{
-                    head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
-                    cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
-                    day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
-                    day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
+                    head_cell: "text-brand-teal font-black uppercase text-[10px] tracking-[0.2em] pt-4",
+                    cell: "h-11 w-11 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-aqua/10 first:[&:has([aria-selected])]:rounded-l-2xl last:[&:has([aria-selected])]:rounded-r-2xl focus-within:relative focus-within:z-20",
+                    day: "h-11 w-11 p-0 font-bold aria-selected:opacity-100 hover:bg-brand-aqua/20 hover:font-black hover:rounded-2xl transition-all text-brand-teal",
+                    day_selected: "bg-brand-aqua !text-brand-teal font-black rounded-2xl shadow-xl shadow-brand-aqua/30 scale-110",
+                    day_today: "bg-brand-teal/5 text-brand-teal font-black rounded-2xl border border-brand-teal/10",
                   }}
                 />
-             </div>
-             <div className="grid grid-cols-3 gap-2">
-                {EVENT_TIME_SLOTS.map(time => (
-                   <button
-                     key={time}
-                     onClick={() => setSelectedEventTime(time)}
-                     className={`
-                       py-2 px-1 rounded-lg text-xs font-bold border transition-all
-                       ${selectedEventTime === time 
-                          ? 'bg-brand-blue text-white border-brand-blue shadow-lg scale-105' 
-                          : 'bg-white text-brand-blue border-brand-blue/10 hover:border-brand-cyan hover:bg-brand-cyan/5'}
-                     `}
-                   >
-                     {time}
-                   </button>
-                ))}
-             </div>
+              </div>
+
+              {/* Time Slots Side */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-brand-teal text-white flex items-center justify-center shadow-md">
+                    <Waves size={16} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-teal/40">Arrival Window</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {EVENT_TIME_SLOTS.map(time => (
+                    <button
+                      key={time}
+                      onClick={() => setSelectedEventTime(time)}
+                      className={cn(
+                        "py-4 px-2 rounded-2xl text-xs font-black border-2 transition-all duration-300 uppercase tracking-widest",
+                        selectedEventTime === time
+                          ? "bg-brand-teal text-white border-brand-teal shadow-xl scale-105"
+                          : "bg-white/40 text-brand-teal border-white/60 hover:border-brand-aqua/50 hover:bg-white/60"
+                      )}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {selectedEventDate && selectedEventTime && (
+              <div className="bg-brand-teal/5 border border-brand-teal/10 p-6 rounded-[2rem] flex items-center justify-between animate-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-brand-aqua/20 flex items-center justify-center text-brand-teal shadow-inner">
+                    <Check size={20} strokeWidth={4} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-brand-teal/40">Confirmation</p>
+                    <p className="text-brand-teal font-display font-black text-sm">
+                      {format(selectedEventDate, "PPPP")} @ {selectedEventTime}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <DialogFooter className="p-6 bg-white border-t border-brand-blue/5">
-             <Button onClick={handleDateTimeSubmit} className="w-full btn-coast-primary" disabled={!selectedEventDate || !selectedEventTime}>
-               Confirm & Continue
-             </Button>
-          </DialogFooter>
+
+          <div className="p-10 pt-0">
+            <Button
+              onClick={handleDateTimeSubmit}
+              className="w-full bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-20 text-xl font-display font-black uppercase tracking-[0.2em] rounded-[1.5rem] shadow-2xl transition-all hover:scale-[1.03] disabled:opacity-50 disabled:grayscale"
+              disabled={!selectedEventDate || !selectedEventTime}
+            >
+              Confirm Logistics <ArrowRight className="ml-4" strokeWidth={4} />
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
         <DialogContent className="sm:max-w-[600px] flex flex-col p-0 border-none bg-transparent shadow-none max-h-[90vh] overflow-hidden">
-           <DialogHeader className="sr-only">
-              <DialogTitle>Customer Details</DialogTitle>
-              <DialogDescription>Please enter your contact information to complete the booking.</DialogDescription>
-           </DialogHeader>
-           <div className="flex-1 overflow-y-auto glass-panel-static rounded-[2rem]">
-              <CustomerDetailsForm 
-                onSubmit={handleCustomerDetailsSubmit} 
-                onCancel={() => setIsCustomerDetailsModalOpen(false)}
-                onBack={() => {
-                  setIsCustomerDetailsModalOpen(false);
-                  setIsDateTimeModalOpen(true);
-                }}
-                eventTime={selectedEventTime}
-                initialValues={customerDetailsForPayment || undefined}
-              />
-           </div>
+          <DialogHeader className="sr-only">
+            <DialogTitle>Customer Details</DialogTitle>
+            <DialogDescription>Please enter your contact information to complete the booking.</DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto glass-panel-static rounded-[2rem]">
+            <CustomerDetailsForm
+              onSubmit={handleCustomerDetailsSubmit}
+              onCancel={() => setIsCustomerDetailsModalOpen(false)}
+              onBack={() => {
+                setIsCustomerDetailsModalOpen(false);
+                setIsDateTimeModalOpen(true);
+              }}
+              eventTime={selectedEventTime}
+              initialValues={customerDetailsForPayment || undefined}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 

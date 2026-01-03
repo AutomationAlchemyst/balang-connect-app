@@ -22,14 +22,14 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
       case 'Delivery Secured - Join In!':
       case 'Delivery Fee Sponsored!':
         return 'default';
-      
+
       case 'Slot Open - Be the First!':
       case 'Contributions Open (Shared Delivery Pending)':
         return 'secondary';
 
       case 'Contributions Welcome - Delivery Needed':
         return 'destructive';
-      
+
       case 'Recently Fulfilled!':
         return 'outline';
 
@@ -44,10 +44,10 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
       case 'Delivery Fee Sponsored!':
       case 'Recently Fulfilled!':
         return <CheckCircle className="h-4 w-4" />;
-      
+
       case 'Contributions Welcome - Delivery Needed':
         return <AlertTriangle className="h-4 w-4" />;
-        
+
       case 'Slot Open - Be the First!':
       case 'Contributions Open (Shared Delivery Pending)':
       default:
@@ -96,11 +96,11 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
           <div className="absolute inset-0 bg-brand-blue/10 mix-blend-multiply"></div>
         </div>
       )}
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start mb-2">
-            <CardTitle className="text-coast-heading text-lg text-brand-blue leading-tight">{slot.mosqueName}</CardTitle>
+      <CardHeader className="p-8 pb-4">
+        <div className="flex justify-between items-start mb-4">
+          <CardTitle className="text-brand-teal text-xl font-display font-black uppercase tracking-tight leading-tight">{slot.mosqueName}</CardTitle>
         </div>
-        
+
         <Badge
           variant={getStatusBadgeVariant(slot.status)}
           className={cn(
@@ -108,36 +108,35 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
             // Custom coloring overrides based on status logic if needed, but variants might suffice if defined well.
             // For now, let's keep variants but maybe tweak opacity in globals if we were thorough. 
             // Or just inline styles for specific statuses to match theme perfectly:
-            slot.status.includes("Secured") || slot.status.includes("Sponsored") ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200" :
-            slot.status.includes("Welcome") ? "bg-brand-yellow/20 text-brand-blue border-brand-yellow/50 hover:bg-brand-yellow/30" :
-            "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20 hover:bg-brand-cyan/20"
+            slot.status.includes("Secured") || slot.status.includes("Sponsored") ? "bg-brand-aqua text-brand-teal border-none" :
+              slot.status.includes("Welcome") ? "bg-brand-coral/20 text-brand-coral border-brand-coral/20" :
+                "bg-brand-teal text-white border-none shadow-lg"
           )}
         >
           {getStatusIcon(slot.status)}
           <span className="ml-1.5 truncate">{slot.status}</span>
         </Badge>
 
-        <div className="text-xs text-brand-blue/60 font-medium space-y-1">
-            <p className="flex items-center">
-                <MapPin size={12} className="mr-2 shrink-0 text-brand-cyan" /> {slot.mosqueAddress || 'Address not specified'}
-            </p>
-            <p className="flex items-center">
-                <CalendarDays size={12} className="mr-2 shrink-0 text-brand-cyan" /> Friday, {slot.displayDate}
-            </p>
+        <div className="text-[10px] text-brand-teal/60 font-black uppercase tracking-widest space-y-2 mt-4">
+          <p className="flex items-center">
+            <MapPin size={12} className="mr-3 shrink-0 text-brand-aqua" strokeWidth={3} /> {slot.mosqueAddress || 'Address not specified'}
+          </p>
+          <p className="flex items-center">
+            <CalendarDays size={12} className="mr-3 shrink-0 text-brand-aqua" strokeWidth={3} /> Friday, {slot.displayDate}
+          </p>
         </div>
       </CardHeader>
-      
-      <CardContent className="flex-grow py-2">
-        {slot.description && <p className="text-sm text-brand-blue/70 italic leading-relaxed">"{slot.description}"</p>}
-         {slot.totalBalangsInfaqed && slot.totalBalangsInfaqed > 0 && (
-          <div className="mt-3 inline-block">
-            <Badge variant="secondary" className="bg-brand-blue/5 text-brand-blue font-mono text-xs border-brand-blue/10">
-               Balangs Infaqed: {slot.totalBalangsInfaqed}
-            </Badge>
+
+      <CardContent className="flex-grow p-8 pt-0">
+        {slot.description && <p className="text-base text-brand-teal/60 font-medium italic leading-relaxed border-l-4 border-brand-aqua/30 pl-6">"{slot.description}"</p>}
+        {slot.totalBalangsInfaqed && slot.totalBalangsInfaqed > 0 && (
+          <div className="mt-6 flex items-center gap-3">
+            <div className="w-8 h-px bg-brand-teal/10"></div>
+            <span className="text-[10px] font-black uppercase text-brand-teal/40 tracking-[0.2em]">Infaqed: {slot.totalBalangsInfaqed} Balangs</span>
           </div>
         )}
       </CardContent>
-      
+
       <CardFooter className="flex-col items-stretch space-y-3 pt-2 pb-6 px-6">
         {slot.status !== 'Recently Fulfilled!' ? (
           <>
@@ -148,7 +147,7 @@ export default function InfaqNoticeCard({ slot }: InfaqNoticeCardProps) {
               <ShoppingBag className="mr-2 h-4 w-4" />
               Contribute
             </Button>
-            
+
             {!slot.isDeliveryFeeCovered && (
               <Button
                 variant="outline"

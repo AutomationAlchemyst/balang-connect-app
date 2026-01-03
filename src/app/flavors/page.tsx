@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import FlavorCard from '@/components/features/flavors/FlavorCard';
 import { mockFlavors } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowRight, Waves } from 'lucide-react';
+import { ShoppingCart, ArrowRight, Waves, Droplets } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+
+import { WavyBackground } from '@/components/ui/wavy-background';
 
 export default function FlavorsPage() {
   const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([]);
@@ -26,8 +29,8 @@ export default function FlavorsPage() {
   const handleProceedToEventBuilder = () => {
     if (selectedFlavorIds.length === 0) {
       toast({
-        title: 'No Flavors Selected',
-        description: 'Please select at least one flavor to proceed.',
+        title: 'Selection Required',
+        description: 'Choose at least one flavor to start your paradise journey.',
         variant: 'destructive',
       });
       return;
@@ -41,71 +44,103 @@ export default function FlavorsPage() {
   const canProceed = selectedFlavorIds.length > 0;
 
   return (
-    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
-      <div className="container mx-auto px-4 space-y-12">
-        
-        {/* Hero / Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-           <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-2">
-              <Waves size={14} /> Premium Selection
-           </div>
-           <h1 className="text-coast-heading text-5xl md:text-7xl drop-shadow-sm text-brand-blue">
-             Our <span className="text-brand-cyan">Flavors</span>
-           </h1>
-           <p className="text-xl text-brand-blue/70 font-medium leading-relaxed">
-             Hand-crafted, ice-blended perfection. Select your favorites below to kickstart your event package.
-           </p>
+    <div className="relative min-h-screen">
+      <WavyBackground
+        className="fixed inset-0 z-0"
+        colors={["#004F59", "#00E0C6", "#FF6F61", "#F4EBD0", "#FFB347"]}
+        waveWidth={60}
+        speed="slow"
+      />
+
+      <div className="container mx-auto px-4 relative z-10 pt-32 pb-32 space-y-24">
+
+        {/* Header Section */}
+        <div className="text-center space-y-8 max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-3 bg-brand-teal text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-4 shadow-xl rotate-1">
+            <Droplets size={16} className="text-brand-aqua" strokeWidth={4} />
+            Pure Hydration
+          </div>
+
+          <h1 className="font-display font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-[0.85] tracking-tighter text-brand-teal drop-shadow-2xl">
+            Iced<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-aqua to-brand-cyan">Paradise</span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-brand-teal/60 font-bold leading-relaxed max-w-2xl mx-auto border-t border-brand-teal/10 pt-8 uppercase tracking-widest">
+            Hand-crafted, cold-pressed, and ice-blended to perfection. Choose your oceanic flavors below.
+          </p>
         </div>
-        
+
         {/* Sticky Selection Bar */}
-        <div className={`sticky top-24 z-40 transition-all duration-500 ease-in-out transform ${canProceed ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'}`}>
-          <div className="glass-panel-wet p-4 rounded-full flex flex-col sm:flex-row justify-between items-center gap-4 max-w-2xl mx-auto border-brand-cyan/30 shadow-2xl">
-            <div className="flex items-center gap-3 px-4">
-               <div className="bg-brand-cyan text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-sm">
-                  {selectedFlavorIds.length}
-               </div>
-               <span className="font-bold text-brand-blue uppercase text-sm tracking-wide">Flavors Selected</span>
+        <div className={`sticky top-28 z-40 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] transform ${canProceed ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-12 opacity-0 scale-95 pointer-events-none'}`}>
+          <div className="bg-white/40 backdrop-blur-2xl p-3 rounded-[3rem] flex flex-col sm:flex-row justify-between items-center gap-4 max-w-3xl mx-auto border border-white/60 shadow-[0_40px_80px_rgba(0,0,0,0.15)]">
+            <div className="flex items-center gap-4 px-6">
+              <div className="bg-brand-teal text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg rotate-3 overflow-hidden relative">
+                <div className="absolute inset-0 bg-brand-aqua/20 animate-pulse"></div>
+                <span className="relative z-10">{selectedFlavorIds.length}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-black text-brand-teal uppercase text-sm tracking-widest">Liquid Selection</span>
+                <span className="text-brand-teal/50 text-xs font-bold uppercase tracking-tight">Ready for deployment</span>
+              </div>
             </div>
-            <Button 
-              onClick={handleProceedToEventBuilder} 
-              className="btn-coast-primary h-10 px-6 rounded-full text-sm w-full sm:w-auto shadow-lg"
-              disabled={!canProceed}
+
+            <button
+              onClick={handleProceedToEventBuilder}
+              className="bg-brand-teal text-white h-14 px-10 rounded-[2.5rem] font-black uppercase tracking-[0.2em] text-sm flex items-center gap-3 hover:bg-brand-aqua hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto"
             >
-              Build Event <ArrowRight className="ml-2 h-4 w-4" strokeWidth={3} />
-            </Button>
+              Build Event <ArrowRight className="h-5 w-5" strokeWidth={3} />
+            </button>
           </div>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {mockFlavors.map((flavor) => (
-            <FlavorCard 
-              key={flavor.id} 
-              flavor={flavor}
-              isSelected={selectedFlavorIds.includes(flavor.id)}
-              onToggleSelect={handleToggleFlavorSelection}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {mockFlavors.map((flavor, index) => (
+            <div
+              key={flavor.id}
+              className="animate-in fade-in slide-in-from-bottom-12 duration-700 fill-mode-both"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <FlavorCard
+                flavor={flavor}
+                isSelected={selectedFlavorIds.includes(flavor.id)}
+                onToggleSelect={handleToggleFlavorSelection}
+              />
+            </div>
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-20 text-center space-y-6">
-            <p className="text-brand-blue/40 font-bold uppercase text-xs tracking-widest">Ready to chill?</p>
-            <Button 
-              onClick={handleProceedToEventBuilder} 
-              size="lg"
-              className={`h-16 px-10 text-xl rounded-full transition-all duration-300 ${
-                canProceed 
-                ? 'btn-coast-primary shadow-xl hover:shadow-2xl hover:-translate-y-1' 
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              }`}
+        <div className="text-center py-20">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-16 rounded-[4rem] max-w-4xl mx-auto space-y-10 shadow-2xl">
+            <h2 className="text-4xl md:text-6xl font-display font-black text-white uppercase leading-tight">
+              Ready to make <br /> a <span className="text-brand-aqua">Splash?</span>
+            </h2>
+            <p className="text-white/60 text-xl font-medium max-w-xl mx-auto">
+              Combine your favorite flavors and let us handle the chill. Perfect for any scale of event.
+            </p>
+            <button
+              onClick={handleProceedToEventBuilder}
+              className={cn(
+                "h-20 px-16 text-xl rounded-[3rem] font-display font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-2xl inline-flex items-center gap-4",
+                canProceed
+                  ? "bg-brand-coral text-white hover:scale-105 hover:bg-white hover:text-brand-coral"
+                  : "bg-white/10 text-white/20 cursor-not-allowed border border-white/5"
+              )}
               disabled={!canProceed}
             >
-              <ShoppingCart className="mr-2 h-5 w-5" strokeWidth={2.5} />
-              {canProceed ? 'Start Building Package' : 'Select Flavors First'}
-            </Button>
+              {canProceed ? (
+                <>
+                  <ShoppingCart size={28} strokeWidth={3} />
+                  Start Building
+                </>
+              ) : (
+                "Select Flavors Above"
+              )}
+            </button>
+          </div>
         </div>
-
       </div>
     </div>
   );

@@ -9,35 +9,56 @@ export const metadata: Metadata = {
   description: 'Browse our specially curated event packages for weddings, birthdays, corporate events, and more.',
 };
 
+import { WavyBackground } from '@/components/ui/wavy-background';
+
 export default function PackagesPage() {
   return (
-    <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
-      <div className="container mx-auto px-4 space-y-12">
-        
-        {/* Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-           <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-2">
-              <PackageOpen size={14} /> Curated Sets
-           </div>
-           <h1 className="text-coast-heading text-5xl md:text-7xl drop-shadow-sm text-brand-blue">
-             Event <span className="text-brand-cyan">Packages</span>
-           </h1>
-           <p className="text-xl text-brand-blue/70 font-medium leading-relaxed">
-             Choose from our thoughtfully designed packages. We cater to all types of events, ensuring a memorable experience.
-           </p>
+    <div className="relative min-h-screen">
+      <WavyBackground
+        className="fixed inset-0 z-0"
+        colors={["#004F59", "#00E0C6", "#FF6F61", "#F4EBD0", "#FFB347"]}
+        waveWidth={60}
+        speed="slow"
+      />
+
+      <div className="container mx-auto px-4 relative z-10 pt-32 pb-32 space-y-24">
+
+        {/* Header Section */}
+        <div className="text-center space-y-8 max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-3 bg-brand-teal text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-4 shadow-xl -rotate-1">
+            <PackageOpen size={16} className="text-brand-aqua" strokeWidth={4} />
+            Curated Experiences
+          </div>
+
+          <h1 className="font-display font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-[0.85] tracking-tighter text-brand-teal drop-shadow-2xl">
+            Event<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-aqua to-brand-cyan">Tiers</span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-brand-teal/60 font-bold leading-relaxed max-w-2xl mx-auto border-t border-brand-teal/10 pt-8 uppercase tracking-widest">
+            From intimate gatherings to massive corporate festivals. We have the perfect "Liquid Paradise" set for your occasion.
+          </p>
         </div>
 
         {/* Packages List */}
-        <div className="flex flex-col gap-8 max-w-5xl mx-auto"> 
-          {mockPackages.map((pkg) => (
-            <PackageCard key={pkg.id} eventPackage={pkg} />
+        <div className="flex flex-col gap-12 lg:gap-20 max-w-6xl mx-auto">
+          {mockPackages.map((pkg, index) => (
+            <div
+              key={pkg.id}
+              className="animate-in fade-in slide-in-from-bottom-20 duration-1000 fill-mode-both"
+              style={{ animationDelay: `${index * 200}ms` }}
+            >
+              <PackageCard eventPackage={pkg} />
+            </div>
           ))}
         </div>
-        
-        <div className="text-center pt-12">
-           <p className="text-brand-blue/40 text-sm font-medium">
-             Need something custom? Use our <a href="/event-builder" className="text-brand-cyan font-bold underline hover:text-brand-blue transition-colors">Event Builder</a> to mix and match.
-           </p>
+
+        <div className="text-center py-12">
+          <div className="inline-block bg-white/10 backdrop-blur-xl border border-white/20 px-10 py-6 rounded-[2rem] shadow-2xl">
+            <p className="text-white/60 text-lg font-bold">
+              Need something custom? Use our <a href="/event-builder" className="text-brand-aqua font-black underline hover:text-white transition-all">Event Builder</a> to mix and match.
+            </p>
+          </div>
         </div>
 
       </div>

@@ -29,10 +29,10 @@ const hearAboutUsOptions = [
 ];
 
 const pickupTimeSlots = [
-  "10:00 AM", "11:00 AM", "12:00 PM", 
-  "01:00 PM", "02:00 PM", "03:00 PM", 
-  "04:00 PM", "05:00 PM", "06:00 PM", 
-  "07:00 PM", "08:00 PM", "09:00 PM", 
+  "10:00 AM", "11:00 AM", "12:00 PM",
+  "01:00 PM", "02:00 PM", "03:00 PM",
+  "04:00 PM", "05:00 PM", "06:00 PM",
+  "07:00 PM", "08:00 PM", "09:00 PM",
   "10:00 PM"
 ];
 
@@ -58,8 +58,12 @@ const customerDetailsFormSchema = z.object({
   addressUnit: z.string().optional(),
   expectedPax: z.coerce.number().positive({ message: 'Expected number of pax must be a positive number.' }),
   eventDescription: z.string().min(5, { message: 'Event description must be at least 5 characters.' }),
-  pickupTime: z.string().min(1, { message: 'Please select a pickup time.' }),
+  pickupTime: z.string().optional(),
   howHeard: z.string().min(1, { message: 'Please select an option.' }),
+}).refine((data) => {
+  // pickupTime is required unless it's the 17L package (but schema level it's optional)
+  // We'll handle the requirement check in the form item or just keep it optional as requested for 17L
+  return true;
 });
 
 export type CustomerDetailsFormValues = z.infer<typeof customerDetailsFormSchema>;
@@ -70,9 +74,10 @@ interface CustomerDetailsFormProps {
   onBack: () => void;
   eventTime?: string;
   initialValues?: Partial<CustomerDetailsFormValues>;
+  selectedPackageId?: string;
 }
 
-export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventTime, initialValues }: CustomerDetailsFormProps) {
+export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventTime, initialValues, selectedPackageId }: CustomerDetailsFormProps) {
   const form = useForm<CustomerDetailsFormValues>({
     resolver: zodResolver(customerDetailsFormSchema),
     defaultValues: initialValues || {
@@ -82,7 +87,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
       postalCode: '',
       addressBlockHouse: '',
       addressUnit: '',
-      expectedPax: '' as unknown as number, 
+      expectedPax: '' as unknown as number,
       eventDescription: '',
       pickupTime: '',
       howHeard: '',
@@ -107,72 +112,77 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
 
   useEffect(() => {
     if (selectedPickupTime && !filteredPickupTimeSlots.includes(selectedPickupTime)) {
-        setValue('pickupTime', '', { shouldValidate: true });
+      setValue('pickupTime', '', { shouldValidate: true });
     }
   }, [filteredPickupTimeSlots, selectedPickupTime, setValue]);
 
-  // MODERN COAST THEME STYLES
-  const inputStyles = "input-coast h-14 text-brand-blue font-medium placeholder:text-brand-blue/30";
-  const labelStyles = "font-display font-bold uppercase tracking-tight text-sm text-[#1C489E] mb-2 ml-1";
-  const cardStyles = "bg-transparent p-6 sm:p-10"; // Parent modal handles the glass effect
-  const buttonBaseStyles = "font-display font-bold uppercase rounded-full shadow-lg transition-all active:scale-95 hover:-translate-y-0.5";
-  
+  // LIQUID PARADISE THEME STYLES
+  const inputStyles = "bg-white/40 border-white/60 h-16 text-brand-teal font-black placeholder:text-brand-teal/20 rounded-[1.25rem] focus:ring-brand-aqua/50 focus:border-brand-aqua transition-all";
+  const labelStyles = "font-display font-black uppercase tracking-[0.2em] text-[10px] text-brand-teal/40 mb-3 ml-2";
+  const cardStyles = "bg-transparent p-10"; // Parent modal handles the glass effect
+  const buttonBaseStyles = "font-display font-black uppercase tracking-widest rounded-[1.25rem] transition-all shadow-xl active:scale-95 hover:-translate-y-1";
+
   return (
     <Form {...form}>
       <div className="h-full">
-        <form 
-          onSubmit={form.handleSubmit(onSubmit)} 
-          className={`flex flex-col gap-8 ${cardStyles}`}
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className={`flex flex-col gap-10 ${cardStyles}`}
         >
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-               <h2 className="text-coast-heading text-3xl font-bold uppercase tracking-tighter drop-shadow-sm">
-                 Customer Details
-               </h2>
-               <div className="h-1 w-24 bg-gradient-to-r from-brand-cyan to-brand-blue mx-auto mt-4 rounded-full opacity-30" />
+          <div className="space-y-8">
+            <div className="flex flex-col items-center text-center mb-12">
+              <div className="w-16 h-1 w-1 bg-brand-aqua rounded-full mb-6 opacity-30" />
+              <h2 className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight">
+                Customer <br />
+                <span className="text-brand-teal/40">Credentials</span>
+              </h2>
+              <p className="text-brand-teal/60 font-bold text-sm mt-4 max-w-xs">Enter your details to finalize the premium booking.</p>
             </div>
 
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={labelStyles}>Full Name *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your Full Name" className={inputStyles} {...field} />
-                  </FormControl>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={labelStyles}>Email *</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="YOUR.EMAIL@EXAMPLE.COM" className={inputStyles} {...field} />
-                  </FormControl>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyles}>Full Name *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="AUTHORIZED REPRESENTATIVE" className={inputStyles} {...field} />
+                    </FormControl>
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyles}>Communication Email *</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="EMAIL@DOMAIN.COM" className={inputStyles} {...field} />
+                    </FormControl>
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyles}>Phone *</FormLabel>
+                  <FormLabel className={labelStyles}>WhatsApp / Mobile *</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="WHATSAPP NUMBER" className={inputStyles} {...field} />
+                    <Input type="tel" placeholder="+65 XXXX XXXX" className={inputStyles} {...field} />
                   </FormControl>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
+                  <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
                 </FormItem>
               )}
             />
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <FormField
                 control={form.control}
                 name="postalCode"
@@ -180,9 +190,9 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                   <FormItem className="sm:col-span-1">
                     <FormLabel className={labelStyles}>Postal Code *</FormLabel>
                     <FormControl>
-                      <Input placeholder="123456" className={inputStyles} {...field} />
+                      <Input placeholder="XXXXXX" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
                   </FormItem>
                 )}
               />
@@ -191,136 +201,148 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
                 name="addressBlockHouse"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
-                    <FormLabel className={labelStyles}>Block No / House Number *</FormLabel>
+                    <FormLabel className={labelStyles}>Block / House Number *</FormLabel>
                     <FormControl>
-                      <Input placeholder="BLK 123 / 45A JALAN BESAR" className={inputStyles} {...field} />
+                      <Input placeholder="STREET & BUILDING" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
                   </FormItem>
                 )}
               />
             </div>
-            <FormField
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <FormField
                 control={form.control}
                 name="addressUnit"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyles}>Unit Number (if any)</FormLabel>
+                    <FormLabel className={labelStyles}>Unit ID (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="#01-23" className={inputStyles} {...field} />
+                      <Input placeholder="#XX-XX" className={inputStyles} {...field} />
                     </FormControl>
-                    <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
                   </FormItem>
                 )}
               />
 
-            <FormField
-              control={form.control}
-              name="expectedPax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={labelStyles}>Expected No of Pax *</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="50, 100, 200" className={inputStyles} {...field} />
-                  </FormControl>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="expectedPax"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyles}>Estimated Guests *</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="HEADCOUNT" className={inputStyles} {...field} />
+                    </FormControl>
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="eventDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyles}>Tell us about the event *</FormLabel>
+                  <FormLabel className={labelStyles}>Experience Description *</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="WEDDING, GATHERING, BIRTHDAY..."
-                      className={`${inputStyles} h-32 pt-3 resize-none`}
+                      placeholder="DESCRIBE THE VIBE..."
+                      className={`${inputStyles} h-32 pt-5 resize-none`}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
+                  <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="pickupTime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={labelStyles}>Balang pickup/collection time *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={inputStyles}>
-                        <SelectValue placeholder="SELECT A TIME" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white/90 backdrop-blur-xl border border-white/60 rounded-xl shadow-lg">
-                      {filteredPickupTimeSlots.length > 0 ? (
-                        filteredPickupTimeSlots.map((slot) => (
-                          <SelectItem key={slot} value={slot} className="focus:bg-brand-yellow/30 focus:text-brand-blue font-body cursor-pointer text-[#1C489E]">
-                            {slot}
+
+            <div className={`grid grid-cols-1 ${selectedPackageId === 'pkg_17l_self_pickup' ? '' : 'md:grid-cols-2'} gap-8`}>
+              {selectedPackageId !== 'pkg_17l_self_pickup' && (
+                <FormField
+                  control={form.control}
+                  name="pickupTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className={labelStyles}>Logistics Collection *</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className={inputStyles}>
+                            <SelectValue placeholder="SELECT SLOT" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white/90 backdrop-blur-2xl border-white/60 rounded-[1.25rem] p-2">
+                          {filteredPickupTimeSlots.length > 0 ? (
+                            filteredPickupTimeSlots.map((slot) => (
+                              <SelectItem key={slot} value={slot} className="font-black text-brand-teal py-3 rounded-xl focus:bg-brand-aqua/20">
+                                {slot}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="no-slots" disabled className="text-brand-teal/40">
+                              No available slots
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="howHeard"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyles}>Acquisition Source *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={inputStyles}>
+                          <SelectValue placeholder="DISCOVERY METHOD" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-white/90 backdrop-blur-2xl border-white/60 rounded-[1.25rem] p-2">
+                        {hearAboutUsOptions.map((option) => (
+                          <SelectItem key={option} value={option} className="font-black text-brand-teal py-3 rounded-xl focus:bg-brand-aqua/20">
+                            {option}
                           </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="no-slots" disabled className="text-gray-500">
-                          No available slots (min. 3hr after event)
-                        </SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription className="font-bold text-xs uppercase tracking-wide text-[#1C489E]/60 ml-1">Time for us to collect empty balangs.</FormDescription>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="howHeard"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={labelStyles}>How did you hear about us? *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={inputStyles}>
-                        <SelectValue placeholder="PLEASE SELECT ONE" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white/90 backdrop-blur-xl border border-white/60 rounded-xl shadow-lg">
-                      {hearAboutUsOptions.map((option) => (
-                        <SelectItem key={option} value={option} className="focus:bg-brand-yellow/30 focus:text-brand-blue font-body cursor-pointer text-[#1C489E]">
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="font-medium text-red-500 text-xs mt-1 ml-1" />
-                </FormItem>
-              )}
-            />
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="font-black text-brand-coral text-[10px] uppercase tracking-widest mt-2 ml-2" />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          
-          <div className="flex flex-col sm:flex-row sm:justify-end gap-4 border-t border-brand-blue/10 pt-8 mt-4">
-            <Button 
-              type="button" 
-              onClick={onBack}
-              className={`${buttonBaseStyles} bg-white text-brand-blue hover:bg-gray-50 border border-brand-blue/10 sm:w-auto w-full h-12 shadow-sm`}
+
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-6 border-t border-brand-teal/10 pt-10 mt-6">
+            <div className="flex gap-4 w-full sm:w-auto">
+              <Button
+                type="button"
+                onClick={onBack}
+                variant="outline"
+                className={`${buttonBaseStyles} bg-white/40 border-white/60 text-brand-teal h-14 px-8 flex-1`}
+              >
+                Regress
+              </Button>
+              <Button
+                type="button"
+                onClick={onCancel}
+                variant="outline"
+                className={`${buttonBaseStyles} border-brand-coral/20 text-brand-coral hover:bg-brand-coral hover:text-white h-14 px-8 flex-1`}
+              >
+                Abort
+              </Button>
+            </div>
+            <Button
+              type="submit"
+              className={`${buttonBaseStyles} bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-16 text-xl px-12 sm:min-w-[240px]`}
             >
-              Back
-            </Button>
-            <Button 
-              type="button" 
-              onClick={onCancel}
-              className={`${buttonBaseStyles} bg-white text-red-500 hover:bg-red-50 border border-red-100 sm:w-auto w-full h-12 shadow-sm`}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              className={`btn-coast-primary sm:w-auto w-full h-14 text-xl px-10 flex-1 sm:flex-none shadow-xl`}
-            >
-              Book Now <ArrowRight className="ml-2 h-5 w-5" />
+              Verify & Book <ArrowRight className="ml-4 h-6 w-6" strokeWidth={4} />
             </Button>
           </div>
         </form>

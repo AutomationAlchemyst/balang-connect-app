@@ -35,7 +35,7 @@ import { getBlockedDates } from '@/app/admin/manage-dates/actions';
 const INFAQ_BALANG_PRICE = 95.00;
 const DELIVERY_FEE = 25.00;
 
-export const hearAboutUsOptions = [ 
+export const hearAboutUsOptions = [
   'Social Media (Facebook, Instagram, etc.)',
   'Google Search',
   'Friend/Family Recommendation',
@@ -75,13 +75,13 @@ export default function InfaqForm() {
   const [isCalendarLoading, setIsCalendarLoading] = useState(true);
 
   useEffect(() => {
-      const fetchBlockedDates = async () => {
-          setIsCalendarLoading(true);
-          const dates = await getBlockedDates();
-          setBlockedDates(dates.map(d => d.date));
-          setIsCalendarLoading(false);
-      };
-      fetchBlockedDates();
+    const fetchBlockedDates = async () => {
+      setIsCalendarLoading(true);
+      const dates = await getBlockedDates();
+      setBlockedDates(dates.map(d => d.date));
+      setIsCalendarLoading(false);
+    };
+    fetchBlockedDates();
   }, []);
 
   const form = useForm<z.infer<typeof infaqFormSchema>>({
@@ -108,7 +108,7 @@ export default function InfaqForm() {
     const deliveryDateParam = searchParams.get('deliveryDate');
     const targetSlotIdParam = searchParams.get('targetSlotId');
     const deliveryAlreadyCoveredParam = searchParams.get('deliveryAlreadyCovered');
-    
+
     let paramsApplied = false;
 
     if (mosqueNameParam) {
@@ -125,10 +125,10 @@ export default function InfaqForm() {
           // JS Date month is 0-indexed.
           const localDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
           if (!isNaN(localDate.getTime())) {
-              form.setValue('deliveryDate', localDate, { shouldValidate: true });
-              paramsApplied = true;
+            form.setValue('deliveryDate', localDate, { shouldValidate: true });
+            paramsApplied = true;
           } else {
-              console.error("Failed to parse date from URL param:", deliveryDateParam);
+            console.error("Failed to parse date from URL param:", deliveryDateParam);
           }
         }
       } catch (e) {
@@ -142,7 +142,7 @@ export default function InfaqForm() {
     }
 
     if (deliveryAlreadyCoveredParam === 'true') {
-      form.setValue('coverDeliveryFee', false); 
+      form.setValue('coverDeliveryFee', false);
       paramsApplied = true;
     }
 
@@ -155,7 +155,7 @@ export default function InfaqForm() {
       currentUrl.searchParams.delete('deliveryAlreadyCovered');
       const hash = window.location.hash;
       router.replace(currentUrl.pathname + currentUrl.search + hash, { scroll: false });
-      
+
       if (hash === '#infaq-form-actual' && formRef.current) {
         formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -195,13 +195,13 @@ export default function InfaqForm() {
   async function onSubmit(values: z.infer<typeof infaqFormSchema>) {
     setIsLoading(true);
     if (!values.deliveryDate) {
-        toast({
-            title: "Delivery Date Missing",
-            description: "Please select a delivery date.",
-            variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
+      toast({
+        title: "Delivery Date Missing",
+        description: "Please select a delivery date.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
     }
     const orderData: InfaqOrder = {
       ...values,
@@ -213,9 +213,9 @@ export default function InfaqForm() {
       calculatedTotal: totalPrice,
       mosqueAddress: selectedMosqueAddress ?? undefined,
       orderType: 'balang_infaq',
-      coverDeliveryFee: !!values.coverDeliveryFee, 
+      coverDeliveryFee: !!values.coverDeliveryFee,
     };
-    
+
     const result = await submitInfaqContribution(orderData);
 
     if (result.success) {
@@ -225,8 +225,8 @@ export default function InfaqForm() {
         variant: 'default',
         duration: 10000,
       });
-      form.reset({ 
-        donorName: '', 
+      form.reset({
+        donorName: '',
         dedicationName: '',
         email: '',
         phone: '',
@@ -238,10 +238,10 @@ export default function InfaqForm() {
         anonymous: false,
         howHeard: undefined,
         consent: false,
-        targetSlotId: undefined, 
+        targetSlotId: undefined,
       });
       setSelectedMosqueAddress(null);
-      setSubtotal(0); 
+      setSubtotal(0);
       setTotalPrice(0);
       setCalculatedDeliveryFee(0);
     } else {
@@ -254,10 +254,10 @@ export default function InfaqForm() {
     setIsLoading(false);
   }
 
-  // Modern Coast Constants
-  const INPUT_STYLE = "input-coast h-12 text-brand-blue placeholder:text-brand-blue/30";
-  const LABEL_STYLE = "font-display font-bold uppercase text-brand-blue text-sm ml-1 mb-1 block";
-  
+  // Liquid Paradise Constants
+  const INPUT_STYLE = "bg-white/40 border-white/60 h-14 text-brand-teal font-black placeholder:text-brand-teal/30 rounded-2xl focus:ring-brand-aqua/50 focus:border-brand-aqua transition-all";
+  const LABEL_STYLE = "font-display font-black uppercase text-brand-teal text-[10px] tracking-[0.2em] ml-1 mb-2 block";
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" ref={formRef} id="infaq-form-actual">
@@ -272,12 +272,12 @@ export default function InfaqForm() {
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="infaq-anonymous"
-                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded"
+                  className="border-brand-teal/30 text-brand-aqua data-[state=checked]:bg-brand-aqua data-[state=checked]:border-brand-aqua rounded-lg w-6 h-6 transition-all"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel htmlFor="infaq-anonymous" className="font-bold text-brand-blue cursor-pointer">Donate Anonymously</FormLabel>
-                <FormDescription className="text-brand-blue/50 text-xs">
+                <FormLabel htmlFor="infaq-anonymous" className="font-black text-[10px] uppercase tracking-widest text-brand-teal cursor-pointer">Donate Anonymously</FormLabel>
+                <FormDescription className="text-brand-teal/40 text-[10px] uppercase font-black tracking-tight">
                   Your name will be recorded as 'Anonymous Donor'.
                 </FormDescription>
               </div>
@@ -346,11 +346,11 @@ export default function InfaqForm() {
               <FormLabel className={LABEL_STYLE}>Number of Balangs to Infaq *</FormLabel>
               <FormControl>
                 <Input type="number" min="1" placeholder="e.g., 1" {...field} onChange={(e) => {
-                    const val = parseInt(e.target.value, 10);
-                    field.onChange(val >= 1 ? val : 1);
-                }} 
-                disabled={isLoading} 
-                className={INPUT_STYLE}
+                  const val = parseInt(e.target.value, 10);
+                  field.onChange(val >= 1 ? val : 1);
+                }}
+                  disabled={isLoading}
+                  className={INPUT_STYLE}
                 />
               </FormControl>
               <FormDescription className="text-xs text-brand-blue/40">Each 23L balang is ${INFAQ_BALANG_PRICE.toFixed(2)} (approx. 60 cups).</FormDescription>
@@ -358,18 +358,18 @@ export default function InfaqForm() {
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="coverDeliveryFee"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm bg-white/60">
               <FormControl>
                 <Checkbox
-                  id="infaq-cover-delivery" 
+                  id="infaq-cover-delivery"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading || currentQuantity < 1}
-                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded"
+                  className="border-brand-teal/30 text-brand-aqua data-[state=checked]:bg-brand-aqua data-[state=checked]:border-brand-aqua rounded-lg w-6 h-6 transition-all"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -389,13 +389,13 @@ export default function InfaqForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className={LABEL_STYLE}>Mosque Name / Venue *</FormLabel>
-              <Select 
+              <Select
                 onValueChange={(value) => {
                   field.onChange(value);
                   const selected = mosqueDataList.find(m => m.name === value);
                   setSelectedMosqueAddress(selected ? selected.address : null);
-                }} 
-                value={field.value || ""} 
+                }}
+                value={field.value || ""}
                 disabled={isLoading}
               >
                 <FormControl>
@@ -413,7 +413,7 @@ export default function InfaqForm() {
               </Select>
               <FormMessage />
               {selectedMosqueAddress && (
-                <p className="text-xs text-brand-blue/60 mt-1 pt-1 ml-1 font-medium">
+                <p className="text-[10px] font-black uppercase text-brand-teal/40 mt-3 ml-1 tracking-widest">
                   Address: {selectedMosqueAddress}
                 </p>
               )}
@@ -453,17 +453,17 @@ export default function InfaqForm() {
                     selected={field.value}
                     onSelect={field.onChange}
                     disabled={[
-                        ...blockedDates,
-                        { before: new Date(new Date().setHours(0, 0, 0, 0)) },
-                        { dayOfWeek: [0, 1, 2, 3, 4, 6] }
+                      ...blockedDates,
+                      { before: new Date(new Date().setHours(0, 0, 0, 0)) },
+                      { dayOfWeek: [0, 1, 2, 3, 4, 6] }
                     ]}
                     initialFocus
                     classNames={{
-                        head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
-                        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                        day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
-                        day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
-                        day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
+                      head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
+                      cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                      day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
+                      day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
+                      day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
                     }}
                   />
                 </PopoverContent>
@@ -472,7 +472,7 @@ export default function InfaqForm() {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="howHeard"
@@ -513,39 +513,39 @@ export default function InfaqForm() {
         />
 
         <div className="p-6 rounded-2xl bg-brand-blue/5 border border-brand-blue/5 space-y-2 mt-4">
+          <div className="flex justify-between text-sm text-brand-blue/70">
+            <span>Balangs Subtotal:</span>
+            <span className="font-bold">${subtotal.toFixed(2)}</span>
+          </div>
+          {calculatedDeliveryFee > 0 && (
             <div className="flex justify-between text-sm text-brand-blue/70">
-                <span>Balangs Subtotal:</span>
-                <span className="font-bold">${subtotal.toFixed(2)}</span>
+              <span>Delivery Fee:</span>
+              <span className="font-bold">${calculatedDeliveryFee.toFixed(2)}</span>
             </div>
-            {calculatedDeliveryFee > 0 && (
-              <div className="flex justify-between text-sm text-brand-blue/70">
-                  <span>Delivery Fee:</span>
-                  <span className="font-bold">${calculatedDeliveryFee.toFixed(2)}</span>
-              </div>
-            )}
-            <div className="h-px bg-brand-blue/10 my-2" />
-            <div className="flex justify-between text-xl font-black text-brand-blue uppercase tracking-tight">
-                <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
-            </div>
+          )}
+          <div className="h-px bg-brand-blue/10 my-2" />
+          <div className="flex justify-between text-xl font-black text-brand-blue uppercase tracking-tight">
+            <span>Total:</span>
+            <span>${totalPrice.toFixed(2)}</span>
+          </div>
         </div>
 
         <FormField
           control={form.control}
           name="consent"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm">
+            <FormItem className="flex flex-row items-start space-x-4 space-y-0 rounded-[2rem] border border-brand-teal/10 p-6 shadow-sm bg-brand-teal/5 transition-all">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="infaq-consent"
-                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded mt-1"
+                  className="border-brand-teal/30 text-brand-aqua data-[state=checked]:bg-brand-aqua data-[state=checked]:border-brand-aqua rounded-lg w-6 h-6 transition-all mt-1"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <Label htmlFor="infaq-consent" className="cursor-pointer text-sm text-brand-blue/80 font-medium leading-snug block">
+                <Label htmlFor="infaq-consent" className="cursor-pointer text-[10px] font-black uppercase tracking-tight text-brand-teal/70 leading-relaxed block">
                   By submitting this form, I consent to BalangConnect using my personal data to respond to my inquiry and process my request. My data will be handled in compliance with Singapore's PDPA. I acknowledge that BalangConnect will follow up by contacting me via WhatsApp/Email. *
                 </Label>
                 <FormMessage />
@@ -553,11 +553,11 @@ export default function InfaqForm() {
             </FormItem>
           )}
         />
-        
-        <Button 
-            type="submit" 
-            className="w-full btn-coast-primary h-14 text-lg shadow-lg"
-            disabled={isLoading || currentQuantity < 1 || !form.formState.isValid}
+
+        <Button
+          type="submit"
+          className="w-full btn-coast-primary h-14 text-lg shadow-lg"
+          disabled={isLoading || currentQuantity < 1 || !form.formState.isValid}
         >
           {isLoading ? (
             <>

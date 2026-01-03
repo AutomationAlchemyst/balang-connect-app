@@ -26,6 +26,12 @@ export default {
           gold: '#D4A110',
           purple: '#B576A4',
           green: '#3FC300',
+          // New "Liquid Paradise" Palette
+          coral: '#FF6F61',
+          teal: '#004F59',
+          aqua: '#00E0C6',
+          sand: '#F4EBD0',
+          mango: '#FFB347',
         },
         card: {
           DEFAULT: 'hsl(var(--card))',

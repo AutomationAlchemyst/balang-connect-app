@@ -26,7 +26,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { InfaqOrder } from '@/lib/types';
 import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
-import { hearAboutUsOptions } from './InfaqForm'; 
+import { hearAboutUsOptions } from './InfaqForm';
 import { submitInfaqContribution } from '@/app/infaq/actions';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -59,13 +59,13 @@ export default function SponsorDeliveryForm() {
   const [isSponsoringExisting, setIsSponsoringExisting] = useState(false);
 
   useEffect(() => {
-      const fetchBlockedDates = async () => {
-          setIsCalendarLoading(true);
-          const dates = await getBlockedDates();
-          setBlockedDates(dates.map(d => d.date));
-          setIsCalendarLoading(false);
-      };
-      fetchBlockedDates();
+    const fetchBlockedDates = async () => {
+      setIsCalendarLoading(true);
+      const dates = await getBlockedDates();
+      setBlockedDates(dates.map(d => d.date));
+      setIsCalendarLoading(false);
+    };
+    fetchBlockedDates();
   }, []);
 
   const form = useForm<z.infer<typeof sponsorDeliveryFormSchema>>({
@@ -91,18 +91,18 @@ export default function SponsorDeliveryForm() {
     if (mosqueNameParam && deliveryDateParam && targetSlotIdParam) {
       form.setValue('mosqueName', mosqueNameParam);
       form.setValue('targetSlotId', targetSlotIdParam);
-      
+
       const date = parseISO(deliveryDateParam); // Correctly parses YYYY-MM-DD
       form.setValue('deliveryDate', date, { shouldValidate: true });
-      
+
       setIsSponsoringExisting(true);
-      
+
       const currentUrl = new URL(window.location.href);
       currentUrl.searchParams.delete('mosqueName');
       currentUrl.searchParams.delete('deliveryDate');
       currentUrl.searchParams.delete('targetSlotId');
       router.replace(currentUrl.pathname + currentUrl.search + window.location.hash, { scroll: false });
-      
+
       if (window.location.hash === '#sponsor-form-actual' && formRef.current) {
         formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -127,28 +127,28 @@ export default function SponsorDeliveryForm() {
   async function onSubmit(values: z.infer<typeof sponsorDeliveryFormSchema>) {
     setIsLoading(true);
     if (!values.deliveryDate) {
-        toast({
-            title: "Delivery Date Missing",
-            description: "Please select a delivery date.",
-            variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
+      toast({
+        title: "Delivery Date Missing",
+        description: "Please select a delivery date.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
     }
     const orderData: InfaqOrder = {
       ...values,
       deliveryDate: format(values.deliveryDate, 'yyyy-MM-dd'),
       deliveryDisplayDate: format(values.deliveryDate, "PPP"),
-      quantity: 0, 
+      quantity: 0,
       pricePerBalang: 0,
       calculatedSubtotal: 0,
       deliveryFee: SPONSORSHIP_AMOUNT,
       calculatedTotal: SPONSORSHIP_AMOUNT,
-      orderType: 'delivery_sponsorship', 
-      mosqueName: values.mosqueName, 
+      orderType: 'delivery_sponsorship',
+      mosqueName: values.mosqueName,
       mosqueAddress: undefined,
     };
-    
+
     const result = await submitInfaqContribution(orderData);
 
     if (result.success) {
@@ -171,7 +171,7 @@ export default function SponsorDeliveryForm() {
       });
       setIsSponsoringExisting(false);
     } else {
-       toast({
+      toast({
         title: 'Sponsorship Submission Failed',
         description: result.message || 'An unexpected error occurred. Please try again.',
         variant: 'destructive',
@@ -180,80 +180,80 @@ export default function SponsorDeliveryForm() {
     setIsLoading(false);
   }
 
-  // Modern Coast Constants
-  const INPUT_STYLE = "input-coast h-12 text-brand-blue placeholder:text-brand-blue/30";
-  const LABEL_STYLE = "font-display font-bold uppercase text-brand-blue text-sm ml-1 mb-1 block";
+  // Liquid Paradise Constants
+  const INPUT_STYLE = "bg-white/40 border-white/60 h-14 text-brand-teal font-black placeholder:text-brand-teal/30 rounded-2xl focus:ring-brand-aqua/50 focus:border-brand-aqua transition-all";
+  const LABEL_STYLE = "font-display font-black uppercase text-brand-teal text-[10px] tracking-[0.2em] ml-1 mb-2 block";
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" ref={formRef} id="sponsor-form-actual">
-         {isSponsoringExisting && form.getValues('mosqueName') && form.getValues('deliveryDate') ? (
-            <Card className="bg-brand-blue/5 border border-brand-blue/10 rounded-2xl">
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-lg text-brand-blue uppercase font-bold">Sponsoring Specific Slot</CardTitle>
-                    <CardDescription className="text-brand-blue/60 text-xs">You are sponsoring the delivery for the following slot. The details are pre-filled for you.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-1 text-sm font-medium text-brand-blue/80">
-                    <p><strong>Mosque:</strong> {form.getValues('mosqueName')}</p>
-                    <p><strong>Date:</strong> {format(form.getValues('deliveryDate')!, "PPP")}</p>
-                </CardContent>
-            </Card>
+        {isSponsoringExisting && form.getValues('mosqueName') && form.getValues('deliveryDate') ? (
+          <Card className="bg-brand-teal/5 border border-brand-teal/10 rounded-[2rem] overflow-hidden">
+            <CardHeader className="p-8 pb-4 bg-brand-teal/5 border-b border-brand-teal/10">
+              <CardTitle className="text-[10px] text-brand-teal uppercase font-black tracking-widest">Sponsoring Specific Slot</CardTitle>
+              <CardDescription className="text-brand-teal/40 text-[10px] uppercase font-black tracking-tight mt-1">You are sponsoring the delivery for the following slot.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8 space-y-2 text-[10px] font-black uppercase tracking-widest text-brand-teal/60">
+              <p><strong>Mosque:</strong> <span className="text-brand-teal">{form.getValues('mosqueName')}</span></p>
+              <p><strong>Date:</strong> <span className="text-brand-teal">{format(form.getValues('deliveryDate')!, "PPP")}</span></p>
+            </CardContent>
+          </Card>
         ) : (
-             <FormField
-                control={form.control}
-                name="deliveryDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className={LABEL_STYLE}>Preferred Delivery Date (Fridays Only) *</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                              INPUT_STYLE
-                            )}
-                            disabled={isLoading || isCalendarLoading}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>{isCalendarLoading ? "Loading dates..." : "Pick a date"}</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 glass-panel-static border-none" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={[
-                              ...blockedDates,
-                              { before: new Date(new Date().setHours(0, 0, 0, 0)) },
-                              { dayOfWeek: [0, 1, 2, 3, 4, 6] }
-                          ]}
-                          initialFocus
-                          classNames={{
-                            head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
-                            cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                            day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
-                            day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
-                            day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
-                        }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription className="text-xs text-brand-blue/40">
-                      Select the Friday you'd like to sponsor the delivery for.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={form.control}
+            name="deliveryDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className={LABEL_STYLE}>Preferred Delivery Date (Fridays Only) *</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                          INPUT_STYLE
+                        )}
+                        disabled={isLoading || isCalendarLoading}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>{isCalendarLoading ? "Loading dates..." : "Pick a date"}</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 glass-panel-static border-none" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={[
+                        ...blockedDates,
+                        { before: new Date(new Date().setHours(0, 0, 0, 0)) },
+                        { dayOfWeek: [0, 1, 2, 3, 4, 6] }
+                      ]}
+                      initialFocus
+                      classNames={{
+                        head_cell: "text-brand-blue font-bold uppercase text-xs pt-4",
+                        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-cyan/10 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                        day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-brand-cyan/20 hover:font-bold hover:rounded-full transition-all text-brand-blue",
+                        day_selected: "bg-brand-cyan text-brand-blue font-bold rounded-full shadow-lg shadow-cyan-500/30",
+                        day_today: "bg-gray-100 text-brand-blue font-bold rounded-full",
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription className="text-xs text-brand-blue/40">
+                  Select the Friday you'd like to sponsor the delivery for.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
         <FormField
           control={form.control}
@@ -266,7 +266,7 @@ export default function SponsorDeliveryForm() {
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="sponsor-anonymous"
-                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded"
+                  className="border-brand-teal/30 text-brand-aqua data-[state=checked]:bg-brand-aqua data-[state=checked]:border-brand-aqua rounded-lg w-6 h-6 transition-all"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -319,56 +319,56 @@ export default function SponsorDeliveryForm() {
           )}
         />
         {!isSponsoringExisting && (
-            <FormField
+          <FormField
             control={form.control}
             name="howHeard"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel className={LABEL_STYLE}>How did you hear about us? (Optional)</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
-                    <FormControl>
+                  <FormControl>
                     <SelectTrigger className={INPUT_STYLE}>
-                        <SelectValue placeholder="Please select one" />
+                      <SelectValue placeholder="Please select one" />
                     </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="glass-panel-static border-none">
+                  </FormControl>
+                  <SelectContent className="glass-panel-static border-none">
                     {hearAboutUsOptions.map((option) => (
-                        <SelectItem key={`sponsor-hear-${option}`} value={option} className="focus:bg-brand-cyan/20 cursor-pointer">
+                      <SelectItem key={`sponsor-hear-${option}`} value={option} className="focus:bg-brand-cyan/20 cursor-pointer">
                         {option}
-                        </SelectItem>
+                      </SelectItem>
                     ))}
-                    </SelectContent>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
         )}
 
-        <div className="p-6 rounded-2xl bg-green-50 border border-green-100 space-y-1 mt-4">
-            <div className="flex justify-between text-lg font-bold text-green-700 items-center">
-                <span className="flex items-center uppercase tracking-tight"><DollarSign className="mr-2 h-5 w-5"/>Sponsorship Amount:</span>
-                <span>${SPONSORSHIP_AMOUNT.toFixed(2)}</span>
-            </div>
-             <p className="text-xs text-green-600/70 font-medium">This contribution helps cover the $25 delivery fee for Infaq Balangs to a mosque in need on the selected date.</p>
+        <div className="p-8 rounded-[2rem] bg-brand-aqua/10 border border-brand-aqua/20 space-y-2 mt-8">
+          <div className="flex justify-between text-2xl font-display font-black text-brand-teal items-center">
+            <span className="flex items-center uppercase tracking-tighter"><DollarSign className="mr-3 h-8 w-8 text-brand-aqua" strokeWidth={3} />Sponsorship</span>
+            <span className="text-3xl">${SPONSORSHIP_AMOUNT.toFixed(2)}</span>
+          </div>
+          <p className="text-[10px] text-brand-teal/50 font-black uppercase tracking-widest border-t border-brand-teal/10 pt-4">Covers the full delivery fee for Infaq Balangs to a mosque in need.</p>
         </div>
 
         <FormField
           control={form.control}
           name="consent"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-2xl border border-brand-blue/10 p-4 shadow-sm">
+            <FormItem className="flex flex-row items-start space-x-4 space-y-0 rounded-[2rem] border border-brand-teal/10 p-6 shadow-sm bg-brand-teal/5 transition-all">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={isLoading}
                   id="sponsor-consent"
-                  className="border-brand-blue/30 text-brand-cyan data-[state=checked]:bg-brand-cyan data-[state=checked]:text-white rounded mt-1"
+                  className="border-brand-teal/30 text-brand-aqua data-[state=checked]:bg-brand-aqua data-[state=checked]:border-brand-aqua rounded-lg w-6 h-6 transition-all mt-1"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <Label htmlFor="sponsor-consent" className="cursor-pointer text-sm text-brand-blue/80 font-medium leading-snug block">
+                <Label htmlFor="sponsor-consent" className="cursor-pointer text-[10px] font-black uppercase tracking-tight text-brand-teal/70 leading-relaxed block">
                   By submitting this form, I consent to BalangConnect using my personal data for this sponsorship. My data will be handled in compliance with Singapore's PDPA. I acknowledge that BalangConnect may follow up by contacting me via WhatsApp/Email. *
                 </Label>
                 <FormMessage />
@@ -376,11 +376,11 @@ export default function SponsorDeliveryForm() {
             </FormItem>
           )}
         />
-        
-        <Button 
-            type="submit" 
-            className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full font-bold uppercase tracking-wide h-12 shadow-lg"
-            disabled={isLoading || !form.formState.isValid}
+
+        <Button
+          type="submit"
+          className="w-full btn-coast-primary h-14 text-lg shadow-lg mt-4"
+          disabled={isLoading || !form.formState.isValid}
         >
           {isLoading ? (
             <>

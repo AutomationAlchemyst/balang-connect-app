@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 function LayoutLoader() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-yellow">
-       <header className="bg-white border-b-4 border-black p-4">
+      <header className="bg-white border-b-4 border-black p-4">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-display font-bold uppercase">
             Balang Kepalang
@@ -54,6 +54,8 @@ function LayoutLoader() {
   );
 }
 
+import { SmoothScroll } from '@/components/ui/smooth-scroll';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,17 +63,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${syne.variable} ${spaceGrotesk.variable} ${oswald.variable} ${permanentMarker.variable}`}>
-      <body className="font-body antialiased flex flex-col min-h-screen bg-[#FFFDF5]">
-        <Suspense fallback={<LayoutLoader />}>
-          <AdminProvider>
-            <Header />
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-            <Footer />
-          </AdminProvider>
-        </Suspense>
-        <Toaster />
+      <body className="font-body antialiased flex flex-col min-h-screen bg-brand-sand/10">
+        <SmoothScroll>
+          <Suspense fallback={<LayoutLoader />}>
+            <AdminProvider>
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </AdminProvider>
+          </Suspense>
+          <Toaster />
+        </SmoothScroll>
       </body>
     </html>
   );
