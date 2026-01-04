@@ -4,15 +4,23 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { mockFlavors } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowRight, Waves, Droplets, Check, Plus } from 'lucide-react';
+import { ShoppingCart, ArrowRight, Waves, Droplets, Check, Plus, Star, Coffee, Leaf, Flower2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // THEME CONSTANTS
 const PRIMARY_GRADIENT = "bg-gradient-to-r from-teal-600 to-emerald-500";
 const TEXT_GRADIENT = "text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-emerald-600";
-// REMOVED local constants in favor of globals.css classes: GLASS_PANEL, BUTTON_PRIMARY
+
+const FLAVOR_CATEGORIES = [
+  { id: 'all', label: 'All Flavors', icon: Waves },
+  { id: 'recommended', label: 'Best Sellers', icon: Star },
+  { id: 'milk', label: 'Milk Base', icon: Coffee },
+  { id: 'refreshing', label: 'Refreshing', icon: Droplets },
+  { id: 'flower', label: 'Flower Series', icon: Flower2 },
+];
 
 export default function FlavorsPage() {
   const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([]);
@@ -46,6 +54,21 @@ export default function FlavorsPage() {
 
   const canProceed = selectedFlavorIds.length > 0;
 
+  const filterFlavors = (categoryId: string) => {
+    switch (categoryId) {
+      case 'recommended':
+        return mockFlavors.filter(f => f.tags.some(tag => ['Best Seller', 'Recommended', 'Must Try', 'Most Popular'].includes(tag)));
+      case 'milk':
+        return mockFlavors.filter(f => f.tags.includes('Milk Base'));
+      case 'refreshing':
+        return mockFlavors.filter(f => f.tags.includes('Non Milk Base') && !f.tags.includes('Flower Series'));
+      case 'flower':
+        return mockFlavors.filter(f => f.tags.includes('Flower Series'));
+      default:
+        return mockFlavors;
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pb-20">
 
@@ -55,7 +78,7 @@ export default function FlavorsPage() {
         <div className="absolute top-[30%] right-[-20%] w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-[80px] mix-blend-multiply opacity-60 animate-blob animation-delay-2000" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 pt-24 space-y-20">
+      <div className="container mx-auto px-4 relative z-10 pt-24 space-y-12">
 
         {/* Header Section */}
         <div className="text-center space-y-6 max-w-4xl mx-auto">
@@ -96,55 +119,81 @@ export default function FlavorsPage() {
           </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {mockFlavors.map((flavor, index) => {
-            const isSelected = selectedFlavorIds.includes(flavor.id);
+        {/* Tabs System */}
+        <Tabs defaultValue="all" className="w-full space-y-12">
+          <div className="flex justify-center">
+            <TabsList className="h-auto py-2 px-2 gap-1 flex-wrap justify-center bg-white/40 border-white/60">
+              {FLAVOR_CATEGORIES.map(cat => (
+                <TabsTrigger key={cat.id} value={cat.id} className="gap-2">
+                  <cat.icon className="w-3.5 h-3.5" />
+                  {cat.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
-            return (
-              <div
-                key={flavor.id}
-                onClick={() => handleToggleFlavorSelection(flavor.id)}
-                className={cn(
-                  "group relative glass-panel-wet overflow-hidden cursor-pointer",
-                  isSelected ? "ring-4 ring-teal-400 shadow-2xl scale-[1.02]" : ""
-                )}
-              >
-                <div className="aspect-[4/5] relative">
-                  <Image
-                    src={flavor.imageUrl}
-                    alt={flavor.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className={cn(
-                    "absolute inset-0 bg-gradient-to-t transition-all duration-300",
-                    isSelected ? "from-teal-900/90 via-teal-900/40 to-transparent" : "from-slate-900/60 to-transparent group-hover:from-teal-900/60"
-                  )}></div>
+          {FLAVOR_CATEGORIES.map(cat => (
+            <TabsContent key={cat.id} value={cat.id}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filterFlavors(cat.id).map((flavor) => {
+                  const isSelected = selectedFlavorIds.includes(flavor.id);
+                  return (
+                    <div
+                      key={flavor.id}
+                      onClick={() => handleToggleFlavorSelection(flavor.id)}
+                      className={cn(
+                        "group relative glass-panel-wet overflow-hidden cursor-pointer transition-all duration-500",
+                        isSelected ? "ring-4 ring-teal-400 shadow-2xl scale-[1.02]" : "hover:shadow-xl"
+                      )}
+                    >
+                      <div className="aspect-[4/5] relative">
+                        <Image
+                          src={flavor.imageUrl}
+                          alt={flavor.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className={cn(
+                          "absolute inset-0 bg-gradient-to-t transition-all duration-300",
+                          isSelected ? "from-teal-900/90 via-teal-900/40 to-transparent" : "from-slate-900/60 to-transparent group-hover:from-teal-900/60"
+                        )}></div>
 
-                  {/* Selection Indicator */}
-                  <div className={cn(
-                    "absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg",
-                    isSelected ? "bg-teal-500 text-white scale-100" : "bg-white/30 backdrop-blur-md text-white scale-90 opacity-0 group-hover:opacity-100"
-                  )}>
-                    {isSelected ? <Check size={20} strokeWidth={4} /> : <Plus size={20} strokeWidth={4} />}
-                  </div>
+                        {/* Selection Indicator */}
+                        <div className={cn(
+                          "absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg",
+                          isSelected ? "bg-teal-500 text-white scale-100" : "bg-white/30 backdrop-blur-md text-white scale-90 opacity-0 group-hover:opacity-100"
+                        )}>
+                          {isSelected ? <Check size={20} strokeWidth={4} /> : <Plus size={20} strokeWidth={4} />}
+                        </div>
 
-                  <div className="absolute bottom-0 left-0 p-8 text-white">
-                    <span className="text-[10px] uppercase font-bold tracking-widest bg-white/20 backdrop-blur-md px-3 py-1 rounded-full mb-3 inline-block">
-                      Premium Series
-                    </span>
-                    <h3 className="font-black text-3xl uppercase leading-none mb-2">{flavor.name}</h3>
-                    <p className="text-white/80 text-sm font-medium line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                      {flavor.description}
-                    </p>
-                    <div className={cn("h-1 w-12 rounded-full transition-all duration-500", isSelected ? "bg-teal-400 w-full" : "bg-white/50 group-hover:bg-teal-400")}></div>
-                  </div>
-                </div>
+                        <div className="absolute bottom-0 left-0 p-8 text-white w-full">
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {flavor.tags.slice(0, 2).map(tag => (
+                              <span key={tag} className="text-[9px] uppercase font-black tracking-widest bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full inline-block border border-white/10">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                          <h3 className="font-black text-2xl uppercase leading-tight mb-2 group-hover:text-teal-300 transition-colors">{flavor.name}</h3>
+                          <p className="text-white/70 text-xs font-medium line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            {flavor.description}
+                          </p>
+                          <div className={cn("h-1 w-12 rounded-full transition-all duration-500", isSelected ? "bg-teal-400 w-full" : "bg-white/50 group-hover:bg-teal-400")}></div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+              
+              {filterFlavors(cat.id).length === 0 && (
+                <div className="text-center py-20 bg-white/30 rounded-[3rem] border border-white/40 border-dashed">
+                  <p className="text-slate-400 font-bold uppercase tracking-widest">No flavors found in this category.</p>
+                </div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
 
         {/* Bottom CTA */}
         <div className="text-center py-10">

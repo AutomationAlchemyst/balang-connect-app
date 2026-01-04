@@ -132,7 +132,7 @@ export default function Header() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-brand-sand/95 backdrop-blur-2xl border-l border-white/40 w-[320px] h-[100dvh] p-0 flex flex-col overflow-hidden">
+              <SheetContent side="right" className="bg-brand-sand/95 backdrop-blur-2xl border-l border-white/40 w-[320px] h-[100dvh] p-0 flex flex-col">
                 <SheetHeader className="p-8 border-b border-brand-teal/5 shrink-0">
                   <SheetTitle asChild>
                     <Link
@@ -153,8 +153,8 @@ export default function Header() {
                   </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto min-h-0">
-                  <nav className="px-4 py-8 space-y-3">
+                <div className="flex-1 overflow-y-scroll overscroll-contain min-h-0 py-4 custom-scrollbar">
+                  <nav className="px-6 space-y-4">
                     {navItems.map((item) => {
                       const isActive = pathname === item.href;
                       return (
@@ -162,31 +162,36 @@ export default function Header() {
                           key={item.label}
                           href={item.href}
                           className={cn(
-                            "flex items-center gap-5 p-5 rounded-3xl font-display font-bold uppercase text-lg transition-all duration-300",
+                            "flex items-center gap-5 p-5 rounded-[2rem] font-display font-bold uppercase text-lg transition-all duration-300 border active:scale-95",
                             isActive
-                              ? 'bg-white text-brand-teal shadow-xl'
-                              : 'text-brand-teal/40 hover:text-brand-teal hover:bg-white/50'
+                              ? 'bg-white text-brand-teal shadow-xl border-white/50'
+                              : 'border-transparent text-brand-teal/60 hover:text-brand-teal hover:bg-white/40'
                           )}
                           onClick={() => setIsSheetOpen(false)}
                         >
-                          <item.icon className={cn("h-6 w-6", isActive ? 'text-brand-aqua' : 'text-brand-teal/20')} />
+                          <div className={cn(
+                            "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+                            isActive ? "bg-teal-50 text-brand-teal" : "bg-white/30 text-brand-teal/40"
+                          )}>
+                            <item.icon className="h-5 w-5" />
+                          </div>
                           {item.label}
                         </Link>
                       )
                     })}
                   </nav>
+                </div>
 
-                  <div className="p-8 border-t border-brand-teal/5">
-                    {isAdmin ? (
-                      <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-3xl font-bold uppercase text-lg shadow-xl">
-                        <LogOut className="mr-3 h-5 w-5" /> Logout Admin
-                      </Button>
-                    ) : (
-                      <Button asChild className="w-full h-14 rounded-3xl bg-brand-teal text-white font-bold uppercase text-lg shadow-xl hover:bg-brand-aqua">
-                        <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Book Now</Link>
-                      </Button>
-                    )}
-                  </div>
+                <div className="p-8 border-t border-brand-teal/5 bg-white/30 backdrop-blur-md">
+                  {isAdmin ? (
+                    <Button variant="destructive" onClick={handleLogout} className="w-full h-16 rounded-[2rem] font-black uppercase text-lg shadow-xl tracking-widest">
+                      <LogOut className="mr-3 h-5 w-5" /> Logout Admin
+                    </Button>
+                  ) : (
+                    <Button asChild className="w-full h-16 rounded-[2rem] bg-gradient-to-r from-teal-600 to-emerald-500 text-white font-black uppercase text-xl shadow-2xl hover:shadow-emerald-500/20 active:scale-95 transition-all tracking-widest">
+                      <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Book Now</Link>
+                    </Button>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

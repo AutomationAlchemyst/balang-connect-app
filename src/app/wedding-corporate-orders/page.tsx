@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import CustomerDetailsForm from '@/components/features/event-builder/CustomerDetailsForm';
 import type { CustomerDetailsFormValues } from '@/components/features/event-builder/CustomerDetailsForm';
 import PaymentConfirmationDialog from '@/components/features/event-builder/PaymentConfirmationDialog';
+import BookingSuccessView from '@/components/features/event-builder/BookingSuccessView';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
@@ -67,6 +68,10 @@ export default function CorporateOrdersPage() {
 
   const [customerDetailsForPayment, setCustomerDetailsForPayment] = useState<CustomerDetailsFormValues | null>(null);
   const [isDeliveryRequested, setIsDeliveryRequested] = useState(false);
+
+  // Success State
+  const [isBookingSuccess, setIsBookingSuccess] = useState(false);
+  const [bookingReference, setBookingReference] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setIsDeliveryRequested(false);
@@ -415,11 +420,21 @@ export default function CorporateOrdersPage() {
     setSelectedEventTime(undefined);
     setCustomerDetailsForPayment(null);
     setIsPaymentModalOpen(false);
+    setIsBookingSuccess(false);
+    setBookingReference(undefined);
   };
 
   const packageIsSelected = !!selectedPackage;
   const requiredFlavorCountForPackage = packageIsSelected ? getMaxFlavors() : 0;
   const canProceed = (packageIsSelected && (requiredFlavorCountForPackage > 0 ? selectedPackageFlavors.length === requiredFlavorCountForPackage : true)) || (!packageIsSelected && Object.keys(selectedAddons).some(k => selectedAddons[k] > 0));
+
+  if (isBookingSuccess) {
+    return (
+      <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pt-32 pb-40">
+        <BookingSuccessView slotId={bookingReference} onReset={resetBookingProcess} />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-slate-50 overflow-x-hidden selection:bg-teal-100 selection:text-teal-900 font-sans text-slate-800">
@@ -473,7 +488,7 @@ export default function CorporateOrdersPage() {
                   }}
                   value={selectedPackage?.id || "none-option"}
                 >
-                  <SelectTrigger className="h-16 text-lg font-bold bg-white border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 px-6 shadow-sm hover:border-teal-300 transition-colors">
+                  <SelectTrigger className="h-16 text-lg font-bold bg-white border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500/20 px-6 shadow-sm hover:border-teal-300 transition-colors">
                     <SelectValue placeholder="Choose your package..." />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-slate-100 rounded-xl shadow-2xl p-1">
@@ -761,15 +776,16 @@ export default function CorporateOrdersPage() {
 
         {/* MODAL: DATE & TIME */}
         <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-          <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none overflow-hidden rounded-[2rem]">
-            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+          <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none">
+            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[80vh] w-full">
               <DialogHeader className={cn("p-6 text-white relative flex-shrink-0", PRIMARY_GRADIENT)}>
                 <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
                   <CalendarDays className="text-teal-200" /> Select Date
                 </DialogTitle>
+                <DialogDescription className="sr-only">Choose a date and time slot for your corporate event.</DialogDescription>
               </DialogHeader>
 
-              <div className="overflow-y-auto p-4 sm:p-6 space-y-6">
+              <div className="overflow-y-auto p-4 sm:p-6 space-y-6 flex-1 min-h-0 w-full">
                 <div className="w-full flex justify-center">
                   <Calendar
                     mode="single"
@@ -801,7 +817,7 @@ export default function CorporateOrdersPage() {
                 </div>
               </div>
 
-              <DialogFooter className="p-4 sm:p-6 pt-2 border-t border-slate-50 flex-col sm:flex-row gap-2 bg-slate-50/50">
+              <DialogFooter className="p-4 sm:p-6 pt-2 border-t border-slate-50 flex-col sm:flex-row gap-2 bg-slate-50/50 flex-shrink-0">
                 <Button variant="ghost" onClick={() => setIsDateTimeModalOpen(false)} className="rounded-xl font-bold text-slate-500 hover:text-slate-800">Cancel</Button>
                 <Button onClick={handleDateTimeSubmit} className={cn("flex-1 h-12 rounded-xl", BUTTON_PRIMARY)} disabled={!selectedEventDate || !selectedEventTime}>
                   Confirm Date
@@ -814,18 +830,22 @@ export default function CorporateOrdersPage() {
         {/* MODAL: CUSTOMER DETAILS */}
         <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
           <DialogContent className="max-w-[95vw] md:max-w-xl p-0 border-0 bg-transparent shadow-none">
-            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
-              <CustomerDetailsForm
-                onSubmit={handleCustomerDetailsSubmit}
-                onCancel={() => setIsCustomerDetailsModalOpen(false)}
-                onBack={() => {
-                  setIsCustomerDetailsModalOpen(false);
-                  setIsDateTimeModalOpen(true);
-                }}
-                eventTime={selectedEventTime}
-                initialValues={customerDetailsForPayment || undefined}
-                selectedPackageId={selectedPackage?.id}
-              />
+            <DialogTitle className="sr-only">Final Details</DialogTitle>
+            <DialogDescription className="sr-only">Provide your contact information and event details for your wedding or corporate order.</DialogDescription>
+            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden max-h-[80vh] flex flex-col w-full">
+              <div className="overflow-y-auto p-6 md:p-8 flex-1 min-h-0 w-full">
+                <CustomerDetailsForm
+                  onSubmit={handleCustomerDetailsSubmit}
+                  onCancel={() => setIsCustomerDetailsModalOpen(false)}
+                  onBack={() => {
+                    setIsCustomerDetailsModalOpen(false);
+                    setIsDateTimeModalOpen(true);
+                  }}
+                  eventTime={selectedEventTime}
+                  initialValues={customerDetailsForPayment || undefined}
+                  selectedPackageId={selectedPackage?.id}
+                />
+              </div>
             </div>
           </DialogContent>
         </Dialog>
@@ -833,13 +853,19 @@ export default function CorporateOrdersPage() {
         {currentEventConfig && customerDetailsForPayment && currentEventConfig.eventDate && (
           <PaymentConfirmationDialog
             isOpen={isPaymentModalOpen}
-            onClose={resetBookingProcess}
+            onClose={() => setIsPaymentModalOpen(false)}
             onBack={() => {
               setIsPaymentModalOpen(false);
               setIsCustomerDetailsModalOpen(true);
             }}
             eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
             customerDetails={customerDetailsForPayment}
+            onConfirm={() => {
+              setBookingReference(`BK-CORP-${Math.floor(Math.random() * 10000)}`);
+              setIsPaymentModalOpen(false);
+              setIsBookingSuccess(true);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           />
         )}
 

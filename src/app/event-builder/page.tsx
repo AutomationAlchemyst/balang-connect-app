@@ -36,6 +36,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import CustomerDetailsForm from '@/components/features/event-builder/CustomerDetailsForm';
 import type { CustomerDetailsFormValues } from '@/components/features/event-builder/CustomerDetailsForm';
 import PaymentConfirmationDialog from '@/components/features/event-builder/PaymentConfirmationDialog';
+import BookingSuccessView from '@/components/features/event-builder/BookingSuccessView';
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from '@/lib/utils';
@@ -87,6 +88,10 @@ export default function EventBuilderPage() {
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
   const [isCalendarDataLoading, setIsCalendarDataLoading] = useState(true);
 
+  // Success State
+  const [isBookingSuccess, setIsBookingSuccess] = useState(false);
+  const [bookingReference, setBookingReference] = useState<string | undefined>(undefined);
+
   const resetBookingProcess = () => {
     setSelectedPackage(null);
     setSelectedPackageFlavors([]);
@@ -103,6 +108,8 @@ export default function EventBuilderPage() {
     setTotalPrice(0);
     setDeliveryFee(BASE_DELIVERY_FEE);
     setDisplayDeliveryFee(0);
+    setIsBookingSuccess(false);
+    setBookingReference(undefined);
   };
 
   // --- Effects & Logic ---
@@ -280,6 +287,14 @@ export default function EventBuilderPage() {
   // --- Render Helpers ---
 
   const requiredFlavorCount = selectedPackage ? getMaxFlavors() : 0;
+
+  if (isBookingSuccess) {
+    return (
+      <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pt-24 pb-40">
+        <BookingSuccessView slotId={bookingReference} onReset={resetBookingProcess} />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pb-40">
@@ -544,7 +559,7 @@ export default function EventBuilderPage() {
                 </div>
               </div>
 
-              <Button onClick={handleProceedToBook} className="w-full h-14 bg-slate-900 hover:bg-slate-800 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all">
+              <Button onClick={handleProceedToBook} className="w-full h-14 bg-slate-900 hover:bg-slate-800 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all px-4 flex items-center justify-center gap-2">
                 Proceed to Book
               </Button>
             </div>
@@ -557,67 +572,70 @@ export default function EventBuilderPage() {
 
       {/* Date & Time Modal - RESPONSIVE FIX */}
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none overflow-hidden rounded-[2rem]">
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl space-y-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <CalendarDays className="text-teal-600" />
+        <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none">
+          <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden max-h-[80vh] flex flex-col w-full">
+            <div className="overflow-y-auto p-6 md:p-8 space-y-6 flex-1 min-h-0 w-full">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <CalendarDays className="text-teal-600" />
+                </div>
+                <DialogTitle className="font-black text-2xl uppercase text-slate-900">Select Date</DialogTitle>
+                <DialogDescription className="text-sm text-slate-500 font-medium">Check availability for your event.</DialogDescription>
               </div>
-              <DialogTitle className="font-black text-2xl uppercase text-slate-900">Select Date</DialogTitle>
-              <DialogDescription>Check availability for your event.</DialogDescription>
-            </div>
 
-            {/* Responsive Calendar Container */}
-            <div className="flex justify-center bg-slate-50/50 p-4 rounded-3xl border border-slate-100">
-              <Calendar
-                mode="single"
-                selected={selectedEventDate}
-                onSelect={setSelectedEventDate}
-                disabled={[
-                  ...blockedDates,
-                  { before: new Date(new Date().setHours(0, 0, 0, 0)) }
-                ]}
-                className="p-3 w-fit"
-              />
-            </div>
+              {/* Responsive Calendar Container */}
+              <div className="flex justify-center bg-slate-50/50 p-4 rounded-3xl border border-slate-100">
+                <Calendar
+                  mode="single"
+                  selected={selectedEventDate}
+                  onSelect={setSelectedEventDate}
+                  disabled={[
+                    ...blockedDates,
+                    { before: new Date(new Date().setHours(0, 0, 0, 0)) }
+                  ]}
+                  className="p-3 w-fit"
+                />
+              </div>
 
-            <div className="space-y-3">
-              <Label className="uppercase text-xs font-bold text-slate-400 tracking-widest pl-2">Select Time</Label>
-              <Select value={selectedEventTime} onValueChange={setSelectedEventTime}>
-                <SelectTrigger className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-bold text-slate-700">
-                  <SelectValue placeholder="--:-- --" />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl max-h-[200px]">
-                  {EVENT_TIME_SLOTS.map(t => (
-                    <SelectItem key={t} value={t} className="font-medium rounded-lg cursor-pointer my-1">{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-3">
+                <Label className="uppercase text-xs font-bold text-slate-400 tracking-widest pl-2">Select Time</Label>
+                <Select value={selectedEventTime} onValueChange={setSelectedEventTime}>
+                  <SelectTrigger className="h-14 rounded-2xl bg-slate-50 border-slate-200 font-bold text-slate-700">
+                    <SelectValue placeholder="--:-- --" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl max-h-[200px]">
+                    {EVENT_TIME_SLOTS.map(t => (
+                      <SelectItem key={t} value={t} className="font-medium rounded-lg cursor-pointer my-1">{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-
-            <DialogFooter>
-              <Button onClick={handleDateTimeSubmit} className={cn("w-full h-14 text-lg", BUTTON_PRIMARY)}>Confirm Date</Button>
-            </DialogFooter>
+            <div className="p-6 md:p-8 pt-2 flex-shrink-0 border-t border-slate-100">
+              <DialogFooter>
+                <Button onClick={handleDateTimeSubmit} className={cn("w-full h-14 text-lg", BUTTON_PRIMARY)}>Confirm Date</Button>
+              </DialogFooter>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* Customer Details Modal */}
       <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-        <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-xl p-0 rounded-[2.5rem] border-0 shadow-2xl overflow-hidden">
-          <div className="p-8 md:p-12 overflow-y-auto max-h-[85vh]">
-            <DialogHeader className="mb-8 text-center">
-              <DialogTitle className="font-black text-3xl uppercase text-teal-800">Final Details</DialogTitle>
-              <DialogDescription>You're one step away from paradise.</DialogDescription>
-            </DialogHeader>
-            <CustomerDetailsForm
-              onSubmit={handleCustomerDetailsSubmit}
-              onCancel={() => setIsCustomerDetailsModalOpen(false)}
-              onBack={() => {
-                setIsCustomerDetailsModalOpen(false);
-                setIsDateTimeModalOpen(true);
-              }}
-            />
+        <DialogContent className="max-w-[95vw] md:max-w-xl p-0 border-0 bg-transparent shadow-none">
+          <DialogTitle className="sr-only">Final Details</DialogTitle>
+          <DialogDescription className="sr-only">Provide your contact information and event details to proceed.</DialogDescription>
+          <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden max-h-[80vh] flex flex-col w-full">
+            <div className="overflow-y-auto p-6 md:p-8 flex-1 min-h-0 w-full">
+              <CustomerDetailsForm
+                onSubmit={handleCustomerDetailsSubmit}
+                onCancel={() => setIsCustomerDetailsModalOpen(false)}
+                onBack={() => {
+                  setIsCustomerDetailsModalOpen(false);
+                  setIsDateTimeModalOpen(true);
+                }}
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -626,14 +644,15 @@ export default function EventBuilderPage() {
       {customerDetailsForPayment && currentEventConfig && currentEventConfig.eventDate && (
         <PaymentConfirmationDialog
           isOpen={isPaymentModalOpen}
-          // @ts-ignore
-          onOpenChange={setIsPaymentModalOpen}
+          onClose={() => setIsPaymentModalOpen(false)}
           eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
           customerDetails={customerDetailsForPayment}
           onConfirm={() => {
-            toast({ title: "Order Placed!", description: "Welcome to paradise.", className: "bg-teal-600 text-white border-0" });
+            // Success logic update
+            setBookingReference(`BK-${Math.floor(Math.random() * 10000)}`); // Simulating a ref ID
             setIsPaymentModalOpen(false);
-            resetBookingProcess();
+            setIsBookingSuccess(true);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onBack={() => {
             setIsPaymentModalOpen(false);

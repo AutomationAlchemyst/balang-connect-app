@@ -40,8 +40,8 @@ export default function PromotionsPage() {
 
         {mockPromotions.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {mockPromotions.map((promo) => (
-              <PromotionCard key={promo.id} promotion={promo} />
+            {mockPromotions.map((promo, index) => (
+              <PromotionCard key={promo.id} promotion={promo} isFeatured={index === 0} />
             ))}
           </div>
         ) : (

@@ -379,17 +379,18 @@ export default function SponsorDeliveryForm() {
 
         <Button
           type="submit"
-          className="w-full btn-coast-primary h-14 text-lg shadow-lg mt-4"
+          className="w-full btn-coast-primary h-14 text-lg shadow-lg mt-4 px-4 flex items-center justify-center gap-2"
           disabled={isLoading || !form.formState.isValid}
         >
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Submitting...
+              <Loader2 className="h-5 w-5 animate-spin shrink-0" />
+              <span className="truncate">Submitting...</span>
             </>
           ) : (
             <>
-              Sponsor Delivery Fee <Send className="ml-2 h-4 w-4" />
+              <span className="truncate">Sponsor Delivery Fee</span>
+              <Send className="h-5 w-5 shrink-0" strokeWidth={2} />
             </>
           )}
         </Button>

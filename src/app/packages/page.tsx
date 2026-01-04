@@ -48,7 +48,7 @@ export default function PackagesPage() {
               className="animate-in fade-in slide-in-from-bottom-20 duration-1000 fill-mode-both"
               style={{ animationDelay: `${index * 200}ms` }}
             >
-              <PackageCard eventPackage={pkg} />
+              <PackageCard eventPackage={pkg} isFeatured={index === 1} />
             </div>
           ))}
         </div>

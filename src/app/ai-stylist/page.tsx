@@ -101,7 +101,7 @@ export default function AiStylistPage() {
                 value={eventDescription}
                 onChange={(e) => setEventDescription(e.target.value)}
                 placeholder="e.g., 'A casual, fun-filled Hari Raya open house for about 50 friends. I want it to feel modern but traditional.'"
-                className="bg-white/40 border-white/60 focus:border-teal-500/50 focus:bg-white/80 focus:ring-8 focus:ring-teal-500/10 transition-all duration-500 rounded-[1.5rem] min-h-[150px] resize-y p-6 text-xl text-slate-700 placeholder:text-slate-400/70"
+                className="bg-white/40 border-white/60 focus:border-teal-500 focus:bg-white/80 focus:ring-4 focus:ring-teal-500/20 transition-all duration-500 rounded-[2rem] min-h-[150px] resize-none p-8 text-xl font-medium text-slate-800 placeholder:text-slate-400/70 shadow-inner"
                 disabled={isLoading}
               />
               <Button type="submit" className="w-full btn-coast-primary h-14 text-lg shadow-lg" disabled={isLoading || !eventDescription}>

@@ -556,17 +556,18 @@ export default function InfaqForm() {
 
         <Button
           type="submit"
-          className="w-full btn-coast-primary h-14 text-lg shadow-lg"
+          className="w-full btn-coast-primary h-14 text-lg shadow-lg px-4 flex items-center justify-center gap-2"
           disabled={isLoading || currentQuantity < 1 || !form.formState.isValid}
         >
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Submitting...
+              <Loader2 className="h-5 w-5 animate-spin shrink-0" />
+              <span className="truncate">Submitting...</span>
             </>
           ) : (
             <>
-              Confirm Infaq Order <Send className="ml-2 h-5 w-5" strokeWidth={2.5} />
+              <span className="truncate">Confirm Infaq Order</span>
+              <Send className="h-5 w-5 shrink-0" strokeWidth={2.5} />
             </>
           )}
         </Button>
