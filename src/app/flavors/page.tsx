@@ -97,24 +97,24 @@ export default function FlavorsPage() {
           </p>
         </div>
 
-        {/* Sticky Selection Bar */}
+        {/* Sticky Selection Bar - Fitts Law Optimized */}
         <div className={cn(
-          "sticky top-28 z-40 transition-all duration-500 ease-in-out",
-          canProceed ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"
+          "fixed bottom-6 left-4 right-4 z-50 md:sticky md:top-28 md:bottom-auto transition-all duration-500 ease-in-out transform",
+          canProceed ? "translate-y-0 opacity-100 scale-100" : "translate-y-8 opacity-0 scale-95 pointer-events-none"
         )}>
-          <div className="bg-white/80 backdrop-blur-2xl p-3 pl-6 rounded-[2rem] flex flex-col sm:flex-row justify-between items-center gap-6 max-w-2xl mx-auto border border-white/50 shadow-2xl">
+          <div className="bg-white/90 backdrop-blur-2xl p-4 pl-6 rounded-[2rem] flex flex-row justify-between items-center gap-4 max-w-2xl mx-auto border border-teal-100 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             <div className="flex items-center gap-4">
-              <div className="bg-teal-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg shadow-md">
+              <div className="bg-teal-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-teal-500/20">
                 {selectedFlavorIds.length}
               </div>
               <div className="flex flex-col">
-                <span className="font-black text-teal-800 uppercase text-xs tracking-wider">Flavors Selected</span>
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Ready to build</span>
+                <span className="font-black text-teal-800 uppercase text-xs tracking-wider">Flavors</span>
+                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest hidden sm:inline-block">Selected & Ready</span>
               </div>
             </div>
 
-            <Button onClick={handleProceedToEventBuilder} className={cn("h-12 px-8 text-sm w-full sm:w-auto btn-coast-primary")}>
-              Build Event <ArrowRight className="ml-2 h-4 w-4" />
+            <Button onClick={handleProceedToEventBuilder} className={cn("h-14 px-8 text-sm md:text-base btn-coast-primary shadow-xl w-auto")}>
+              Build Event <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>

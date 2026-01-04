@@ -484,26 +484,41 @@ export default function EventBuilderPage() {
                   </div>
                 </div>
 
-                <div className="p-8 md:p-10 bg-white/30 space-y-4">
-                  {mockAddons.map(addon => {
-                    const isSelected = selectedAddons[addon.id] > 0;
-                    return (
-                      <div key={addon.id} className={cn("p-6 rounded-3xl border transition-all flex flex-col md:flex-row items-center justify-between gap-6", isSelected ? "bg-white border-teal-400 shadow-lg" : "bg-white/40 border-transparent hover:bg-white/60")}>
-                        <div className="flex items-center gap-4 flex-1">
-                          <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center transition-colors", isSelected ? "bg-teal-600 text-white" : "bg-teal-50 text-teal-600")}>
-                            <Zap size={24} />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-lg text-slate-800 uppercase">{addon.name}</h4>
-                            <p className="text-teal-600 font-bold">${addon.price}</p>
-                          </div>
-                        </div>
+                <div className="p-8 md:p-10 bg-white/30 space-y-10">
+                  {['Drinks', 'Food', 'Equipment', 'Services'].map(category => {
+                    const categoryAddons = mockAddons.filter(a => a.category === category);
+                    if (categoryAddons.length === 0) return null;
 
-                        <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-xl">
-                          <button onClick={() => handleAddonQuantityChange(addon.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white shadow-sm transition-all" disabled={!selectedAddons[addon.id]}><MinusCircle size={18} className="text-slate-400" /></button>
-                          <span className="font-black text-slate-800 w-8 text-center">{selectedAddons[addon.id] || 0}</span>
-                          <button onClick={() => handleAddonQuantityChange(addon.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white shadow-sm transition-all"><PlusCircle size={18} className="text-teal-600" /></button>
+                    return (
+                      <div key={category} className="space-y-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="h-px flex-1 bg-teal-200/50"></div>
+                          <h4 className="font-bold text-sm uppercase tracking-widest text-teal-700">{category}</h4>
+                          <div className="h-px flex-1 bg-teal-200/50"></div>
                         </div>
+                        
+                        {categoryAddons.map(addon => {
+                          const isSelected = selectedAddons[addon.id] > 0;
+                          return (
+                            <div key={addon.id} className={cn("p-6 rounded-3xl border transition-all flex flex-col md:flex-row items-center justify-between gap-6", isSelected ? "bg-white border-teal-400 shadow-lg" : "bg-white/40 border-transparent hover:bg-white/60")}>
+                              <div className="flex items-center gap-4 flex-1">
+                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center transition-colors", isSelected ? "bg-teal-600 text-white" : "bg-teal-50 text-teal-600")}>
+                                  <Zap size={24} />
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-lg text-slate-800 uppercase">{addon.name}</h4>
+                                  <p className="text-teal-600 font-bold">${addon.price}</p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-xl">
+                                <button onClick={() => handleAddonQuantityChange(addon.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white shadow-sm transition-all" disabled={!selectedAddons[addon.id]}><MinusCircle size={18} className="text-slate-400" /></button>
+                                <span className="font-black text-slate-800 w-8 text-center">{selectedAddons[addon.id] || 0}</span>
+                                <button onClick={() => handleAddonQuantityChange(addon.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white shadow-sm transition-all"><PlusCircle size={18} className="text-teal-600" /></button>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })}
