@@ -57,13 +57,13 @@ export default function FlavorsPage() {
   const filterFlavors = (categoryId: string) => {
     switch (categoryId) {
       case 'recommended':
-        return mockFlavors.filter(f => f.tags.some(tag => ['Best Seller', 'Recommended', 'Must Try', 'Most Popular'].includes(tag)));
+        return mockFlavors.filter(f => f.tags?.some(tag => ['Best Seller', 'Recommended', 'Must Try', 'Most Popular'].includes(tag)));
       case 'milk':
-        return mockFlavors.filter(f => f.tags.includes('Milk Base'));
+        return mockFlavors.filter(f => f.tags?.includes('Milk Base'));
       case 'refreshing':
-        return mockFlavors.filter(f => f.tags.includes('Non Milk Base') && !f.tags.includes('Flower Series'));
+        return mockFlavors.filter(f => f.tags?.includes('Non Milk Base') && !f.tags?.includes('Flower Series'));
       case 'flower':
-        return mockFlavors.filter(f => f.tags.includes('Flower Series'));
+        return mockFlavors.filter(f => f.tags?.includes('Flower Series'));
       default:
         return mockFlavors;
     }
@@ -168,7 +168,7 @@ export default function FlavorsPage() {
 
                         <div className="absolute bottom-0 left-0 p-8 text-white w-full">
                           <div className="flex flex-wrap gap-2 mb-3">
-                            {flavor.tags.slice(0, 2).map(tag => (
+                            {flavor.tags?.slice(0, 2).map(tag => (
                               <span key={tag} className="text-[9px] uppercase font-black tracking-widest bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full inline-block border border-white/10">
                                 {tag}
                               </span>
