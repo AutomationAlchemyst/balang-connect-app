@@ -16,7 +16,9 @@ import {
   CalendarDays,
   Ban,
   LogOut,
-  Waves
+  Waves,
+  Sparkles,
+  TicketPercent
 } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 import { cn } from '@/lib/utils';
@@ -27,6 +29,8 @@ const navItems = [
   { href: '/packages', label: 'Packages', icon: Package },
   { href: '/wedding-corporate-orders', label: 'Wedding & Corp', icon: Wrench },
   { href: '/event-builder', label: 'Event Builder', icon: Wrench },
+  { href: '/promotions', label: 'Promotions', icon: TicketPercent },
+  { href: '/ai-stylist', label: 'AI Stylist', icon: Sparkles },
   { href: '/infaq', label: 'Infaq Orders', icon: HeartHandshake },
 ];
 
@@ -128,8 +132,8 @@ export default function Header() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-brand-sand/95 backdrop-blur-2xl border-l border-white/40 w-[320px] p-0 flex flex-col">
-                <SheetHeader className="p-8 border-b border-brand-teal/5">
+              <SheetContent side="right" className="bg-brand-sand/95 backdrop-blur-2xl border-l border-white/40 w-[320px] h-[100dvh] p-0 flex flex-col overflow-hidden">
+                <SheetHeader className="p-8 border-b border-brand-teal/5 shrink-0">
                   <SheetTitle asChild>
                     <Link
                       href="/"
@@ -149,8 +153,8 @@ export default function Header() {
                   </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex-grow overflow-y-auto py-8">
-                  <nav className="px-4 space-y-3">
+                <div className="flex-1 overflow-y-auto min-h-0">
+                  <nav className="px-4 py-8 space-y-3">
                     {navItems.map((item) => {
                       const isActive = pathname === item.href;
                       return (
@@ -171,18 +175,18 @@ export default function Header() {
                       )
                     })}
                   </nav>
-                </div>
 
-                <div className="p-8 border-t border-brand-teal/5">
-                  {isAdmin ? (
-                    <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-3xl font-bold uppercase text-lg shadow-xl">
-                      <LogOut className="mr-3 h-5 w-5" /> Logout Admin
-                    </Button>
-                  ) : (
-                    <Button asChild className="w-full h-14 rounded-3xl bg-brand-teal text-white font-bold uppercase text-lg shadow-xl hover:bg-brand-aqua">
-                      <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Book Now</Link>
-                    </Button>
-                  )}
+                  <div className="p-8 border-t border-brand-teal/5">
+                    {isAdmin ? (
+                      <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-3xl font-bold uppercase text-lg shadow-xl">
+                        <LogOut className="mr-3 h-5 w-5" /> Logout Admin
+                      </Button>
+                    ) : (
+                      <Button asChild className="w-full h-14 rounded-3xl bg-brand-teal text-white font-bold uppercase text-lg shadow-xl hover:bg-brand-aqua">
+                        <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Book Now</Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

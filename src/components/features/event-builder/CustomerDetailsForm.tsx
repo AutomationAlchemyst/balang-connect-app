@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useMemo, useEffect } from 'react';
 
 const hearAboutUsOptions = [
@@ -117,10 +117,10 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
   }, [filteredPickupTimeSlots, selectedPickupTime, setValue]);
 
   // LIQUID PARADISE THEME STYLES
-  const inputStyles = "bg-white/40 border-white/60 h-16 text-brand-teal font-black placeholder:text-brand-teal/20 rounded-[1.25rem] focus:ring-brand-aqua/50 focus:border-brand-aqua transition-all";
-  const labelStyles = "font-display font-black uppercase tracking-[0.2em] text-[10px] text-brand-teal/40 mb-3 ml-2";
-  const cardStyles = "bg-transparent p-6 md:p-10"; // Parent modal handles the glass effect
-  const buttonBaseStyles = "font-display font-black uppercase tracking-widest rounded-[1.25rem] transition-all shadow-xl active:scale-95 hover:-translate-y-1";
+  const inputStyles = "bg-slate-50 border-slate-200 h-16 text-slate-900 font-bold placeholder:text-slate-400 rounded-xl focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm hover:bg-white";
+  const labelStyles = "font-bold uppercase tracking-wider text-xs text-slate-500 mb-2 ml-1";
+  const cardStyles = "bg-transparent p-1"; // Parent modal handles the glass effect
+  const buttonBaseStyles = "font-bold uppercase tracking-widest rounded-xl transition-all shadow-md active:scale-95 hover:-translate-y-0.5";
 
   return (
     <Form {...form}>
@@ -130,13 +130,14 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
           className={`flex flex-col gap-6 md:gap-10 ${cardStyles}`}
         >
           <div className="space-y-8">
-            <div className="flex flex-col items-center text-center mb-12">
-              <div className="w-16 h-1 w-1 bg-brand-aqua rounded-full mb-6 opacity-30" />
-              <h2 className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight">
-                Customer <br />
-                <span className="text-brand-teal/40">Credentials</span>
+            <div className="flex flex-col items-center text-center mb-8">
+              <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 text-teal-600 shadow-sm">
+                <Sparkles size={20} strokeWidth={2} />
+              </div>
+              <h2 className="text-slate-800 text-3xl lg:text-4xl font-black uppercase tracking-tight">
+                Customer Details
               </h2>
-              <p className="text-brand-teal/60 font-bold text-sm mt-4 max-w-xs">Enter your details to finalize the premium booking.</p>
+              <p className="text-slate-500 font-medium text-sm mt-2 max-w-xs">Please provide your contact information.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -319,30 +320,30 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:justify-end gap-6 border-t border-brand-teal/10 pt-10 mt-6">
-            <div className="flex gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-4 border-t border-slate-100 pt-8 mt-6">
+            <div className="flex gap-3 w-full sm:w-auto">
               <Button
                 type="button"
                 onClick={onBack}
                 variant="outline"
-                className={`${buttonBaseStyles} bg-white/40 border-white/60 text-brand-teal h-14 px-8 flex-1`}
+                className={`${buttonBaseStyles} bg-white text-slate-600 border-slate-200 hover:bg-slate-50 h-14 px-8 flex-1`}
               >
-                Regress
+                Back
               </Button>
               <Button
                 type="button"
                 onClick={onCancel}
                 variant="outline"
-                className={`${buttonBaseStyles} border-brand-coral/20 text-brand-coral hover:bg-brand-coral hover:text-white h-14 px-8 flex-1`}
+                className={`${buttonBaseStyles} border-red-100 text-red-400 hover:bg-red-50 hover:text-red-600 hover:border-red-200 h-14 px-8 flex-1`}
               >
-                Abort
+                Cancel
               </Button>
             </div>
             <Button
               type="submit"
-              className={`${buttonBaseStyles} bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-16 text-xl px-12 sm:min-w-[240px]`}
+              className={`${buttonBaseStyles} bg-gradient-to-r from-teal-600 to-emerald-500 text-white hover:from-teal-500 hover:to-emerald-400 h-14 text-lg px-10 sm:min-w-[200px]`}
             >
-              Verify & Book <ArrowRight className="ml-4 h-6 w-6" strokeWidth={4} />
+              Proceed to Payment <ArrowRight className="ml-3 h-5 w-5" strokeWidth={3} />
             </Button>
           </div>
         </form>
