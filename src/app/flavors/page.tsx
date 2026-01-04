@@ -99,7 +99,7 @@ export default function FlavorsPage() {
 
         {/* Sticky Selection Bar */}
         <div className={cn(
-          "sticky top-28 z-40 transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+          "sticky top-28 z-40 transition-all duration-500 ease-in-out",
           canProceed ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"
         )}>
           <div className="bg-white/80 backdrop-blur-2xl p-3 pl-6 rounded-[2rem] flex flex-col sm:flex-row justify-between items-center gap-6 max-w-2xl mx-auto border border-white/50 shadow-2xl">
