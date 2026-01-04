@@ -42,7 +42,7 @@ type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 // LIQUID PARADISE THEME STYLES
 const DIALOG_CONTENT_STYLE = "glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl lg:max-w-2xl rounded-[3rem] shadow-2xl";
-const HEADER_STYLE = "p-10 bg-brand-teal text-white relative overflow-hidden";
+const HEADER_STYLE = "p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden";
 const TITLE_STYLE = "text-5xl font-display font-black uppercase tracking-tight relative z-10 leading-none";
 const BUTTON_BASE = "font-display font-black uppercase tracking-widest rounded-[1.25rem] transition-all shadow-xl active:scale-95 hover:-translate-y-1";
 const TAB_TRIGGER_STYLE = "rounded-[1rem] font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-brand-aqua data-[state=active]:text-brand-teal data-[state=active]:shadow-xl transition-all h-10 px-6";
@@ -279,14 +279,14 @@ export default function PaymentConfirmationDialog({
                 </TabsList>
 
                 <div className="mt-8">
-                  <TabsContent value="paynow_qr" className="p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl text-center backdrop-blur-xl relative overflow-hidden group">
+                  <TabsContent value="paynow_qr" className="p-6 md:p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl text-center backdrop-blur-xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-brand-aqua/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     <p className="text-[10px] font-black uppercase mb-6 text-brand-teal/30 tracking-[0.4em] relative z-10">Scan Digital Asset</p>
                     <div className="inline-block p-6 bg-white rounded-[2rem] shadow-2xl border-2 border-brand-teal/5 relative z-10 scale-100 group-hover:scale-105 transition-transform duration-500">
                       <Image src="https://placehold.co/250x250.png?text=PayNow+QR+Code" alt="PayNow QR Code" width={220} height={220} className="mx-auto rounded-xl grayscale group-hover:grayscale-0 transition-all duration-700" />
                     </div>
                   </TabsContent>
-                  <TabsContent value="paynow_uen" className="p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl space-y-6 backdrop-blur-xl">
+                  <TabsContent value="paynow_uen" className="p-6 md:p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl space-y-6 backdrop-blur-xl">
                     <p className="text-[10px] font-black uppercase text-brand-teal/30 tracking-[0.4em]">Corporate UEN Mapping</p>
                     <div className="flex items-center justify-between p-6 bg-brand-teal text-white rounded-[1.5rem] shadow-2xl border border-white/20">
                       <span className="font-display font-black text-2xl tracking-widest">{PAYNOW_UEN}</span>
@@ -295,7 +295,7 @@ export default function PaymentConfirmationDialog({
                       </Button>
                     </div>
                   </TabsContent>
-                  <TabsContent value="fast_transfer" className="p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl space-y-6 backdrop-blur-xl">
+                  <TabsContent value="fast_transfer" className="p-6 md:p-10 bg-white/40 border-2 border-white rounded-[3rem] shadow-2xl space-y-6 backdrop-blur-xl">
                     <p className="text-[10px] font-black uppercase text-brand-teal/30 tracking-[0.4em]">Institutional Fast Wire</p>
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between p-6 bg-brand-teal text-white rounded-[1.5rem] shadow-2xl border border-white/20">
@@ -364,20 +364,20 @@ export default function PaymentConfirmationDialog({
     switch (submissionStatus) {
       case 'success':
         return (
-          <DialogFooter className="p-10 bg-brand-teal/5 border-t border-brand-teal/10 !justify-center">
+          <DialogFooter className="p-6 md:p-10 bg-brand-teal/5 border-t border-brand-teal/10 !justify-center">
             <Button variant="outline" onClick={() => handleDialogStateChange(false)} className={`${BUTTON_BASE} bg-white text-brand-teal border-white/60 hover:bg-white/80 h-14 px-10`}>Initiative Complete</Button>
           </DialogFooter>
         );
       case 'error':
         return (
-          <DialogFooter className="p-10 bg-brand-coral/10 border-t border-brand-coral/20 flex-col sm:flex-row gap-4">
+          <DialogFooter className="p-6 md:p-10 bg-brand-coral/10 border-t border-brand-coral/20 flex-col sm:flex-row gap-4">
             <Button variant="ghost" onClick={() => handleDialogStateChange(false)} className={`${BUTTON_BASE} hover:bg-brand-coral hover:text-white text-brand-coral w-full h-14`}>Abort Session</Button>
             <Button onClick={() => setSubmissionStatus('idle')} className={`${BUTTON_BASE} bg-brand-coral text-white hover:bg-brand-coral/80 w-full h-14 shadow-2xl`}>Retry Protocol</Button>
           </DialogFooter>
         );
       default: // 'idle'
         return (
-          <DialogFooter className="p-10 bg-white/40 border-t border-white/20 flex-col sm:flex-row gap-6 backdrop-blur-3xl shadow-[0_-20px_50px_rgba(0,0,0,0.05)]">
+          <DialogFooter className="p-6 md:p-10 bg-white/40 border-t border-white/20 flex-col sm:flex-row gap-6 backdrop-blur-3xl shadow-[0_-20px_50px_rgba(0,0,0,0.05)]">
             <div className="flex gap-4 w-full sm:w-auto">
               <Button variant="ghost" onClick={onBack} disabled={isActionDisabled} className={`${BUTTON_BASE} bg-white/20 text-brand-teal hover:bg-white/40 h-14 px-8 border border-white/40`}>
                 Regress

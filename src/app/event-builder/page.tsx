@@ -539,7 +539,7 @@ export default function EventBuilderPage() {
               <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
 
               <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
-                <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                <CardHeader className="p-6 md:p-10 pb-6 border-b border-white/10 relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-8 opacity-5">
                     <PackageIcon size={120} className="text-brand-teal" />
                   </div>
@@ -550,12 +550,12 @@ export default function EventBuilderPage() {
                     </div>
                     <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.3em]">Foundation</span>
                   </div>
-                  <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
+                  <CardTitle className="text-brand-teal text-3xl md:text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
                     Select Base <br />
                     <span className="text-brand-teal/40">Package</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-10 space-y-10">
+                <CardContent className="p-6 md:p-10 space-y-6 md:space-y-10">
                   <div className="space-y-4">
                     <Label className="text-brand-teal/40 font-black uppercase text-[10px] tracking-[0.3em] pl-6">Curated Selection</Label>
                     <Select
@@ -586,12 +586,12 @@ export default function EventBuilderPage() {
 
                   {selectedPackage && (
                     <div className="animate-in slide-in-from-bottom-6 duration-700">
-                      <div className="bg-brand-teal/5 border border-brand-teal/10 p-10 rounded-[3rem] relative overflow-hidden group">
+                      <div className="bg-brand-teal/5 border border-brand-teal/10 p-6 md:p-10 rounded-[3rem] relative overflow-hidden group">
                         <div className="absolute top-[-50px] left-[-50px] w-64 h-64 bg-brand-aqua/5 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-aqua/10 transition-colors duration-700"></div>
 
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 relative z-10">
                           <div className="space-y-4">
-                            <h4 className="text-brand-teal text-3xl font-display font-black uppercase tracking-tight">{selectedPackage.name}</h4>
+                            <h4 className="text-brand-teal text-2xl md:text-3xl font-display font-black uppercase tracking-tight">{selectedPackage.name}</h4>
                             <p className="text-brand-teal/60 text-lg font-medium leading-relaxed max-w-md border-l-4 border-brand-aqua/30 pl-6 italic">"{selectedPackage.description}"</p>
                           </div>
                           <div className="text-right">
@@ -642,7 +642,7 @@ export default function EventBuilderPage() {
                 <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
 
                 <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
-                  <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                  <CardHeader className="p-6 md:p-10 pb-6 border-b border-white/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 opacity-5">
                       <Droplets size={120} className="text-brand-teal" />
                     </div>
@@ -655,7 +655,7 @@ export default function EventBuilderPage() {
                           </div>
                           <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Curation</span>
                         </div>
-                        <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight">
+                        <CardTitle className="text-brand-teal text-3xl md:text-4xl lg:text-5xl font-display font-black uppercase tracking-tight">
                           Pick Your <br />
                           <span className="text-brand-teal/40">Flavors</span>
                         </CardTitle>
@@ -673,7 +673,7 @@ export default function EventBuilderPage() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-10">
+                  <CardContent className="p-6 md:p-10">
                     {/* Selected Flavors Chips */}
                     <div className="flex flex-wrap gap-4 mb-12 min-h-[60px] p-6 bg-brand-teal/5 border border-brand-teal/10 rounded-[2.5rem] relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-brand-aqua/5 rounded-full blur-2xl pointer-events-none"></div>
@@ -758,7 +758,7 @@ export default function EventBuilderPage() {
                 <div className="absolute -left-[51px] top-4 w-[10px] h-[10px] rounded-full bg-brand-aqua shadow-[0_0_15px_rgba(0,224,198,0.5)] hidden xl:block"></div>
 
                 <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-2xl overflow-hidden">
-                  <CardHeader className="p-10 pb-6 border-b border-white/10 relative overflow-hidden">
+                  <CardHeader className="p-6 md:p-10 pb-6 border-b border-white/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 opacity-5">
                       <Zap size={120} className="text-brand-teal" />
                     </div>
@@ -769,12 +769,12 @@ export default function EventBuilderPage() {
                       </div>
                       <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Amplification</span>
                     </div>
-                    <CardTitle className="text-brand-teal text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
+                    <CardTitle className="text-brand-teal text-3xl md:text-4xl lg:text-5xl font-display font-black uppercase tracking-tight relative z-10">
                       Enhance Your <br />
                       <span className="text-brand-teal/40">Event</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-10 space-y-6">
+                  <CardContent className="p-6 md:p-10 space-y-6">
                     {mockAddons.map(addon => {
                       const isSelected = selectedAddons[addon.id] > 0;
                       return (
@@ -897,7 +897,7 @@ export default function EventBuilderPage() {
           <div className="lg:col-span-4 relative">
             <div className="sticky top-32 space-y-8">
               <Card className="glass-panel-wet bg-white/40 backdrop-blur-3xl border-white/20 shadow-[0_40px_100px_rgba(0,40,80,0.1)] overflow-hidden rounded-[3rem]">
-                <div className="bg-brand-teal p-10 relative overflow-hidden">
+                <div className="bg-brand-teal p-6 md:p-10 relative overflow-hidden">
                   <div className="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 bg-brand-aqua rounded-full opacity-20 blur-3xl animate-pulse"></div>
                   <div className="absolute bottom-0 left-0 -ml-12 -mb-12 w-48 h-48 bg-brand-coral rounded-full opacity-10 blur-3xl"></div>
                   <h3 className="text-white font-display font-black text-2xl uppercase tracking-[0.2em] flex items-center gap-4 relative z-10">
@@ -908,7 +908,7 @@ export default function EventBuilderPage() {
                   </h3>
                 </div>
 
-                <CardContent className="p-10 space-y-8">
+                <CardContent className="p-6 md:p-10 space-y-8">
                   {/* Line Items */}
                   <div className="space-y-6">
                     {/* Package */}
@@ -992,7 +992,7 @@ export default function EventBuilderPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="p-10 pt-0">
+                <CardFooter className="p-6 md:p-10 pt-0">
                   <Button
                     className="w-full bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-20 text-xl font-display font-black uppercase tracking-[0.2em] rounded-[1.5rem] shadow-2xl transition-all hover:scale-[1.03] active:scale-[0.98] group"
                     onClick={handleProceedToBook}
@@ -1025,7 +1025,7 @@ export default function EventBuilderPage() {
       {/* MODALS */}
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
         <DialogContent className="glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl rounded-[3rem] shadow-2xl">
-          <DialogHeader className="p-10 bg-brand-teal text-white relative overflow-hidden">
+          <DialogHeader className="p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-10">
               <CalendarDays size={120} className="text-white" />
             </div>
@@ -1044,10 +1044,10 @@ export default function EventBuilderPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-10 space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+          <div className="p-6 md:p-10 space-y-6 md:space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
               {/* Calendar Side */}
-              <div className="bg-white/40 border border-white/60 rounded-[2.5rem] p-6 shadow-xl backdrop-blur-md">
+              <div className="bg-white/40 border border-white/60 rounded-[2.5rem] p-4 md:p-6 shadow-xl backdrop-blur-md">
                 <Calendar
                   mode="single"
                   selected={selectedEventDate}
@@ -1056,8 +1056,8 @@ export default function EventBuilderPage() {
                   className="w-full"
                   classNames={{
                     head_cell: "text-brand-teal font-black uppercase text-[10px] tracking-[0.2em] pt-4",
-                    cell: "h-11 w-11 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-aqua/10 first:[&:has([aria-selected])]:rounded-l-2xl last:[&:has([aria-selected])]:rounded-r-2xl focus-within:relative focus-within:z-20",
-                    day: "h-11 w-11 p-0 font-bold aria-selected:opacity-100 hover:bg-brand-aqua/20 hover:font-black hover:rounded-2xl transition-all text-brand-teal",
+                    cell: "h-9 w-9 md:h-11 md:w-11 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-brand-aqua/10 first:[&:has([aria-selected])]:rounded-l-2xl last:[&:has([aria-selected])]:rounded-r-2xl focus-within:relative focus-within:z-20",
+                    day: "h-9 w-9 md:h-11 md:w-11 p-0 font-bold aria-selected:opacity-100 hover:bg-brand-aqua/20 hover:font-black hover:rounded-2xl transition-all text-brand-teal",
                     day_selected: "bg-brand-aqua !text-brand-teal font-black rounded-2xl shadow-xl shadow-brand-aqua/30 scale-110",
                     day_today: "bg-brand-teal/5 text-brand-teal font-black rounded-2xl border border-brand-teal/10",
                   }}
@@ -1072,13 +1072,13 @@ export default function EventBuilderPage() {
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-teal/40">Arrival Window</span>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 md:gap-4">
                   {EVENT_TIME_SLOTS.map(time => (
                     <button
                       key={time}
                       onClick={() => setSelectedEventTime(time)}
                       className={cn(
-                        "py-4 px-2 rounded-2xl text-xs font-black border-2 transition-all duration-300 uppercase tracking-widest",
+                        "py-3 md:py-4 px-2 rounded-2xl text-[10px] md:text-xs font-black border-2 transition-all duration-300 uppercase tracking-widest",
                         selectedEventTime === time
                           ? "bg-brand-teal text-white border-brand-teal shadow-xl scale-105"
                           : "bg-white/40 text-brand-teal border-white/60 hover:border-brand-aqua/50 hover:bg-white/60"
@@ -1108,7 +1108,7 @@ export default function EventBuilderPage() {
             )}
           </div>
 
-          <div className="p-10 pt-0">
+          <div className="p-6 md:p-10 pt-0">
             <Button
               onClick={handleDateTimeSubmit}
               className="w-full bg-brand-teal text-white hover:bg-brand-aqua hover:text-brand-teal h-20 text-xl font-display font-black uppercase tracking-[0.2em] rounded-[1.5rem] shadow-2xl transition-all hover:scale-[1.03] disabled:opacity-50 disabled:grayscale"

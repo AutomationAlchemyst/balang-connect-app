@@ -119,7 +119,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
   // LIQUID PARADISE THEME STYLES
   const inputStyles = "bg-white/40 border-white/60 h-16 text-brand-teal font-black placeholder:text-brand-teal/20 rounded-[1.25rem] focus:ring-brand-aqua/50 focus:border-brand-aqua transition-all";
   const labelStyles = "font-display font-black uppercase tracking-[0.2em] text-[10px] text-brand-teal/40 mb-3 ml-2";
-  const cardStyles = "bg-transparent p-10"; // Parent modal handles the glass effect
+  const cardStyles = "bg-transparent p-6 md:p-10"; // Parent modal handles the glass effect
   const buttonBaseStyles = "font-display font-black uppercase tracking-widest rounded-[1.25rem] transition-all shadow-xl active:scale-95 hover:-translate-y-1";
 
   return (
@@ -127,7 +127,7 @@ export default function CustomerDetailsForm({ onSubmit, onCancel, onBack, eventT
       <div className="h-full">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={`flex flex-col gap-10 ${cardStyles}`}
+          className={`flex flex-col gap-6 md:gap-10 ${cardStyles}`}
         >
           <div className="space-y-8">
             <div className="flex flex-col items-center text-center mb-12">
