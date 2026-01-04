@@ -41,8 +41,8 @@ type UploadStatus = 'idle' | 'reading' | 'success' | 'error';
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 // LIQUID PARADISE THEME STYLES
-const DIALOG_CONTENT_STYLE = "glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl lg:max-w-2xl rounded-[3rem] shadow-2xl";
-const HEADER_STYLE = "p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden";
+const DIALOG_CONTENT_STYLE = "glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl lg:max-w-2xl rounded-[3rem] shadow-2xl max-h-[90vh] flex flex-col";
+const HEADER_STYLE = "p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden flex-shrink-0";
 const TITLE_STYLE = "text-5xl font-display font-black uppercase tracking-tight relative z-10 leading-none";
 const BUTTON_BASE = "font-display font-black uppercase tracking-widest rounded-[1.25rem] transition-all shadow-xl active:scale-95 hover:-translate-y-1";
 const TAB_TRIGGER_STYLE = "rounded-[1rem] font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-brand-aqua data-[state=active]:text-brand-teal data-[state=active]:shadow-xl transition-all h-10 px-6";

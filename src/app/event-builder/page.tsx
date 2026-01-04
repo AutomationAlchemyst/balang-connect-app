@@ -1024,8 +1024,8 @@ export default function EventBuilderPage() {
 
       {/* MODALS */}
       <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-        <DialogContent className="glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl rounded-[3rem] shadow-2xl">
-          <DialogHeader className="p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden">
+        <DialogContent className="glass-panel-wet bg-white/60 backdrop-blur-3xl border-white/20 p-0 overflow-hidden sm:max-w-xl rounded-[2rem] md:rounded-[3rem] shadow-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="p-6 md:p-10 bg-brand-teal text-white relative overflow-hidden flex-shrink-0">
             <div className="absolute top-0 right-0 p-8 opacity-10">
               <CalendarDays size={120} className="text-white" />
             </div>
@@ -1035,7 +1035,7 @@ export default function EventBuilderPage() {
               </div>
               <span className="text-brand-aqua font-display font-black text-xs uppercase tracking-[0.4em]">Logistics</span>
             </div>
-            <DialogTitle className="font-display font-black text-4xl uppercase tracking-tight relative z-10">
+            <DialogTitle className="font-display font-black text-3xl md:text-4xl uppercase tracking-tight relative z-10">
               Select <br />
               <span className="text-white/40">Your Date</span>
             </DialogTitle>
@@ -1044,7 +1044,7 @@ export default function EventBuilderPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-6 md:p-10 space-y-6 md:space-y-10">
+          <div className="p-6 md:p-10 space-y-6 md:space-y-10 overflow-y-auto custom-scrollbar">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
               {/* Calendar Side */}
               <div className="bg-white/40 border border-white/60 rounded-[2.5rem] p-4 md:p-6 shadow-xl backdrop-blur-md">
