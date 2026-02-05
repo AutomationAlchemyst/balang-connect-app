@@ -28,7 +28,9 @@ export interface Addon {
   name: string;
   description: string;
   price: number;
-  category: 'Drinks' | 'Food' | 'Equipment' | 'Services';
+  category: 'Drinks' | 'Food' | 'Equipment' | 'Services' | 'Live Stations';
+  imageUrl?: string;
+  requiresFlavor?: boolean;
 }
 
 export interface Promotion {
@@ -57,22 +59,22 @@ export interface InfaqOrder {
   donorName: string;
   dedicationName?: string;
   email: string;
-  phone?: string; 
-  quantity: number; 
+  phone?: string;
+  quantity: number;
   mosqueName?: string;
-  mosqueAddress?: string; 
-  deliveryDate: string; 
+  mosqueAddress?: string;
+  deliveryDate: string;
   deliveryDisplayDate: string;
   message?: string;
   anonymous?: boolean;
-  howHeard?: string; 
+  howHeard?: string;
   consent: boolean;
   pricePerBalang?: number;
   calculatedSubtotal?: number;
-  deliveryFee?: number; 
+  deliveryFee?: number;
   calculatedTotal?: number;
   orderType?: 'balang_infaq' | 'delivery_sponsorship';
-  coverDeliveryFee?: boolean; 
+  coverDeliveryFee?: boolean;
   targetSlotId?: string;
   paymentProofUrl?: string;
 }
@@ -83,7 +85,7 @@ export interface InfaqContribution {
   quantity?: number; // For balangs
   amount?: number; // For sponsorship amount
   timestamp: any; // Firestore Timestamp
-  sponsoredDelivery?: boolean; 
+  sponsoredDelivery?: boolean;
 }
 
 export interface InfaqNoticeBoardSlot {
@@ -92,15 +94,15 @@ export interface InfaqNoticeBoardSlot {
   mosqueAddress?: string;
   date: string; // ISO Date string for the target Friday (used for form pre-fill)
   displayDate: string; // Pre-formatted date string for display on card (e.g., "June 13th, 2025")
-  status: 
-    | 'Delivery Secured - Join In!' 
-    | 'Delivery Fee Sponsored!' 
-    | 'Slot Open - Be the First!' 
-    | 'Contributions Open (Shared Delivery Pending)'
-    | 'Contributions Welcome - Delivery Needed'
-    | 'Recently Fulfilled!';
-  description?: string; 
-  imageUrl?: string; 
+  status:
+  | 'Delivery Secured - Join In!'
+  | 'Delivery Fee Sponsored!'
+  | 'Slot Open - Be the First!'
+  | 'Contributions Open (Shared Delivery Pending)'
+  | 'Contributions Welcome - Delivery Needed'
+  | 'Recently Fulfilled!';
+  description?: string;
+  imageUrl?: string;
   dataAiHint?: string;
   totalBalangsInfaqed?: number;
   isDeliveryFeeCovered?: boolean;
@@ -108,9 +110,9 @@ export interface InfaqNoticeBoardSlot {
 }
 
 export interface BlockedDate {
-    id: string; // YYYY-MM-DD
-    date: Date;
-    reason?: string;
+  id: string; // YYYY-MM-DD
+  date: Date;
+  reason?: string;
 }
 
 export interface LeaderboardUser {

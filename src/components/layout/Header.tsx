@@ -18,7 +18,8 @@ import {
   LogOut,
   Waves,
   Sparkles,
-  TicketPercent
+  TicketPercent,
+  X
 } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,6 @@ import { MagneticButton } from '@/components/ui/magnetic-button';
 
 const navItems = [
   { href: '/flavors', label: 'Flavors', icon: CupSoda },
-  { href: '/packages', label: 'Packages', icon: Package },
   { href: '/wedding-corporate-orders', label: 'Wedding & Corp', icon: Wrench },
   { href: '/event-builder', label: 'Event Builder', icon: Wrench },
   { href: '/promotions', label: 'Promotions', icon: TicketPercent },
@@ -37,9 +37,9 @@ const navItems = [
 const sheetUrl = 'https://docs.google.com/spreadsheets/d/1M5nf8xC34Y6ZvB5qQCWYoWsSAAplzX1uO6IsPXdxyKE/edit';
 const calendarUrl = 'https://calendar.google.com/calendar/u/0/r/month?cid=bac102a37094ab792c29d34b294fa8868ebc2fceee9cbf3a654c59c145064bee@group.calendar.google.com';
 
-// Modern Coast Styles
-const navButtonStyles = "font-display font-black uppercase text-brand-teal/60 hover:text-brand-teal hover:bg-white/60 transition-all rounded-full px-5 py-2.5 text-[11px] tracking-[0.2em]";
-const activeNavButtonStyles = "bg-white text-brand-teal shadow-xl border border-white/80 active:scale-95";
+// Breezy Balang Header Styles
+const navButtonStyles = "font-black uppercase text-[#041F1C]/60 hover:text-[#041F1C] hover:bg-white/60 transition-all rounded-full px-5 py-2.5 text-[10px] tracking-[0.3em]";
+const activeNavButtonStyles = "bg-white text-[#041F1C] shadow-xl border border-white/80 active:scale-95";
 
 export default function Header() {
   const { isAdmin, setIsAdmin } = useAdmin();
@@ -63,6 +63,10 @@ export default function Header() {
     router.push('/');
   };
 
+  if (pathname?.startsWith('/wedding-corporate-orders')) {
+    return null;
+  }
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled
@@ -72,7 +76,7 @@ export default function Header() {
     >
       <div className="container mx-auto px-4">
         <div className={`flex justify-between items-center px-6 py-2 transition-all duration-500 rounded-[2.5rem] ${scrolled
-          ? 'bg-white/60 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,40,80,0.05)] border border-white/80'
+          ? 'bg-white/60 backdrop-blur-2xl shadow-[0_20px_50px_rgba(13,242,223,0.1)] border border-white/80'
           : 'bg-transparent border-transparent'
           }`}>
           <Link href="/" className="flex items-center gap-2 group relative z-10">
@@ -107,7 +111,17 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-4">
             {isAdmin ? (
               <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" asChild className="rounded-full border-brand-teal/20 text-brand-teal hover:bg-brand-aqua/10 transition-all font-bold">
+                <Button variant="outline" size="sm" asChild className="rounded-full border-[#0df2df]/20 text-[#041F1C] hover:bg-[#0df2df]/10 transition-all font-bold">
+                  <Link href={sheetUrl} target="_blank">
+                    <SheetIcon size={16} className="mr-2" /> Orders
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild className="rounded-full border-[#0df2df]/20 text-[#041F1C] hover:bg-[#0df2df]/10 transition-all font-bold">
+                  <Link href={calendarUrl} target="_blank">
+                    <CalendarDays size={16} className="mr-2" /> Calendar
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild className="rounded-full border-[#0df2df]/20 text-[#041F1C] hover:bg-[#0df2df]/10 transition-all font-bold">
                   <Link href="/admin/manage-dates">
                     <Ban size={16} className="mr-2" /> Dates
                   </Link>
@@ -117,7 +131,7 @@ export default function Header() {
                 </Button>
               </div>
             ) : (
-              <MagneticButton className="h-11 px-8 text-sm shadow-xl">
+              <MagneticButton className="h-11 px-8 text-sm shadow-xl breezy-btn-primary">
                 <Link href="/event-builder">Book Now</Link>
               </MagneticButton>
             )}
@@ -132,66 +146,111 @@ export default function Header() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-brand-sand/95 backdrop-blur-2xl border-l border-white/40 w-[320px] h-[100dvh] p-0 flex flex-col">
-                <SheetHeader className="p-8 border-b border-brand-teal/5 shrink-0">
-                  <SheetTitle asChild>
-                    <Link
-                      href="/"
-                      className="flex items-center"
-                      onClick={() => setIsSheetOpen(false)}
-                    >
-                      <div className="relative h-10 w-32">
-                        <Image
-                          src="/logo.png"
-                          alt="Balang Kepalang Logo"
-                          fill
-                          className="object-contain"
-                          sizes="200px"
-                        />
-                      </div>
-                    </Link>
-                  </SheetTitle>
-                </SheetHeader>
-
-                <div className="flex-1 overflow-y-scroll overscroll-contain min-h-0 py-4 custom-scrollbar">
-                  <nav className="px-6 space-y-4">
-                    {navItems.map((item) => {
-                      const isActive = pathname === item.href;
-                      return (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          className={cn(
-                            "flex items-center gap-5 p-5 rounded-[2rem] font-display font-bold uppercase text-lg transition-all duration-300 border active:scale-95",
-                            isActive
-                              ? 'bg-white text-brand-teal shadow-xl border-white/50'
-                              : 'border-transparent text-brand-teal/60 hover:text-brand-teal hover:bg-white/40'
-                          )}
-                          onClick={() => setIsSheetOpen(false)}
-                        >
-                          <div className={cn(
-                            "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-                            isActive ? "bg-teal-50 text-brand-teal" : "bg-white/30 text-brand-teal/40"
-                          )}>
-                            <item.icon className="h-5 w-5" />
-                          </div>
-                          {item.label}
-                        </Link>
-                      )
-                    })}
-                  </nav>
+              <SheetContent side="right" className="bg-transparent border-none w-full h-[100dvh] p-0 flex flex-col overflow-hidden [&>button]:hidden">
+                {/* Background Image/Pattern */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200"
+                    alt="Coastal Background"
+                    fill
+                    className="object-cover opacity-100"
+                  />
+                  <div className="absolute inset-0 bg-neutral-100/10 backdrop-blur-md"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#f4ece7]/80 via-transparent to-[#b2dee0]/80"></div>
                 </div>
 
-                <div className="p-8 border-t border-brand-teal/5 bg-white/30 backdrop-blur-md">
-                  {isAdmin ? (
-                    <Button variant="destructive" onClick={handleLogout} className="w-full h-16 rounded-[2rem] font-black uppercase text-lg shadow-xl tracking-widest">
-                      <LogOut className="mr-3 h-5 w-5" /> Logout Admin
+                <div className="relative z-10 flex flex-col h-full">
+                  <SheetHeader className="p-6 pt-12 flex flex-row items-center justify-end shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsSheetOpen(false)}
+                      className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-md text-brand-midnight hover:bg-white/40 border border-white/40"
+                    >
+                      <X className="h-6 w-6" />
+                      <span className="sr-only">Close menu</span>
                     </Button>
-                  ) : (
-                    <Button asChild className="w-full h-16 rounded-[2rem] bg-gradient-to-r from-teal-600 to-emerald-500 text-white font-black uppercase text-xl shadow-2xl hover:shadow-emerald-500/20 active:scale-95 transition-all tracking-widest">
-                      <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Book Now</Link>
-                    </Button>
-                  )}
+                  </SheetHeader>
+
+                  <div className="flex-1 overflow-y-auto px-10 py-4 custom-scrollbar">
+                    <nav className="flex flex-col gap-6">
+                      <Link
+                        href="/"
+                        className="text-brand-midnight text-4xl font-black tracking-tighter hover:text-brand-aqua transition-colors uppercase"
+                        onClick={() => setIsSheetOpen(false)}
+                      >
+                        Home
+                      </Link>
+                      {navItems.map((item) => {
+                        const label = item.label === 'Packages' ? 'Event Packages' : item.label;
+                        return (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            className="flex items-center gap-3 text-brand-midnight text-4xl font-black tracking-tighter hover:text-brand-aqua transition-colors uppercase leading-tight"
+                            onClick={() => setIsSheetOpen(false)}
+                          >
+                            {label}
+                            {item.label === 'AI Stylist' && (
+                              <span className="bg-brand-aqua/20 text-brand-teal text-[10px] px-2 py-1 rounded-full font-black uppercase tracking-widest border border-brand-aqua/30">
+                                New
+                              </span>
+                            )}
+                          </Link>
+                        )
+                      })}
+                    </nav>
+
+                    <div className="mt-10">
+                      {isAdmin ? (
+                        <div className="space-y-3">
+                          <Button variant="outline" asChild className="w-full h-14 rounded-2xl bg-white/20 backdrop-blur-md border-white/40 font-black uppercase tracking-widest text-brand-midnight">
+                            <Link href={sheetUrl} target="_blank" onClick={() => setIsSheetOpen(false)}>
+                              <SheetIcon size={18} className="mr-2" /> Orders
+                            </Link>
+                          </Button>
+                          <Button variant="outline" asChild className="w-full h-14 rounded-2xl bg-white/20 backdrop-blur-md border-white/40 font-black uppercase tracking-widest text-brand-midnight">
+                            <Link href={calendarUrl} target="_blank" onClick={() => setIsSheetOpen(false)}>
+                              <CalendarDays size={18} className="mr-2" /> Calendar
+                            </Link>
+                          </Button>
+                          <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl">
+                            <LogOut className="mr-3 h-5 w-5" /> Logout Admin
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button asChild className="w-full max-w-[320px] h-16 rounded-[1.25rem] bg-[#f47b25] hover:bg-[#e66a14] text-white font-black uppercase text-xl shadow-2xl shadow-[#f47b25]/30 active:scale-95 transition-all tracking-wider border-none">
+                          <Link href="/event-builder" onClick={() => setIsSheetOpen(false)}>Build Event</Link>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-auto border-t border-brand-midnight/10 p-10 bg-white/10 backdrop-blur-sm">
+                    <p className="text-brand-midnight/80 text-xl italic font-serif text-center mb-8">
+                      Balang Kepalang
+                    </p>
+                    <div className="flex justify-center gap-10">
+                      <Link href="#" className="flex flex-col items-center gap-2 group">
+                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
+                          <Image src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png" alt="IG" width={24} height={24} className="opacity-80" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">IG</span>
+                      </Link>
+                      <Link href="#" className="flex flex-col items-center gap-2 group">
+                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
+                          <Image src="https://img.icons8.com/material-rounded/24/000000/tiktok.png" alt="TikTok" width={24} height={24} className="opacity-80" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">TikTok</span>
+                      </Link>
+                      <Link href="#" className="flex flex-col items-center gap-2 group">
+                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
+                          <Image src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png" alt="FB" width={24} height={24} className="opacity-80" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">FB</span>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

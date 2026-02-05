@@ -4,156 +4,138 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    /* Very light cool gray */
+    --background: 180 20% 98%;
     --foreground: 220 10% 25%;
-    /* Dark slate gray for text */
 
     --card: 0 0% 100%;
-    /* White cards */
     --card-foreground: 220 10% 25%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 220 10% 25%;
 
-    --primary: 24 95% 53%;
-    /* A slightly more modern orange */
-    --primary-foreground: 0 0% 100%;
-    /* White text on orange */
+    --primary: 174 90% 50%;
+    /* #0df2df - Breezy Aqua */
+    --primary-foreground: 180 100% 5%;
 
-    --secondary: 220 15% 90%;
-    /* Light gray for secondary elements */
+    --secondary: 180 15% 90%;
     --secondary-foreground: 220 10% 25%;
 
-    --muted: 220 15% 94%;
+    --muted: 180 15% 94%;
     --muted-foreground: 220 10% 45%;
 
-    --accent: 170 45% 45%;
-    /* Soft Teal */
+    --accent: 174 60% 45%;
+    /* Deep Breezy Teal */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 170 45% 45%;
-    /* Use teal for focus rings */
+    --border: 180 15% 90%;
+    --input: 180 15% 90%;
+    --ring: 174 90% 50%;
 
-    --radius: 0.75rem;
-    /* Increase border radius for a softer look */
-
-    /* Chart and sidebar colors can be updated later if needed */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 220 10% 25%;
-    --sidebar-primary: 24 95% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 170 45% 45%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 15% 90%;
-    --sidebar-ring: 170 45% 45%;
+    --radius: 1.5rem;
+    /* Larger border radius for the new theme */
   }
 
   .dark {
-    --background: 220 15% 10%;
-    --foreground: 220 15% 85%;
-    --card: 220 15% 13%;
-    --card-foreground: 220 15% 85%;
-    --popover: 220 15% 10%;
-    --popover-foreground: 220 15% 85%;
-    --primary: 24 95% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 220 15% 85%;
-    --muted: 220 15% 25%;
-    --muted-foreground: 220 15% 65%;
-    --accent: 170 45% 45%;
+    --background: 220 15% 5%;
+    --foreground: 180 10% 90%;
+    --card: 220 15% 8%;
+    --card-foreground: 180 10% 90%;
+    --popover: 220 15% 5%;
+    --popover-foreground: 180 10% 90%;
+    --primary: 174 90% 50%;
+    --primary-foreground: 180 100% 5%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 180 10% 90%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 174 60% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 170 45% 45%;
-    --radius: 0.75rem;
-    /* sidebar and chart colors for dark theme */
-    --sidebar-background: 220 15% 13%;
-    --sidebar-foreground: 220 15% 85%;
-    --sidebar-primary: 24 95% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 170 45% 45%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 15% 25%;
-    --sidebar-ring: 170 45% 45%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 174 90% 50%;
   }
 
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
+  .sand-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAP73nX-5iSwXxCpkw29RDRH43czRWCTEy6_f1YF-jwfN6x1miptGRC08a71HB7xKTniW6plv-IIIQWwpp0iXM-UKC50j5CFmkNOC4DVJjnDa-teX2IrEYFiNzYiWlYPGwsmMVZhE0ZUIrA4YBc406layJWasxNJSqnmiwCmUoVP6Ya03XvEgMU8gK3GiH6JV1I0uvzyAMqGpEZ7VXWJQVi3cecltmfK77NRrxF5gtWCiLNYg8YnX6Nm8RHm3K5lH9eY6w7OaKuhrg);
+    opacity: 0.03;
+    pointer-events: none;
   }
 }
 
 @layer components {
-  /* Option B: "Liquid Paradise" Theme Utilities - Refined to match Weddings Page */
+  /* Breezy Balang Design System Utilities */
 
-  .glass-panel-wet {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 rounded-[2rem];
-    /* Matches GLASS_PANEL from wedding-corporate-orders */
-    box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .breezy-glass {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2rem];
+    box-shadow: 0 12px 40px -12px rgba(13, 242, 223, 0.15);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .glass-panel-wet:hover {
-    @apply bg-white/90;
-    /* Matches GLASS_PANEL_HOVER */
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgb(0, 0, 0, 0.08);
+  .breezy-glass:hover {
+    @apply bg-white/60 border-white/80;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 50px -12px rgba(13, 242, 223, 0.25);
   }
 
-  .glass-panel-static {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 rounded-[2rem];
-    box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04);
+  .breezy-glass-static {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2rem];
+    box-shadow: 0 12px 40px -12px rgba(13, 242, 223, 0.15);
   }
 
-  .btn-coast-primary {
-    @apply bg-gradient-to-r from-teal-600 to-emerald-500 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg;
-    /* Matches BUTTON_PRIMARY */
-    transition: all 0.3s ease;
+  .breezy-btn-primary {
+    @apply bg-gradient-to-br from-[#0df2df] via-[#0bc9b9] to-[#09a093] text-[#041F1C] font-black uppercase tracking-widest rounded-2xl shadow-xl;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  .btn-coast-primary:hover {
-    @apply shadow-xl;
-    transform: scale(1.02);
+  .breezy-btn-primary:hover {
+    @apply shadow-2xl brightness-110;
+    transform: translateY(-2px) rotate(-1deg);
   }
 
-  .btn-coast-primary:active {
-    transform: scale(0.95);
+  .breezy-btn-primary:active {
+    @apply brightness-90;
+    transform: scale(0.96) rotate(0deg);
   }
 
-  .text-coast-gradient {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-emerald-600;
+  .breezy-text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-br from-[#041F1C] to-[#09a093] font-black;
   }
 
-  .text-coast-heading {
-    @apply font-black uppercase tracking-tighter text-slate-900;
+  .breezy-input {
+    @apply bg-white/50 border-white/80 rounded-2xl focus:ring-8 focus:ring-[#0df2df]/20 focus:border-[#0df2df]/40 transition-all duration-500 font-bold h-16 px-6;
   }
 
-  .input-coast {
-    @apply bg-white border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 shadow-sm hover:border-teal-300 transition-colors font-bold text-lg px-6 h-16;
+  .breezy-card-hero {
+    @apply relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#0df2df]/10 to-white/50 backdrop-blur-md border border-white/60;
   }
 
-  .text-coast-heading {
-    @apply font-display font-black uppercase tracking-tighter text-brand-teal;
+  .coastal-tilt-right {
+    @apply rotate-1 hover:rotate-0 transition-transform duration-500 ease-in-out;
   }
 
-  .input-coast {
-    @apply bg-white/40 border-white/60 focus:border-brand-aqua/50 focus:bg-white/80 focus:ring-8 focus:ring-brand-aqua/5 transition-all duration-500 rounded-[1.5rem];
+  .coastal-tilt-left {
+    @apply -rotate-1 hover:rotate-0 transition-transform duration-500 ease-in-out;
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--tw-rotate, 0deg));
+    }
+
+    50% {
+      transform: translateY(-10px) rotate(calc(var(--tw-rotate, 0deg) + 0.5deg));
+    }
   }
 }

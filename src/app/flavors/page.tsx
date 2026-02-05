@@ -1,208 +1,184 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { mockFlavors } from '@/lib/data';
+
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowRight, Waves, Droplets, Check, Plus, Star, Coffee, Leaf, Flower2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { FLAVOR_CATEGORIES } from '@/data/mockData';
+import { useFlavorSelection } from '@/hooks/useFlavorSelection';
+import { Plus, ArrowRight, Droplets, Coffee, Flower2, Star, Waves, Check } from 'lucide-react';
 import Image from 'next/image';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-// THEME CONSTANTS
-const PRIMARY_GRADIENT = "bg-gradient-to-r from-teal-600 to-emerald-500";
-const TEXT_GRADIENT = "text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-emerald-600";
-
-const FLAVOR_CATEGORIES = [
-  { id: 'all', label: 'All Flavors', icon: Waves },
-  { id: 'recommended', label: 'Best Sellers', icon: Star },
-  { id: 'milk', label: 'Milk Base', icon: Coffee },
-  { id: 'refreshing', label: 'Refreshing', icon: Droplets },
-  { id: 'flower', label: 'Flower Series', icon: Flower2 },
-];
-
+/**
+ * FlavorsPage Component
+ * 
+ * Ported from "Iced Paradise" Reference Design.
+ * - Theme: Sunny Gold (#f4c025) & Sand (#f8f5ee)
+ * - Layout: Responsive Grid (2-col mobile, 4-col desktop), Sticky Header, Horizontal Filter Scroll
+ */
 export default function FlavorsPage() {
-  const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([]);
-  const router = useRouter();
-  const { toast } = useToast();
+  const {
+    selectedFlavorIds,
+    toggleFlavorSelection,
+    proceedToEventBuilder,
+    filterFlavors,
+    canProceed
+  } = useFlavorSelection();
 
-  const handleToggleFlavorSelection = (flavorId: string) => {
-    setSelectedFlavorIds((prevSelectedIds) => {
-      if (prevSelectedIds.includes(flavorId)) {
-        return prevSelectedIds.filter((id) => id !== flavorId);
-      } else {
-        return [...prevSelectedIds, flavorId];
-      }
-    });
-  };
-
-  const handleProceedToEventBuilder = () => {
-    if (selectedFlavorIds.length === 0) {
-      toast({
-        title: 'Selection Required',
-        description: 'Choose at least one flavor to start your journey.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    const queryParams = new URLSearchParams();
-    queryParams.append('defaultPackageId', 'pkg_opt1');
-    queryParams.append('addFlavorIds', selectedFlavorIds.join(','));
-    router.push(`/event-builder?${queryParams.toString()}`);
-  };
-
-  const canProceed = selectedFlavorIds.length > 0;
-
-  const filterFlavors = (categoryId: string) => {
-    switch (categoryId) {
-      case 'recommended':
-        return mockFlavors.filter(f => f.tags?.some(tag => ['Best Seller', 'Recommended', 'Must Try', 'Most Popular'].includes(tag)));
-      case 'milk':
-        return mockFlavors.filter(f => f.tags?.includes('Milk Base'));
-      case 'refreshing':
-        return mockFlavors.filter(f => f.tags?.includes('Non Milk Base') && !f.tags?.includes('Flower Series'));
-      case 'flower':
-        return mockFlavors.filter(f => f.tags?.includes('Flower Series'));
-      default:
-        return mockFlavors;
-    }
-  };
+  const [activeCategory, setActiveCategory] = useState('all');
 
   return (
-    <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pb-20">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#fcfbf8] font-plus-jakarta text-[#1c180d] pt-32 md:pt-40">
+      {/* Sand Texture Overlay */}
+      <div className="fixed inset-0 sand-texture z-0"></div>
 
-      {/* Background Decor */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-teal-100/40 rounded-full blur-[100px] mix-blend-multiply opacity-60 animate-blob" />
-        <div className="absolute top-[30%] right-[-20%] w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-[80px] mix-blend-multiply opacity-60 animate-blob animation-delay-2000" />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10 pt-24 space-y-12">
-
-        {/* Header Section */}
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/40 shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
-            <Droplets size={14} className="text-teal-500" strokeWidth={3} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-800">Pure Hydration</span>
-          </div>
-
-          <h1 className="font-black text-5xl md:text-7xl lg:text-8xl uppercase leading-[0.85] tracking-tighter text-slate-900 drop-shadow-sm">
-            Iced <br />
-            <span className={TEXT_GRADIENT}>Paradise</span>
-          </h1>
-
-          <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto">
-            Hand-crafted, cold-pressed, and ice-blended. Choose your flavors below to build your custom Balang experience.
-          </p>
-        </div>
-
-        {/* Sticky Selection Bar - Fitts Law Optimized */}
-        <div className={cn(
-          "fixed bottom-6 left-4 right-4 z-50 md:sticky md:top-28 md:bottom-auto transition-all duration-500 ease-in-out transform",
-          canProceed ? "translate-y-0 opacity-100 scale-100" : "translate-y-8 opacity-0 scale-95 pointer-events-none"
-        )}>
-          <div className="bg-white/90 backdrop-blur-2xl p-4 pl-6 rounded-[2rem] flex flex-row justify-between items-center gap-4 max-w-2xl mx-auto border border-teal-100 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-            <div className="flex items-center gap-4">
-              <div className="bg-teal-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-teal-500/20">
-                {selectedFlavorIds.length}
-              </div>
-              <div className="flex flex-col">
-                <span className="font-black text-teal-800 uppercase text-xs tracking-wider">Flavors</span>
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest hidden sm:inline-block">Selected & Ready</span>
-              </div>
+      {/* Header Section */}
+      <header className="sticky top-24 md:top-28 z-40 flex flex-col bg-[#fcfbf8]/90 px-4 pb-4 pt-2 backdrop-blur-md border-b border-black/5 md:border-none shadow-sm md:shadow-none transition-all">
+        <div className="w-full max-w-7xl mx-auto space-y-4">
+          <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <h1 className="text-2xl md:text-3xl font-extrabold uppercase italic tracking-tight text-[#1c180d] mt-2">Iced Paradise</h1>
             </div>
+          </div>
 
-            <Button onClick={handleProceedToEventBuilder} className={cn("h-14 px-8 text-sm md:text-base btn-coast-primary shadow-xl w-auto")}>
-              Build Event <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+          <p className="hidden md:block text-center text-base font-medium leading-snug text-[#1c180d]/70 max-w-lg mx-auto">
+            Hand-crafted, cold-pressed, and ice-blended excellence. <br /> Select your flavors to begin customizing your event.
+          </p>
+
+          {/* Filter Bar (Horizontal Scroll) */}
+          <div className="no-scrollbar flex gap-3 overflow-x-auto py-2 md:justify-center">
+            {FLAVOR_CATEGORIES.map(cat => {
+              const isActive = cat.id === activeCategory;
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={cn(
+                    "flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full px-6 text-sm font-bold shadow-sm transition-all cursor-pointer select-none",
+                    isActive
+                      ? "bg-[#f4c025] text-white shadow-[#f4c025]/40 scale-105"
+                      : "bg-white border border-[#f4f0e7] text-[#1c180d] hover:bg-gray-50 hover:border-[#f4c025]/30"
+                  )}
+                >
+                  {cat.label}
+                </div>
+              )
+            })}
           </div>
         </div>
+      </header>
 
-        {/* Tabs System */}
-        <Tabs defaultValue="all" className="w-full space-y-12">
-          <div className="flex justify-center">
-            <TabsList className="h-auto py-2 px-2 gap-1 flex-wrap justify-center bg-white/40 border-white/60">
-              {FLAVOR_CATEGORIES.map(cat => (
-                <TabsTrigger key={cat.id} value={cat.id} className="gap-2">
-                  <cat.icon className="w-3.5 h-3.5" />
-                  {cat.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+      {/* Product Catalog Grid */}
+      <main className="relative z-10 flex-1 px-4 pb-32 pt-16 md:pt-20">
+        <div className="w-full max-w-7xl mx-auto">
+          {/* Responsive Grid: 2 cols mobile -> 3 cols tablet -> 4 cols desktop -> 5 cols large screens */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
+            {filterFlavors(activeCategory).map((flavor) => {
+              const isSelected = selectedFlavorIds.includes(flavor.id);
+              return (
+                <div
+                  key={flavor.id}
+                  onClick={() => toggleFlavorSelection(flavor.id)}
+                  className={cn(
+                    "group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer",
+                    isSelected
+                      ? "border-[#f4c025] ring-4 ring-[#f4c025]/20 shadow-xl scale-[1.02] z-10"
+                      : "border-white/50 bg-white hover:shadow-xl hover:-translate-y-1 hover:border-[#f4c025]/30"
+                  )}
+                  style={{ boxShadow: isSelected ? '0 10px 30px -5px rgba(244, 192, 37, 0.3)' : undefined }}
+                >
+                  <div
+                    className="relative aspect-[3/4] w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                    style={{
+                      backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%), url(${flavor.imageUrl})`
+                    }}
+                  >
+                    <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+                      {flavor.tags?.slice(0, 1).map(tag => (
+                        <span key={tag} className="rounded-full bg-[#f4c025] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#1c180d] shadow-sm">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="absolute bottom-3 left-3 right-3 transition-transform duration-300 group-hover:-translate-y-1">
+                      <h3 className="leading-tight text-white text-base md:text-lg font-bold drop-shadow-md">{flavor.name}</h3>
+                    </div>
 
-          {FLAVOR_CATEGORIES.map(cat => (
-            <TabsContent key={cat.id} value={cat.id}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filterFlavors(cat.id).map((flavor) => {
-                  const isSelected = selectedFlavorIds.includes(flavor.id);
-                  return (
-                    <div
-                      key={flavor.id}
-                      onClick={() => handleToggleFlavorSelection(flavor.id)}
-                      className={cn(
-                        "group relative glass-panel-wet overflow-hidden cursor-pointer transition-all duration-500",
-                        isSelected ? "ring-4 ring-teal-400 shadow-2xl scale-[1.02]" : "hover:shadow-xl"
-                      )}
-                    >
-                      <div className="aspect-[4/5] relative">
-                        <Image
-                          src={flavor.imageUrl}
-                          alt={flavor.name}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className={cn(
-                          "absolute inset-0 bg-gradient-to-t transition-all duration-300",
-                          isSelected ? "from-teal-900/90 via-teal-900/40 to-transparent" : "from-slate-900/60 to-transparent group-hover:from-teal-900/60"
-                        )}></div>
-
-                        {/* Selection Indicator */}
-                        <div className={cn(
-                          "absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg",
-                          isSelected ? "bg-teal-500 text-white scale-100" : "bg-white/30 backdrop-blur-md text-white scale-90 opacity-0 group-hover:opacity-100"
-                        )}>
-                          {isSelected ? <Check size={20} strokeWidth={4} /> : <Plus size={20} strokeWidth={4} />}
-                        </div>
-
-                        <div className="absolute bottom-0 left-0 p-8 text-white w-full">
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {flavor.tags?.slice(0, 2).map(tag => (
-                              <span key={tag} className="text-[9px] uppercase font-black tracking-widest bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full inline-block border border-white/10">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                          <h3 className="font-black text-2xl uppercase leading-tight mb-2 group-hover:text-teal-300 transition-colors">{flavor.name}</h3>
-                          <p className="text-white/70 text-xs font-medium line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                            {flavor.description}
-                          </p>
-                          <div className={cn("h-1 w-12 rounded-full transition-all duration-500", isSelected ? "bg-teal-400 w-full" : "bg-white/50 group-hover:bg-teal-400")}></div>
-                        </div>
+                    {/* Selection Overlay */}
+                    <div className={cn(
+                      "absolute inset-0 bg-[#f4c025]/20 backdrop-blur-[2px] flex items-center justify-center transition-all duration-300",
+                      isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 bg-black/20"
+                    )}>
+                      <div className={cn(
+                        "bg-white text-[#f4c025] rounded-full p-3 shadow-xl transition-all duration-300 transform",
+                        isSelected ? "scale-100" : "scale-75 translate-y-4 group-hover:scale-100 group-hover:translate-y-0"
+                      )}>
+                        {isSelected ? <Check strokeWidth={4} size={24} /> : <Plus strokeWidth={4} size={24} />}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-              
-              {filterFlavors(cat.id).length === 0 && (
-                <div className="text-center py-20 bg-white/30 rounded-[3rem] border border-white/40 border-dashed">
-                  <p className="text-slate-400 font-bold uppercase tracking-widest">No flavors found in this category.</p>
+                  </div>
+
+                  <div className="p-3 md:p-4 bg-white relative z-20">
+                    <p className="mb-3 line-clamp-2 text-xs md:text-sm text-[#1c180d]/60 font-medium">
+                      {flavor.description}
+                    </p>
+                    <button
+                      className={cn(
+                        "w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs md:text-sm font-bold transition-all active:scale-95",
+                        isSelected
+                          ? "bg-[#f4c025] text-[#1c180d] shadow-lg shadow-[#f4c025]/20"
+                          : "bg-[#f4c025]/10 text-[#1c180d] group-hover:bg-[#f4c025] group-hover:text-white"
+                      )}
+                    >
+                      {isSelected ? (
+                        <>
+                          <Check size={16} strokeWidth={3} /> Selected
+                        </>
+                      ) : (
+                        <>
+                          <Plus size={16} strokeWidth={3} /> Select Flavor
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-
-        {/* Bottom CTA */}
-        <div className="text-center py-10">
-          <p className="text-slate-400 font-medium text-sm uppercase tracking-widest">
-            More flavors coming soon
-          </p>
+              );
+            })}
+          </div>
         </div>
+      </main>
 
-      </div>
+      {/* Floating Footer Action Bar */}
+      <footer className="fixed bottom-0 left-0 right-0 z-50 p-6 pointer-events-none">
+        <div className={cn(
+          "pointer-events-auto mx-auto flex max-w-sm md:max-w-md items-center justify-between rounded-full border border-white/40 bg-white/90 p-2 shadow-2xl shadow-black/10 backdrop-blur-xl transition-all duration-500 hover:scale-105 hover:shadow-[#f4c025]/10",
+          canProceed ? "translate-y-0 opacity-100" : "translate-y-32 opacity-0"
+        )}>
+          <div className="flex items-center gap-3 pl-5">
+            <div className="relative flex size-12 items-center justify-center rounded-full bg-[#008080] text-white shadow-lg shadow-[#008080]/30">
+              <Droplets size={22} className="animate-pulse" />
+              <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#f4c025] border-2 border-white flex items-center justify-center text-[10px] font-bold text-[#1c180d]">
+                {selectedFlavorIds.length}
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-extrabold leading-none text-[#1c180d]">{selectedFlavorIds.length} Flavors</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#1c180d]/50">Ready to Go</span>
+            </div>
+          </div>
+
+          <button
+            onClick={proceedToEventBuilder}
+            className="group flex h-14 items-center justify-center rounded-full bg-[#f4c025] px-8 font-bold text-[#1c180d] shadow-lg shadow-[#f4c025]/30 transition-transform hover:brightness-110 active:scale-95"
+          >
+            Build Event
+            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={3} size={20} />
+          </button>
+        </div>
+      </footer>
+
+      {/* iOS Home Indicator Mockup (Hidden on desktop if desired, but kept for consistency) */}
+      <div className="fixed bottom-1 left-1/2 h-1 w-32 -translate-x-1/2 rounded-full bg-black/10 z-[60] md:hidden"></div>
     </div>
   );
 }

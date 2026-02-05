@@ -33,7 +33,7 @@ export const sendWhatsAppMessage = ai.defineTool(
     try {
       const client = new UnipileClient(unipileDsn, unipileApiKey);
 
-      const message = `Salam ${customerName}! Thank you for your order with BalangConnect.\n\nYour order #${orderId} is confirmed.\nTotal: S$${totalAmount.toFixed(2)}\n\nWe'll be in touch shortly regarding your event. Alhamdulillah!`;
+      const message = `Salam ${customerName}! Thank you for your order with Balang Kepalang.\n\nYour order #${orderId} is confirmed.\nTotal: S$${totalAmount.toFixed(2)}\n\nWe'll be in touch shortly regarding your event. Alhamdulillah!`;
 
       const response = await client.messaging.startNewChat({
         account_id: unipileAccountId,

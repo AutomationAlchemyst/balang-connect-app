@@ -32,8 +32,8 @@ import { mosqueDataList } from '@/lib/data';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
 
 
-const INFAQ_BALANG_PRICE = 95.00;
-const DELIVERY_FEE = 25.00;
+const INFAQ_BALANG_PRICE = 90.00;
+const DELIVERY_FEE = 15.00;
 
 export const hearAboutUsOptions = [
   'Social Media (Facebook, Instagram, etc.)',
@@ -505,7 +505,7 @@ export default function InfaqForm() {
             <FormItem>
               <FormLabel className={LABEL_STYLE}>Message / Niat / On Behalf Of (Optional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Any special requests, messages for recipients, your Niat, or if this is on behalf of someone not covered in 'Dedication Name'." className={`${INPUT_STYLE} h-24 pt-3 resize-none`} {...field} disabled={isLoading} />
+                <Textarea placeholder="Any special requests, messages for recipients, your Niat, or if this is on behalf of someone not covered in 'Dedication Name'." className={`${INPUT_STYLE} h-24 pt-3 resize-none border-2 border-brand-teal/30 shadow-none focus:border-brand-aqua`} {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -546,7 +546,7 @@ export default function InfaqForm() {
               </FormControl>
               <div className="space-y-1 leading-none">
                 <Label htmlFor="infaq-consent" className="cursor-pointer text-[10px] font-black uppercase tracking-tight text-brand-teal/70 leading-relaxed block">
-                  By submitting this form, I consent to BalangConnect using my personal data to respond to my inquiry and process my request. My data will be handled in compliance with Singapore's PDPA. I acknowledge that BalangConnect will follow up by contacting me via WhatsApp/Email. *
+                  By submitting this form, I consent to Balang Kepalang using my personal data to respond to my inquiry and process my request. My data will be handled in compliance with Singapore's PDPA. I acknowledge that Balang Kepalang will follow up by contacting me via WhatsApp/Email. *
                 </Label>
                 <FormMessage />
               </div>

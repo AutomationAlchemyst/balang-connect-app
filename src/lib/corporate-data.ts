@@ -9,7 +9,7 @@ export const mockCorporatePackages: EventPackage[] = [
     price: 600.00,
     setupFee: 0,
     isAllInclusive: true,
-    includedItems: ['3 x 40L Balangs (Choice of 3 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'],
+    includedItems: ['3 x 40L Balangs (Choice of 3 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
     imageUrl: 'https://placehold.co/400x250.png',
     pax: '300-400',
     dataAiHint: 'corporate event drinks'
@@ -21,7 +21,7 @@ export const mockCorporatePackages: EventPackage[] = [
     price: 765.00,
     setupFee: 0,
     isAllInclusive: true,
-    includedItems: ['4 x 40L Balangs (Choice of 4 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'],
+    includedItems: ['4 x 40L Balangs (Choice of 4 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
     imageUrl: 'https://placehold.co/400x250.png',
     pax: '400-500',
     dataAiHint: 'large corporate event drinks'
@@ -33,7 +33,7 @@ export const mockCorporatePackages: EventPackage[] = [
     price: 930.00,
     setupFee: 0,
     isAllInclusive: true,
-    includedItems: ['5 x 40L Balangs (Choice of 5 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'],
+    includedItems: ['5 x 40L Balangs (Choice of 5 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
     imageUrl: 'https://placehold.co/400x250.png',
     pax: '600-700',
     dataAiHint: 'major corporate event drinks'
@@ -45,7 +45,7 @@ export const mockCorporatePackages: EventPackage[] = [
     price: 1080.00,
     setupFee: 0,
     isAllInclusive: true,
-    includedItems: ['6 x 40L Balangs (Choice of 6 Flavors)', '2 Bal-tenders service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'],
+    includedItems: ['6 x 40L Balangs (Choice of 6 Flavors)', '2 Bal-tenders service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
     imageUrl: 'https://placehold.co/400x250.png',
     pax: '800-900',
     dataAiHint: 'conference drinks catering'
@@ -57,7 +57,7 @@ export const mockCorporatePackages: EventPackage[] = [
     price: 1260.00,
     setupFee: 0,
     isAllInclusive: true,
-    includedItems: ['8 x 40L Balangs (Choice of 8 Flavors)', '2 Bal-tenders service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'],
+    includedItems: ['8 x 40L Balangs (Choice of 8 Flavors)', '2 Bal-tenders service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
     imageUrl: 'https://placehold.co/400x250.png',
     pax: '1000',
     dataAiHint: 'large scale event drinks'
@@ -65,7 +65,7 @@ export const mockCorporatePackages: EventPackage[] = [
   {
     id: 'pkg_17l_self_pickup',
     name: '17L Balang (Self-Pickup / Delivery)',
-    description: 'Suitable for 15-25 pax. Price is for self-pickup. Delivery is available for an additional $20.00. Includes one 17L balang with your choice of one flavor.',
+    description: "Suitable for 15-25 pax. Price is for self-pickup. Delivery is available for an additional $20.00. This 17L balang is for you to keep. We don't collect the balang back.",
     price: 98.00,
     setupFee: 0,
     isAllInclusive: false,
@@ -77,11 +77,13 @@ export const mockCorporatePackages: EventPackage[] = [
 ];
 
 export const mockCorporateAddons: Addon[] = [
-  { id: 'addon_balang_23l', name: 'Additional 1 x 23L Balang', description: 'One extra 23L balang of your chosen flavor.', price: 95.00, category: 'Drinks' },
-  { id: 'addon_balang_40l', name: 'Additional 1 x 40L Balang', description: 'One extra 40L balang of your chosen flavor.', price: 165.00, category: 'Drinks' },
-  { id: 'addon_bartender_1hr', name: 'Additional Bal-Tender (1 Hour)', description: 'Additional hour of bal-tender service.', price: 15.00, category: 'Services' },
-  { id: 'addon_bartender_4hr', name: 'Bal-Tender (4 Hours)', description: '4 hours of dedicated bal-tender service (if not included in package).', price: 60.00, category: 'Services' },
-  { id: 'addon_table_rental', name: 'Table Rental', description: 'Rental of one table for your setup.', price: 20.00, category: 'Equipment' },
-  { id: 'addon_infused_water_23l', name: '23L Infused Water', description: 'Refreshing 23L infused water (e.g., lemon & mint).', price: 25.00, category: 'Drinks' },
-  { id: 'addon_cups_upgrade', name: 'Cups Upgrade (per 100)', description: 'Upgrade to premium cups, priced per 100 units.', price: 30.00, category: 'Services' },
+  { id: 'addon_balang_23l', name: 'Additional 1 x 23L Balang', description: 'One extra 23L balang of your chosen flavor.', price: 95.00, category: 'Drinks', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80', requiresFlavor: true },
+  { id: 'addon_balang_40l', name: 'Additional 1 x 40L Balang', description: 'One extra 40L balang of your chosen flavor.', price: 165.00, category: 'Drinks', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80', requiresFlavor: true },
+  { id: 'addon_bartender_1hr', name: 'Additional Bal-Tender (1 Hour)', description: 'Additional hour of bal-tender service.', price: 15.00, category: 'Services', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_bartender_4hr', name: 'Bal-Tender (4 Hours)', description: '4 hours of dedicated bal-tender service (if not included in package).', price: 60.00, category: 'Services', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_table_rental', name: 'Table Rental', description: 'Rental of one table for your setup.', price: 20.00, category: 'Equipment', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_infused_water_23l', name: '23L Infused Water (Lemon & Mint leaves)', description: 'Refreshing 23L infused water with lemon & mint leaves.', price: 25.00, category: 'Drinks', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_cups_upgrade_500', name: '500ml Cup Upgrade (with branding)', description: 'Upgrade to 500ml premium cups with branding.', price: 30.00, category: 'Services', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_cup_corn', name: 'Cup Corn Live Station', description: 'Includes server (2hrs). Suitable for 100-120 pax. Note: We require a power point for this station.', price: 250.00, category: 'Live Stations', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
+  { id: 'addon_cups_upgrade_1000', name: '1000ml Cup Upgrade (with branding)', description: 'Upgrade to 1000ml premium cups with branding.', price: 35.00, category: 'Services', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },
 ];

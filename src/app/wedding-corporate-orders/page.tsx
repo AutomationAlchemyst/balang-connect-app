@@ -10,7 +10,31 @@ import { mockFlavors } from '@/lib/data';
 import type { EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PlusCircle, MinusCircle, ShoppingCart, Zap, PackageIcon, Truck, XIcon, Check, CalendarDays, Loader2, Star, Info, ChevronRight, ArrowRight } from 'lucide-react';
+import {
+  ArrowLeft,
+  HelpCircle,
+  Plus,
+  Minus,
+  X,
+  XIcon,
+  Check,
+  CheckCircle2,
+  Info,
+  ChevronRight,
+  ArrowRight,
+  PlusCircle,
+  MinusCircle,
+  ShoppingCart,
+  Loader2,
+  CalendarDays,
+  Zap,
+  PackageIcon,
+  Truck,
+  Star,
+  Droplets,
+  Waves,
+  Sparkles
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -22,6 +46,7 @@ import BookingSuccessView from '@/components/features/event-builder/BookingSucce
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
 import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import NextImage from 'next/image';
 
 const BASE_DELIVERY_FEE = 45.00;
 const SPECIAL_DELIVERY_FEE = 20.00;
@@ -35,14 +60,6 @@ export interface EventConfig {
   eventDate?: Date;
   eventTime?: string;
 }
-
-// PREMIUM THEME CONSTANTS - "Liquid Paradise" Refined
-const GLASS_PANEL = "bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem]";
-const GLASS_PANEL_HOVER = "hover:bg-white/90 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300";
-const PRIMARY_GRADIENT = "bg-gradient-to-r from-teal-600 to-emerald-500";
-const TEXT_GRADIENT = "text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-emerald-600";
-const BUTTON_PRIMARY = "bg-gradient-to-r from-teal-600 to-emerald-500 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300";
-const BUTTON_SECONDARY = "bg-white text-teal-700 font-bold border border-teal-100 uppercase tracking-wider rounded-xl hover:bg-teal-50 hover:border-teal-200 transition-all duration-300";
 
 export default function CorporateOrdersPage() {
   const searchParams = useSearchParams();
@@ -75,6 +92,7 @@ export default function CorporateOrdersPage() {
 
   useEffect(() => {
     setIsDeliveryRequested(false);
+    setSelectedPackageFlavors([]);
   }, [selectedPackage]);
 
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
@@ -88,18 +106,13 @@ export default function CorporateOrdersPage() {
         setBlockedDates(dates.map(d => d.date));
       } catch (error) {
         console.error("Failed to fetch blocked dates for event builder:", error);
-        toast({
-          title: "Could not load calendar",
-          description: "Failed to fetch blocked dates. Please try refreshing.",
-          variant: "destructive",
-        });
       } finally {
         setIsCalendarDataLoading(false);
       }
     };
 
     fetchBlockedDates();
-  }, [toast]);
+  }, []);
 
   const getMaxFlavors = useCallback(() => {
     if (selectedPackage) {
@@ -123,14 +136,11 @@ export default function CorporateOrdersPage() {
       if (prevFlavors.length < currentMaxFlavors) {
         return [...prevFlavors, flavorId];
       } else {
-        const flavorDetails = mockFlavors.find(f => f.id === flavorId);
-        setTimeout(() => {
-          toast({
-            title: "Limit Reached",
-            description: `You can only select ${currentMaxFlavors} flavors for this package.`,
-            variant: "destructive",
-          });
-        }, 0);
+        toast({
+          title: "Limit Reached",
+          description: `You can only select ${currentMaxFlavors} flavors for this package.`,
+          variant: "destructive",
+        });
         return prevFlavors;
       }
     });
@@ -141,74 +151,17 @@ export default function CorporateOrdersPage() {
   };
 
   useEffect(() => {
-    setSelectedPackageFlavors([]);
-  }, [selectedPackage]);
-
-
-  useEffect(() => {
     const defaultPackageIdFromUrl = searchParams.get('defaultPackageId');
     if (defaultPackageIdFromUrl) {
       const packageToSet = mockCorporatePackages.find(p => p.id === defaultPackageIdFromUrl);
       if (packageToSet && selectedPackage?.id !== packageToSet.id) {
         setSelectedPackage(packageToSet);
       }
-      const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
-      if (currentParams.has('defaultPackageId')) {
-        currentParams.delete('defaultPackageId');
-        const queryString = currentParams.toString();
-        router.replace(`/wedding-corporate-orders${queryString ? `?${queryString}` : ''}`, { scroll: false });
-      }
     }
-  }, [searchParams, router, selectedPackage?.id]);
-
-  useEffect(() => {
-    const flavorIdsToAddParam = searchParams.get('addFlavorIds');
-    const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
-
-    if (flavorIdsToAddParam && selectedPackage) {
-      const flavorIdsFromUrl = flavorIdsToAddParam.split(',');
-      const maxPackageFlavors = getMaxFlavors();
-      const couldNotAddFlavors: string[] = [];
-
-      setSelectedPackageFlavors(currentFlavors => {
-        let newFlavorsState = [...currentFlavors];
-        for (const idFromUrl of flavorIdsFromUrl) {
-          if (newFlavorsState.length < maxPackageFlavors) {
-            if (!newFlavorsState.includes(idFromUrl)) {
-              newFlavorsState.push(idFromUrl);
-            } else {
-              newFlavorsState.push(idFromUrl);
-            }
-          } else {
-            const flavorDetails = mockFlavors.find(f => f.id === idFromUrl);
-            couldNotAddFlavors.push(flavorDetails?.name || idFromUrl);
-          }
-        }
-        return newFlavorsState.slice(0, maxPackageFlavors);
-      });
-
-      if (couldNotAddFlavors.length > 0) {
-        setTimeout(() => {
-          toast({
-            title: `Some flavors ignored`,
-            description: `Could not add all flavors. Limit is ${maxPackageFlavors}.`,
-            variant: "default",
-          });
-        }, 0);
-      }
-
-      if (currentParams.has('addFlavorIds')) {
-        currentParams.delete('addFlavorIds');
-        const queryString = currentParams.toString();
-        router.replace(`/wedding-corporate-orders${queryString ? `?${queryString}` : ''}`, { scroll: false });
-      }
-    } else if (flavorIdsToAddParam && !selectedPackage && !currentParams.has('defaultPackageId')) {
-      // Logic to prompt package selection if flavors are passed without a package
-      // Silent for now to improve UX
-    }
-  }, [searchParams, router, selectedPackage, getMaxFlavors, toast]);
+  }, [searchParams, selectedPackage?.id]);
 
 
+  // Price Calculation Logic
   useEffect(() => {
     let currentTotal = 0;
     let deliveryFeeApplied = false;
@@ -243,42 +196,10 @@ export default function CorporateOrdersPage() {
       }
     }
 
-
     setTotalPrice(currentTotal);
     setDisplayDeliveryFee(deliveryFeeApplied ? (selectedPackage?.id === 'pkg_17l_self_pickup' ? SPECIAL_DELIVERY_FEE : deliveryFee) : 0);
   }, [selectedPackage, selectedAddons, deliveryFee, isDeliveryRequested]);
 
-  // Sync addons with flavor selections
-  useEffect(() => {
-    setAddonFlavorSelections(prevSelections => {
-      // Logic from original to keep flavor selections in sync with quantity
-      const nextState: Record<string, (string | undefined)[]> = {};
-      const balangAddonIds = ['addon_balang_23l', 'addon_balang_40l'];
-      let hasChange = false;
-
-      balangAddonIds.forEach(addonId => {
-        const qty = selectedAddons[addonId] || 0;
-        if (qty > 0) {
-          const current = prevSelections[addonId] || [];
-          if (current.length !== qty) {
-            nextState[addonId] = Array(qty).fill(undefined).map((_, i) => current[i]);
-            hasChange = true;
-          } else {
-            nextState[addonId] = current;
-          }
-        } else if (prevSelections[addonId]) {
-          hasChange = true;
-          // key removed implicitly by not adding to nextState
-        }
-      });
-      // Copy over non-balang keys if any (though currently only balangs have flavors)
-      // For safety, just use the computed nextState for balangs and keep previous for others if needed?
-      // Actually, let's just stick to the specific balang logic to avoid complexity.
-
-      if (hasChange) return nextState;
-      return prevSelections;
-    });
-  }, [selectedAddons]);
 
   const handleAddonToggle = (addonId: string, checked: boolean) => {
     setSelectedAddons(prev => {
@@ -287,7 +208,6 @@ export default function CorporateOrdersPage() {
         newAddons[addonId] = 1;
       } else {
         delete newAddons[addonId];
-        // Clean up flavors - handled by useEffect
       }
       return newAddons;
     });
@@ -295,7 +215,22 @@ export default function CorporateOrdersPage() {
 
   const handleAddonQuantityChange = (addonId: string, change: number) => {
     setSelectedAddons(prev => {
-      const newQuantity = (prev[addonId] || 0) + change;
+      const currentQty = prev[addonId] || 0;
+      const newQuantity = currentQty + change;
+
+      // Update flavor selections array size
+      setAddonFlavorSelections(prevFlavors => {
+        const currentFlavors = prevFlavors[addonId] || [];
+        if (change > 0) {
+          // Add empty slots for new items
+          return { ...prevFlavors, [addonId]: [...currentFlavors, undefined] };
+        } else if (change < 0) {
+          // Remove last item's flavor selection
+          return { ...prevFlavors, [addonId]: currentFlavors.slice(0, newQuantity) };
+        }
+        return prevFlavors;
+      });
+
       if (newQuantity <= 0) {
         const { [addonId]: _, ...rest } = prev;
         return rest;
@@ -304,24 +239,11 @@ export default function CorporateOrdersPage() {
     });
   };
 
-  const handleAdditiveFlavorSelect = (addonId: string, balangIndex: number, selectedFlavorId: string) => {
+  const handleUpdateAddonFlavor = (addonId: string, index: number, flavorId: string) => {
     setAddonFlavorSelections(prev => {
-      const newSelectionsForAddon = [...(prev[addonId] || [])];
-      while (newSelectionsForAddon.length <= balangIndex) {
-        newSelectionsForAddon.push(undefined);
-      }
-      newSelectionsForAddon[balangIndex] = selectedFlavorId;
-      return { ...prev, [addonId]: newSelectionsForAddon };
-    });
-  };
-
-  const handleRemoveAdditiveFlavor = (addonId: string, balangIndex: number) => {
-    setAddonFlavorSelections(prev => {
-      const newSelectionsForAddon = [...(prev[addonId] || [])];
-      if (balangIndex < newSelectionsForAddon.length) {
-        newSelectionsForAddon[balangIndex] = undefined;
-      }
-      return { ...prev, [addonId]: newSelectionsForAddon };
+      const currentFlavors = [...(prev[addonId] || [])];
+      currentFlavors[index] = flavorId;
+      return { ...prev, [addonId]: currentFlavors };
     });
   };
 
@@ -345,6 +267,28 @@ export default function CorporateOrdersPage() {
       return;
     }
 
+    // Validate Add-on Flavors
+    const missingAddonFlavors: string[] = [];
+    Object.entries(selectedAddons).forEach(([addonId, qty]) => {
+      const addon = mockCorporateAddons.find(a => a.id === addonId);
+      if (addon?.requiresFlavor && qty > 0) {
+        const flavors = addonFlavorSelections[addonId] || [];
+        // Check if we have enough flavor selections and all are defined
+        if (flavors.length < qty || flavors.includes(undefined) || flavors.some(f => f === "")) {
+          missingAddonFlavors.push(addon.name);
+        }
+      }
+    });
+
+    if (missingAddonFlavors.length > 0) {
+      toast({
+        title: "Missing Flavors for Add-ons",
+        description: `Please select flavors for: ${missingAddonFlavors.join(', ')}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     const packageFlavorDetails = selectedPackageFlavors
       .map(id => mockFlavors.find(f => f.id === id)?.name)
       .filter((name): name is string => !!name);
@@ -355,15 +299,17 @@ export default function CorporateOrdersPage() {
         const addon = mockCorporateAddons.find(a => a.id === addonId);
         if (!addon) return null;
 
-        const flavorsForThisAddon = (addonFlavorSelections[addonId] || [])
-          .map(fId => fId ? mockFlavors.find(f => f.id === fId)?.name : undefined)
-          .filter((name): name is string => !!name);
+        let flavors: string[] | undefined = undefined;
+        if (addon.requiresFlavor) {
+          const flavorIds = addonFlavorSelections[addonId] || [];
+          flavors = flavorIds.map(fid => mockFlavors.find(f => f.id === fid)?.name).filter((n): n is string => !!n);
+        }
 
         return {
           name: addon.name,
           quantity,
           price: (addon.price * quantity).toFixed(2),
-          ...(flavorsForThisAddon.length > 0 && { flavors: flavorsForThisAddon }),
+          ...(flavors && flavors.length > 0 && { flavors }),
         };
       })
       .filter((detail): detail is NonNullable<typeof detail> => detail !== null);
@@ -385,11 +331,7 @@ export default function CorporateOrdersPage() {
 
   const handleDateTimeSubmit = () => {
     if (!selectedEventDate || !selectedEventTime) {
-      toast({
-        title: "Date & Time Required",
-        description: "Please select both a date and a time slot.",
-        variant: "destructive",
-      });
+      toast({ title: "Date & Time Required", description: "Please select both a date and a time slot.", variant: "destructive", });
       return;
     }
     if (currentEventConfig) {
@@ -430,446 +372,472 @@ export default function CorporateOrdersPage() {
 
   if (isBookingSuccess) {
     return (
-      <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pt-32 pb-40">
-        <BookingSuccessView slotId={bookingReference} onReset={resetBookingProcess} />
+      <div className="relative min-h-screen bg-[#f9f7f2] dark:bg-[#102022] pb-40">
+        <BookingSuccessView
+          slotId={bookingReference}
+          onReset={resetBookingProcess}
+          customerName={customerDetailsForPayment?.fullName || "Valued Customer"}
+          eventDate={selectedEventDate || currentEventConfig?.eventDate}
+          eventTime={selectedEventTime || currentEventConfig?.eventTime}
+        />
       </div>
     );
   }
 
-  return (
-    <div className="relative min-h-screen bg-slate-50 overflow-x-hidden selection:bg-teal-100 selection:text-teal-900 font-sans text-slate-800">
+  // --- STITCH STRUCTURED UI IMPLEMENTATION ---
 
-      {/* Background Decor */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-teal-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob" />
-        <div className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] bg-emerald-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-cyan-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob animation-delay-4000" />
+  return (
+    <div className="relative min-h-screen bg-[#f9f7f2] dark:bg-[#102022] font-display text-[#0d1a1b] dark:text-white transition-colors duration-300 pb-32 lg:pb-12">
+
+      {/* 1. Header & Stepper */}
+      <header className="sticky top-0 z-50 flex items-center bg-[#f9f7f2]/90 dark:bg-[#102022]/90 backdrop-blur-md p-4 pb-2 justify-between border-b border-[#f2eee4] dark:border-white/10">
+        <div className="text-[#0d1a1b] dark:text-white flex size-12 shrink-0 items-center justify-center cursor-pointer" onClick={() => router.push('/')}>
+          <ArrowLeft size={24} />
+        </div>
+        <h2 className="text-[#0d1a1b] dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-12">Design Your Experience</h2>
+      </header>
+
+      {/* Stepper Dots */}
+      <div className="flex w-full flex-row items-center justify-center gap-3 py-6">
+        <div className={cn("h-1.5 w-8 rounded-full shadow-sm transition-all", selectedPackage ? "bg-brand-stitch-structured-primary shadow-brand-stitch-structured-primary/30" : "bg-brand-stitch-structured-primary")}></div>
+        <div className={cn("h-1.5 w-1.5 rounded-full transition-all", selectedPackage ? "bg-brand-stitch-structured-primary" : "bg-brand-stitch-structured-primary/20 dark:bg-white/20")}></div>
+        <div className={cn("h-1.5 w-1.5 rounded-full transition-all", Object.keys(selectedAddons).length > 0 ? "bg-brand-stitch-structured-primary" : "bg-brand-stitch-structured-primary/20 dark:bg-white/20")}></div>
       </div>
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-10 pt-32 pb-32">
-        {/* HEADER */}
-        <div className="text-center mb-16 space-y-4">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-[0.2em] border border-teal-100 shadow-sm animate-fade-in-up">
-            Corporate & Wedding
-          </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-slate-900 leading-none animate-fade-in-up delay-100">
-            Design Your <br className="md:hidden" />
-            <span className={TEXT_GRADIENT}>Experience</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg text-slate-500 font-medium animate-fade-in-up delay-200">
-            Customize every detail of your beverage service. Choose a package, select your flavors, and let us handle the rest.
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto w-full px-4 lg:px-8">
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
 
-          {/* LEFT COLUMN: BUILDER */}
-          <div className="lg:col-span-2 space-y-8 animate-fade-in-up delay-300">
+          {/* LEFT COLUMN: BUILDER STEPS */}
+          <div className="lg:col-span-8 xl:col-span-8 space-y-8">
 
-            {/* STEP 1: PACKAGE */}
-            <section id="step-package" className={cn(GLASS_PANEL, "p-8 md:p-10")}>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-black text-lg shadow-inner">1</div>
-                <div>
-                  <h2 className="text-2xl font-display font-bold text-slate-900 uppercase tracking-tight">Select Package</h2>
-                  <p className="text-sm text-slate-500 font-body font-medium">Start with a curated package or build from scratch.</p>
-                </div>
+            {/* SECTION: STEP 1 - FOUNDATION (PACKAGE) */}
+            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="pb-6">
+                <h2 className="text-[#0d1a1b] dark:text-white tracking-tight text-[28px] font-bold leading-tight pb-2 pt-2">Step 1: Select Package</h2>
+                <p className="text-[#0d1a1b]/60 dark:text-white/60 text-sm font-medium leading-relaxed">Choose a curated experience or build your own bespoke event.</p>
               </div>
 
-              <div className="space-y-6">
-                <Select
-                  onValueChange={(pkgId) => {
-                    if (pkgId === "none-option") {
-                      setSelectedPackage(null);
-                    } else {
-                      const newSelectedPackage = mockCorporatePackages.find(p => p.id === pkgId) || null;
-                      setSelectedPackage(newSelectedPackage);
-                    }
-                  }}
-                  value={selectedPackage?.id || "none-option"}
-                >
-                  <SelectTrigger className="h-16 text-lg font-bold bg-white border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500/20 px-6 shadow-sm hover:border-teal-300 transition-colors">
-                    <SelectValue placeholder="Choose your package..." />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-slate-100 rounded-xl shadow-2xl p-1">
-                    <SelectItem value="none-option" className="py-3 px-4 rounded-lg font-bold text-slate-600 focus:bg-slate-50 focus:text-teal-700">None (Build from scratch)</SelectItem>
-                    <Separator className="my-1 bg-slate-100" />
-                    {mockCorporatePackages.map(pkg => (
-                      <SelectItem key={pkg.id} value={pkg.id} className="py-3 px-4 rounded-lg font-bold text-slate-800 focus:bg-teal-50 focus:text-teal-700">
-                        <span className="flex justify-between w-full items-center gap-4">
-                          <span>{pkg.name}</span>
-                          <span className="text-teal-600">${pkg.price.toFixed(2)}</span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {selectedPackage && (
-                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                      <h3 className="text-xl font-display font-bold text-teal-900">{selectedPackage.name}</h3>
-                      {selectedPackage.isAllInclusive && (
-                        <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-display font-bold uppercase tracking-wider rounded-full self-start">
-                          All Inclusive
-                        </span>
-                      )}
+              {/* Dropdown UI for Package Selection */}
+              <div className="flex flex-col gap-4 py-3">
+                <label className="flex flex-col w-full">
+                  <p className="text-[#0d1a1b] dark:text-white text-base font-semibold leading-normal pb-2">Pre-defined Packages</p>
+                  <div className="relative group">
+                    <select
+                      className="w-full rounded-xl text-[#0d1a1b] dark:text-white border border-[#f2eee4] dark:border-white/10 bg-white dark:bg-[#0d1a1b]/40 h-14 px-4 text-base font-normal focus:ring-2 focus:ring-brand-stitch-structured-primary focus:border-brand-stitch-structured-primary transition-all shadow-sm appearance-none"
+                      onChange={(e) => {
+                        const pkg = mockCorporatePackages.find(p => p.id === e.target.value);
+                        setSelectedPackage(pkg || null);
+                      }}
+                      value={selectedPackage?.id || ""}
+                    >
+                      <option value="" disabled>Select from premium options</option>
+                      {mockCorporatePackages.map(pkg => (
+                        <option key={pkg.id} value={pkg.id}>
+                          {pkg.name} (${pkg.price})
+                        </option>
+                      ))}
+                    </select>
+                    {/* Custom Arrow Icon */}
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#0d1a1b]/50 dark:text-white/50">
+                      <ChevronRight className="rotate-90" size={20} />
                     </div>
-                    <p className="text-slate-600 font-body">{selectedPackage.description}</p>
+                  </div>
+                </label>
+              </div>
 
-                    <div className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-                      <h4 className="text-xs font-display font-bold uppercase text-slate-400 tracking-wider mb-3">Includes</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {selectedPackage.includedItems.map((item, idx) => (
-                          <div key={idx} className="flex items-start gap-2 text-sm font-medium text-slate-700">
-                            <Check className="w-4 h-4 text-teal-500 mt-0.5" strokeWidth={3} />
-                            <span>{item}</span>
-                          </div>
-                        ))}
+              {/* Selected Package Details (If any) */}
+              {selectedPackage && (
+                <div className="mt-2 mb-6 bg-white dark:bg-[#102221] border border-brand-stitch-structured-primary/20 rounded-xl p-5 shadow-lg shadow-brand-stitch-structured-primary/5 animate-in fade-in zoom-in-95 duration-300">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-bold text-lg text-[#0d1a1b] dark:text-white">{selectedPackage.name}</h4>
+                    <span className="font-bold text-brand-stitch-structured-primary">${selectedPackage.price}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {selectedPackage.includedItems.slice(0, 3).map((item, i) => (
+                      <span key={i} className="text-[10px] font-bold uppercase tracking-wider bg-[#0d1a1b]/5 dark:bg-white/10 px-2 py-1 rounded text-[#0d1a1b]/60 dark:text-white/60">{item}</span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#0d1a1b]/50 dark:text-white/50 italic">{selectedPackage.description}</p>
+
+                  {/* Delivery Opt-in for Self-Pickup 17L Package */}
+                  {selectedPackage.id === 'pkg_17l_self_pickup' && (
+                    <div className="mt-4 pt-4 border-t border-[#f2eee4] dark:border-white/5">
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id="delivery-opt-in"
+                          checked={isDeliveryRequested}
+                          onCheckedChange={(checked) => setIsDeliveryRequested(!!checked)}
+                          className="border-2 border-brand-stitch-structured-primary data-[state=checked]:bg-brand-stitch-structured-primary data-[state=checked]:text-black"
+                        />
+                        <Label htmlFor="delivery-opt-in" className="text-xs font-bold uppercase tracking-widest text-[#0d1a1b]/60 dark:text-white/60 cursor-pointer">
+                          Add Delivery & Support (+$20)
+                        </Label>
                       </div>
                     </div>
+                  )}
+                </div>
+              )}
 
-                    {selectedPackage.id === 'pkg_17l_self_pickup' && (
-                      <label className="flex items-center gap-3 p-4 bg-white border border-teal-100 rounded-xl cursor-pointer hover:bg-teal-50/50 transition-colors">
-                        <Checkbox
-                          checked={isDeliveryRequested}
-                          onCheckedChange={(c) => setIsDeliveryRequested(!!c)}
-                          className="w-5 h-5 border-2 border-slate-300 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 rounded-md"
-                        />
-                        <span className="font-display font-bold text-slate-700 uppercase text-sm tracking-wide">Request Delivery (+$20.00)</span>
-                      </label>
-                    )}
-                  </div>
-                )}
+              {/* Bespoke Button Removed */}
+
+            </section>
+
+            {/* SECTION: STEP 2 - CURATION (FLAVORS) - Only if package requires it */}
+            {selectedPackage && requiredFlavorCountForPackage > 0 && (
+              <section className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <div className="flex justify-between items-baseline pb-4 pt-4 border-t border-[#f2eee4] dark:border-white/5">
+                  <h2 className="text-[#0d1a1b] dark:text-white tracking-tight text-[28px] font-bold leading-tight">Step 2: Curation</h2>
+                  <span className="text-brand-stitch-structured-primary text-xs font-bold uppercase tracking-widest bg-brand-stitch-structured-primary/10 px-2 py-1 rounded">
+                    {selectedPackageFlavors.length}/{requiredFlavorCountForPackage}
+                  </span>
+                </div>
+                <p className="text-[#0d1a1b]/60 dark:text-white/60 text-sm font-medium leading-relaxed mb-6">Select your premium Balang flavors.</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {mockFlavors.map(flavor => {
+                    const qty = selectedPackageFlavors.filter(id => id === flavor.id).length;
+                    const isSelected = qty > 0;
+                    // Max flavors reached if total selected >= limit
+                    const isLimitReached = selectedPackageFlavors.length >= requiredFlavorCountForPackage;
+
+                    return (
+                      <div
+                        key={flavor.id}
+                        className={cn(
+                          "group flex items-center justify-between p-3 bg-white dark:bg-[#0d1a1b]/40 rounded-xl border transition-all duration-300 shadow-sm",
+                          isSelected
+                            ? "border-brand-stitch-structured-primary ring-1 ring-brand-stitch-structured-primary shadow-brand-stitch-structured-primary/20"
+                            : "border-[#f2eee4] dark:border-white/5 hover:border-brand-stitch-structured-primary/50"
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="size-10 rounded-lg bg-cover bg-center shrink-0 border border-[#0d1a1b]/5"
+                            style={{ backgroundImage: `url('${flavor.imageUrl}')` }}></div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[#0d1a1b] dark:text-white font-bold text-sm line-clamp-1">{flavor.name}</span>
+                            <span className="text-[#0d1a1b]/50 dark:text-white/40 text-[9px] uppercase font-bold tracking-wider">Premium Mix</span>
+                          </div>
+                        </div>
+
+                        {qty === 0 ? (
+                          <button
+                            onClick={() => {
+                              if (!isLimitReached) handleAddPackageFlavor(flavor.id);
+                            }}
+                            disabled={isLimitReached}
+                            className={cn(
+                              "size-8 rounded-full flex items-center justify-center transition-all",
+                              isLimitReached
+                                ? "bg-transparent border border-[#0d1a1b]/10 text-[#0d1a1b]/20 cursor-not-allowed"
+                                : "bg-brand-stitch-structured-primary/10 text-brand-stitch-structured-primary hover:bg-brand-stitch-structured-primary hover:text-white"
+                            )}
+                          >
+                            <Plus size={16} />
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-2 bg-[#f9f7f2] dark:bg-white/5 p-1 rounded-full border border-brand-stitch-structured-primary/20">
+                            <button
+                              onClick={() => handleRemovePackageFlavorByIndex(selectedPackageFlavors.indexOf(flavor.id))}
+                              className="size-6 rounded-full bg-white dark:bg-[#102221] text-[#0d1a1b] dark:text-white flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm"
+                            >
+                              <Minus size={12} />
+                            </button>
+                            <span className="font-bold text-xs w-3 text-center">{qty}</span>
+                            <button
+                              onClick={() => {
+                                if (!isLimitReached) handleAddPackageFlavor(flavor.id);
+                              }}
+                              disabled={isLimitReached}
+                              className={cn(
+                                "size-6 rounded-full flex items-center justify-center transition-colors shadow-md",
+                                isLimitReached
+                                  ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                                  : "bg-brand-stitch-structured-primary text-white hover:brightness-110"
+                              )}
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* SECTION: STEP 3 - ADD-ONS (AMPLIFICATION) */}
+            <section className="pb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+              <h2 className="text-[#0d1a1b] dark:text-white tracking-tight text-[28px] font-bold leading-tight pb-2 pt-4 border-t border-[#f2eee4] dark:border-white/5 mt-6">Step 3: Add-ons</h2>
+              <p className="text-[#0d1a1b]/60 dark:text-white/60 text-sm font-medium leading-relaxed mb-6">Enhance your event with our premium service extras.</p>
+
+              <div className="flex flex-col gap-4">
+                {mockCorporateAddons.map((addon) => {
+                  const qty = selectedAddons[addon.id] || 0;
+                  return (
+                    <div key={addon.id} className="group flex flex-col p-4 bg-white dark:bg-[#0d1a1b]/30 rounded-xl border border-[#f2eee4] dark:border-white/5 hover:border-brand-stitch-structured-primary/50 transition-all duration-300 shadow-sm">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col flex-1 pr-4">
+                          <span className="text-[#0d1a1b] dark:text-white font-bold text-base">{addon.name}</span>
+                          <span className="text-[#0d1a1b]/50 dark:text-white/40 text-xs line-clamp-1">{addon.description}</span>
+                          <span className="text-brand-stitch-structured-primary font-bold text-sm mt-1">${addon.price}</span>
+                        </div>
+
+                        {qty === 0 ? (
+                          <button
+                            onClick={() => handleAddonToggle(addon.id, true)}
+                            className="size-10 rounded-full bg-brand-stitch-structured-primary/10 text-brand-stitch-structured-primary flex items-center justify-center hover:bg-brand-stitch-structured-primary hover:text-white transition-colors"
+                          >
+                            <Plus size={20} />
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-3 bg-[#f9f7f2] dark:bg-white/5 p-1 rounded-full border border-brand-stitch-structured-primary/20">
+                            <button
+                              onClick={() => handleAddonQuantityChange(addon.id, -1)}
+                              className="size-8 rounded-full bg-white dark:bg-[#102221] text-[#0d1a1b] dark:text-white flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm"
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className="font-bold text-sm w-4 text-center">{qty}</span>
+                            <button
+                              onClick={() => handleAddonQuantityChange(addon.id, 1)}
+                              className="size-8 rounded-full bg-brand-stitch-structured-primary text-white flex items-center justify-center hover:brightness-110 transition-colors shadow-md"
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Flavor Selection for Add-ons requiring it */}
+                      {qty > 0 && addon.requiresFlavor && (
+                        <div className="mt-4 pl-4 border-l-2 border-brand-stitch-structured-primary/20 space-y-3 animate-in fade-in slide-in-from-top-2">
+                          <p className="text-xs font-bold uppercase tracking-widest text-[#0d1a1b]/40 dark:text-white/40 mb-2">Select Flavors</p>
+                          {Array.from({ length: qty }).map((_, idx) => (
+                            <div key={`${addon.id}-flavor-${idx}`} className="flex items-center gap-3">
+                              <span className="text-xs font-mono text-[#0d1a1b]/60 dark:text-white/60 w-6">#{idx + 1}</span>
+                              <div className="relative flex-1">
+                                <select
+                                  className="w-full h-10 rounded-lg text-sm bg-white dark:bg-white/5 border border-[#f2eee4] dark:border-white/10 px-3 appearance-none focus:ring-1 focus:ring-brand-stitch-structured-primary outline-none"
+                                  value={addonFlavorSelections[addon.id]?.[idx] || ""}
+                                  onChange={(e) => handleUpdateAddonFlavor(addon.id, idx, e.target.value)}
+                                >
+                                  <option value="" disabled>Choose a flavor...</option>
+                                  {mockFlavors.map(flavor => (
+                                    <option key={flavor.id} value={flavor.id}>{flavor.name}</option>
+                                  ))}
+                                </select>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#0d1a1b]/40">
+                                  <ChevronRight className="rotate-90 size-4" />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </section>
 
-            {/* STEP 2: FLAVORS */}
-            {selectedPackage && requiredFlavorCountForPackage > 0 && (
-              <section id="step-flavors" className={cn(GLASS_PANEL, "p-8 md:p-10")}>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-black text-lg shadow-inner">2</div>
-                    <div>
-                      <h2 className="text-2xl font-display font-bold text-slate-900 uppercase tracking-tight">Choose Flavors</h2>
-                      <p className="text-sm text-slate-400 font-body font-medium">Select {requiredFlavorCountForPackage} flavors.</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className={cn("text-2xl font-black", selectedPackageFlavors.length === requiredFlavorCountForPackage ? "text-teal-600" : "text-slate-300")}>
-                      {selectedPackageFlavors.length}
-                    </span>
-                    <span className="text-slate-300 font-bold text-lg">/{requiredFlavorCountForPackage}</span>
-                  </div>
-                </div>
+          </div>
 
-                {/* Selected Flavors Chips */}
-                {selectedPackageFlavors.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-8 p-4 bg-teal-50/50 rounded-2xl border border-teal-100/50">
-                    {selectedPackageFlavors.map((flavorId, idx) => {
-                      const flavor = mockFlavors.find(f => f.id === flavorId);
+          {/* RIGHT COLUMN: DESKTOP SIDEBAR (SUMMARY) */}
+          <div className="hidden lg:block lg:col-span-4 lg:sticky lg:top-24">
+            <div className="bg-white dark:bg-[#102221] border border-[#f2eee4] dark:border-white/10 rounded-[2rem] p-6 xl:p-8 shadow-xl shadow-black/5 animate-in slide-in-from-right-8 duration-700">
+              <h3 className="text-lg font-black uppercase tracking-tight text-[#0d1a1b] dark:text-white mb-6 flex items-center gap-2">
+                <div className="h-6 w-1 bg-brand-stitch-structured-primary rounded-full"></div>
+                Order Summary
+              </h3>
+
+              <div className="space-y-6">
+                {/* Package Summary */}
+                {selectedPackage ? (
+                  <div className="flex justify-between items-start pb-4 border-b border-[#f2eee4] dark:border-white/5">
+                    <div>
+                      <p className="font-bold text-[#0d1a1b] dark:text-white">{selectedPackage.name}</p>
+                      <p className="text-xs text-[#0d1a1b]/50 dark:text-white/50">{selectedPackage.includedItems.length} items included</p>
+                      {selectedPackageFlavors.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {selectedPackageFlavors.map(fid => {
+                            const f = mockFlavors.find(fl => fl.id === fid);
+                            return f ? <span key={fid} className="text-[9px] bg-[#f9f7f2] dark:bg-white/10 px-1.5 py-0.5 rounded text-[#0d1a1b]/60 dark:text-white/60 uppercase font-bold">{f.name}</span> : null
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    <span className="font-bold text-brand-stitch-structured-primary">${selectedPackage.price.toFixed(2)}</span>
+                  </div>
+                ) : (
+                  <div className="p-4 border border-dashed border-[#f2eee4] dark:border-white/10 rounded-xl text-center">
+                    <p className="text-xs font-bold text-[#0d1a1b]/30 dark:text-white/30 uppercase tracking-widest">No Package Selected</p>
+                  </div>
+                )}
+
+                {/* Add-ons Summary */}
+                {Object.keys(selectedAddons).length > 0 && (
+                  <div className="space-y-2 pb-4 border-b border-[#f2eee4] dark:border-white/5">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#0d1a1b]/40 dark:text-white/40">Add-ons</p>
+                    {Object.entries(selectedAddons).map(([id, qty]) => {
+                      const addon = mockCorporateAddons.find(a => a.id === id);
+                      if (!addon) return null;
                       return (
-                        <div key={`${flavorId}-${idx}`} className="flex items-center gap-2 pl-3 pr-2 py-1.5 bg-white text-teal-800 text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm border border-teal-100">
-                          <span>{flavor?.name}</span>
-                          <button onClick={() => handleRemovePackageFlavorByIndex(idx)} className="p-0.5 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors">
-                            <XIcon size={14} strokeWidth={3} />
-                          </button>
+                        <div key={id} className="flex justify-between text-sm">
+                          <span className="text-[#0d1a1b]/80 dark:text-white/80">{qty}x {addon.name}</span>
+                          <span className="font-medium text-[#0d1a1b]/80 dark:text-white/80">${(addon.price * qty).toFixed(2)}</span>
                         </div>
                       )
                     })}
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {mockFlavors.map(flavor => {
-                    const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
-                    const disabled = selectedPackageFlavors.length >= requiredFlavorCountForPackage;
-                    return (
-                      <button
-                        key={flavor.id}
-                        onClick={() => handleAddPackageFlavor(flavor.id)}
-                        disabled={disabled}
-                        className={cn(
-                          "group relative flex flex-col items-start p-4 rounded-xl border transition-all duration-200 text-left",
-                          count > 0
-                            ? "bg-teal-600 border-teal-600 text-white shadow-lg shadow-teal-900/10"
-                            : "bg-white border-slate-100 text-slate-600 hover:border-teal-200 hover:shadow-md disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:shadow-none"
-                        )}
-                      >
-                        <div className="flex justify-between w-full items-start mb-2">
-                          <span className={cn("font-bold text-sm uppercase leading-tight", count > 0 ? "text-white" : "text-slate-700")}>{flavor.name}</span>
-                          {count > 0 && <span className="flex items-center justify-center w-5 h-5 bg-white text-teal-600 text-[10px] font-black rounded-full shadow-sm">x{count}</span>}
-                        </div>
-                        <div className={cn("opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold uppercase tracking-widest mt-auto", count > 0 ? "text-teal-200" : "text-teal-500")}>
-                          {disabled ? "" : "+ Add"}
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* STEP 3: ADDONS */}
-            <section id="step-addons" className={cn(GLASS_PANEL, "p-8 md:p-10")}>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-black text-lg shadow-inner">
-                  {selectedPackage && requiredFlavorCountForPackage > 0 ? 3 : 2}
-                </div>
-                <div>
-                  <h2 className="text-2xl font-display font-bold text-slate-900 uppercase tracking-tight">Add-ons</h2>
-                  <p className="text-sm text-slate-500 font-body font-medium">Enhance your event with premium extras.</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {mockCorporateAddons.map(addon => {
-                  const isSelected = (selectedAddons[addon.id] || 0) > 0;
-                  return (
-                    <div key={addon.id} className={cn("p-5 rounded-2xl border transition-all duration-300", isSelected ? "bg-white border-teal-200 shadow-md" : "bg-white/50 border-transparent hover:bg-white hover:border-slate-100")}>
-                      <div className="flex items-start sm:items-center justify-between gap-4">
-                        <label htmlFor={`addon-${addon.id}`} className="flex-grow cursor-pointer">
-                          <div>
-                            <h4 className="font-display font-bold text-base text-slate-800 uppercase">{addon.name}</h4>
-                            <p className="text-xs text-slate-500 font-body font-medium">{addon.description}</p>
-                          </div>
-                          <span className="block mt-2 font-black text-teal-600">+${addon.price.toFixed(2)}</span>
-                        </label>
-
-                        <div className="flex items-center gap-3 bg-slate-50 p-1 rounded-xl border border-slate-200">
-                          {isSelected ? (
-                            <>
-                              <button onClick={() => handleAddonQuantityChange(addon.id, -1)} className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-red-500 transition-colors"><MinusCircle size={16} /></button>
-                              <span className="font-bold text-slate-900 w-4 text-center">{selectedAddons[addon.id]}</span>
-                              <button onClick={() => handleAddonQuantityChange(addon.id, 1)} className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-teal-600 transition-colors"><PlusCircle size={16} /></button>
-                            </>
-                          ) : (
-                            <Checkbox
-                              id={`addon-${addon.id}`}
-                              checked={isSelected}
-                              onCheckedChange={(c) => handleAddonToggle(addon.id, !!c)}
-                              className="mx-2 w-6 h-6 rounded-md data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
-                            />
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Balang Flavors Logic */}
-                      {(addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l') && isSelected && (
-                        <div className="mt-4 pt-4 border-t border-dashed border-slate-200 space-y-3">
-                          {Array.from({ length: selectedAddons[addon.id] }).map((_, i) => {
-                            const currentFlavorId = addonFlavorSelections[addon.id]?.[i];
-                            const currentFlavor = mockFlavors.find(f => f.id === currentFlavorId);
-                            return (
-                              <div key={i} className="flex items-center justify-between text-sm bg-slate-50 p-2 rounded-lg">
-                                <span className="font-bold text-slate-500 uppercase text-xs">Unit {i + 1}</span>
-
-                                <Popover
-                                  open={activeAddonFlavorPopover?.addonId === addon.id && activeAddonFlavorPopover?.balangIndex === i}
-                                  onOpenChange={(open) => setActiveAddonFlavorPopover(open ? { addonId: addon.id, balangIndex: i } : null)}
-                                >
-                                  <PopoverTrigger asChild>
-                                    <button className={cn("px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide transition-all border", currentFlavor ? "bg-teal-100 text-teal-800 border-teal-200" : "bg-white text-slate-400 border-slate-200 hover:border-teal-300")}>
-                                      {currentFlavor ? currentFlavor.name : "Select Flavor"}
-                                    </button>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="p-1 w-[220px] max-h-[300px] overflow-y-auto rounded-xl">
-                                    {mockFlavors.map(f => (
-                                      <button
-                                        key={f.id}
-                                        onClick={() => {
-                                          handleAdditiveFlavorSelect(addon.id, i, f.id);
-                                          setActiveAddonFlavorPopover(null);
-                                        }}
-                                        className="w-full text-left px-3 py-2 text-xs font-bold uppercase hover:bg-slate-50 rounded-lg text-slate-600"
-                                      >
-                                        {f.name}
-                                      </button>
-                                    ))}
-                                  </PopoverContent>
-                                </Popover>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </section>
-          </div>
-
-          {/* RIGHT COLUMN: SUMMARY SIDEBAR */}
-          <div className="lg:col-span-1 lg:sticky lg:top-24 space-y-6 animate-fade-in-left delay-500">
-            <Card className={cn("border-0 shadow-2xl overflow-hidden rounded-[2rem]", PRIMARY_GRADIENT)}>
-              <CardHeader className="p-8 pb-4 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-bl-[100px] pointer-events-none" />
-                <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2 relative z-10"><ShoppingCart size={20} /> Your Order</h3>
-              </CardHeader>
-              <CardContent className="p-8 bg-white/95 backdrop-blur-sm space-y-6 min-h-[300px] flex flex-col">
-                {/* Line Items */}
-                <div className="space-y-4 flex-grow">
-                  {selectedPackage ? (
-                    <div className="flex justify-between items-start pb-4 border-b border-dashed border-slate-200">
-                      <div className="space-y-1">
-                        <span className="font-bold text-slate-900 block">{selectedPackage.name}</span>
-                        {selectedPackage.isAllInclusive && <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">All Inclusive</span>}
-                        {selectedPackageFlavors.length > 0 && requiredFlavorCountForPackage > 0 && (
-                          <ul className="text-xs text-slate-500 pl-2 border-l-2 border-slate-100 mt-2 space-y-0.5">
-                            {selectedPackageFlavors.map((fid, idx) => <li key={idx} className="uppercase">{mockFlavors.find(f => f.id === fid)?.name}</li>)}
-                          </ul>
-                        )}
-                      </div>
-                      <span className="font-bold text-slate-900">${selectedPackage.price.toFixed(2)}</span>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-slate-400 text-sm font-medium italic">
-                      Select a package or add-ons to start building your order.
-                    </div>
-                  )}
-
-                  {/* Add-ons Summary */}
-                  {Object.keys(selectedAddons).some(k => selectedAddons[k] > 0) && (
-                    <div className="space-y-3 pb-4 border-b border-dashed border-slate-200">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Add-ons</span>
-                      {Object.entries(selectedAddons).map(([id, qty]) => {
-                        if (qty === 0) return null;
-                        const addon = mockCorporateAddons.find(a => a.id === id);
-                        if (!addon) return null;
-                        return (
-                          <div key={id} className="flex justify-between text-sm">
-                            <span className="text-slate-600">{qty}x {addon.name}</span>
-                            <span className="font-medium text-slate-900">${(addon.price * qty).toFixed(2)}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-
-                  {displayDeliveryFee > 0 && (
-                    <div className="flex justify-between text-sm py-2">
-                      <span className="text-slate-500 font-medium">Delivery Fee</span>
-                      <span className="font-bold text-slate-900">${displayDeliveryFee.toFixed(2)}</span>
-                    </div>
-                  )}
-                </div>
+                {/* Delivery Fee */}
+                {displayDeliveryFee > 0 && (
+                  <div className="flex justify-between text-sm pb-4 border-b border-[#f2eee4] dark:border-white/5">
+                    <span className="text-[#0d1a1b]/60 dark:text-white/60">Delivery Fee</span>
+                    <span className="font-medium text-[#0d1a1b]/80 dark:text-white/80">${displayDeliveryFee.toFixed(2)}</span>
+                  </div>
+                )}
 
                 {/* Total */}
-                <div className="pt-2">
-                  <div className="flex justify-between items-end mb-6">
-                    <span className="text-sm font-bold uppercase text-slate-400 tracking-widest">Total</span>
-                    <span className="text-4xl font-black text-teal-600 tracking-tighter">${totalPrice.toFixed(2)}</span>
-                  </div>
-                  <Button
-                    onClick={handleProceedToBook}
-                    disabled={!canProceed || isCalendarDataLoading}
-                    className={cn("w-full h-14 text-lg", BUTTON_PRIMARY, (!canProceed || isCalendarDataLoading) && "opacity-50 grayscale cursor-not-allowed")}
-                  >
-                    {isCalendarDataLoading ? <Loader2 className="animate-spin" /> : "Book Now"} <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-sm font-bold uppercase tracking-widest text-[#0d1a1b]/60 dark:text-white/60">Total Est.</span>
+                  <span className="text-3xl font-black text-brand-stitch-structured-primary px-4 py-2 bg-brand-stitch-structured-primary/5 rounded-lg border border-brand-stitch-structured-primary/10">
+                    ${totalPrice.toFixed(2)}
+                  </span>
                 </div>
-              </CardContent>
-            </Card>
+
+                <button
+                  onClick={handleProceedToBook}
+                  disabled={!canProceed && !(Object.keys(selectedAddons).length > 0)}
+                  className="w-full bg-brand-stitch-structured-primary text-white h-14 rounded-xl font-bold text-base flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-brand-stitch-structured-primary/30 disabled:opacity-50 disabled:shadow-none hover:scale-[1.02] hover:brightness-110"
+                >
+                  Continue to Payment
+                  <ArrowRight size={18} />
+                </button>
+
+                <p className="text-[10px] text-center text-[#0d1a1b]/40 dark:text-white/40 leading-relaxed max-w-xs mx-auto">
+                  By proceeding, you agree to our booking terms and cancellation policy.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* MODAL: DATE & TIME */}
-        <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
-          <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none">
-            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[80vh] w-full">
-              <DialogHeader className={cn("p-6 text-white relative flex-shrink-0", PRIMARY_GRADIENT)}>
-                <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
-                  <CalendarDays className="text-teal-200" /> Select Date
-                </DialogTitle>
-                <DialogDescription className="sr-only">Choose a date and time slot for your corporate event.</DialogDescription>
-              </DialogHeader>
+      {/* STICKY FOOTER */}
+      <footer className="lg:hidden fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white/95 dark:bg-[#102022]/95 backdrop-blur-lg border-t border-[#f2eee4] dark:border-white/10 p-6 flex flex-col gap-4 z-[100] shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.05)] animate-in slide-in-from-bottom-full duration-700">
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-xs text-[#0d1a1b]/60 dark:text-white/40 font-semibold uppercase tracking-widest">Current Subtotal</p>
+            <p className="text-2xl font-bold text-[#0d1a1b] dark:text-white">${totalPrice.toFixed(2)}</p>
+          </div>
+          {Object.keys(selectedAddons).length > 0 && (
+            <div className="flex items-center text-xs font-bold text-brand-stitch-structured-primary bg-brand-stitch-structured-primary/10 px-3 py-1 rounded-full">
+              <span>{Object.values(selectedAddons).reduce((a, b) => a + b, 0)} Item(s) Added</span>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={handleProceedToBook}
+          disabled={!canProceed && !(Object.keys(selectedAddons).length > 0)}
+          className="w-full bg-brand-stitch-structured-primary text-white h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-lg shadow-brand-stitch-structured-primary/30 disabled:opacity-50 disabled:shadow-none hover:brightness-110"
+        >
+          Continue to Payment
+          <ArrowRight size={20} />
+        </button>
+      </footer>
 
-              <div className="overflow-y-auto p-4 sm:p-6 space-y-6 flex-1 min-h-0 w-full">
-                <div className="w-full flex justify-center">
-                  <Calendar
-                    mode="single"
-                    selected={selectedEventDate}
-                    onSelect={setSelectedEventDate}
-                    disabled={[...blockedDates, { before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
-                    className="rounded-2xl border border-slate-100 p-3 w-fit" // w-fit centers it comfortably
-                  />
+      {/* --- MODALS (Hidden but functional) --- */}
+      {/* Date & Time Modal */}
+      <Dialog open={isDateTimeModalOpen} onOpenChange={setIsDateTimeModalOpen}>
+        <DialogContent className="max-w-[95vw] md:max-w-[480px] p-0 border-0 bg-transparent shadow-none">
+          <div className="bg-white dark:bg-[#1a2e2d] rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col w-full border border-white/20">
+            <div className="overflow-y-auto p-8 space-y-6 flex-1 min-h-0 w-full custom-scrollbar">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-brand-stitch-structured-primary/10 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border border-brand-stitch-structured-primary/20">
+                  <CalendarDays className="text-brand-stitch-structured-primary h-8 w-8" />
                 </div>
-
-                <div className="space-y-3">
-                  <Label className="uppercase text-xs font-black text-slate-400 tracking-widest ml-1">Time Slot</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {EVENT_TIME_SLOTS.map(time => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedEventTime(time)}
-                        className={cn(
-                          "py-2 px-1 rounded-lg text-xs font-bold transition-all border",
-                          selectedEventTime === time
-                            ? "bg-teal-600 border-teal-600 text-white shadow-md transform scale-105"
-                            : "bg-white border-slate-100 text-slate-600 hover:border-teal-200"
-                        )}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <DialogTitle className="font-black text-2xl uppercase text-[#0d1a1b] dark:text-white tracking-tighter italic">Select Date</DialogTitle>
+                <DialogDescription className="text-xs text-[#0d1a1b]/60 dark:text-white/60 font-black uppercase tracking-widest">Coastal Availability Check</DialogDescription>
               </div>
 
-              <DialogFooter className="p-4 sm:p-6 pt-2 border-t border-slate-50 flex-col sm:flex-row gap-2 bg-slate-50/50 flex-shrink-0">
-                <Button variant="ghost" onClick={() => setIsDateTimeModalOpen(false)} className="rounded-xl font-bold text-slate-500 hover:text-slate-800">Cancel</Button>
-                <Button onClick={handleDateTimeSubmit} className={cn("flex-1 h-12 rounded-xl", BUTTON_PRIMARY)} disabled={!selectedEventDate || !selectedEventTime}>
-                  Confirm Date
-                </Button>
-              </DialogFooter>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* MODAL: CUSTOMER DETAILS */}
-        <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-          <DialogContent className="max-w-[95vw] md:max-w-xl p-0 border-0 bg-transparent shadow-none">
-            <DialogTitle className="sr-only">Final Details</DialogTitle>
-            <DialogDescription className="sr-only">Provide your contact information and event details for your wedding or corporate order.</DialogDescription>
-            <div className="bg-white m-1 rounded-[2rem] shadow-2xl overflow-hidden max-h-[80vh] flex flex-col w-full">
-              <div className="overflow-y-auto p-6 md:p-8 flex-1 min-h-0 w-full">
-                <CustomerDetailsForm
-                  onSubmit={handleCustomerDetailsSubmit}
-                  onCancel={() => setIsCustomerDetailsModalOpen(false)}
-                  onBack={() => {
-                    setIsCustomerDetailsModalOpen(false);
-                    setIsDateTimeModalOpen(true);
-                  }}
-                  eventTime={selectedEventTime}
-                  initialValues={customerDetailsForPayment || undefined}
-                  selectedPackageId={selectedPackage?.id}
+              <div className="flex justify-center bg-[#f9f7f2] dark:bg-black/20 p-4 rounded-[2rem] border border-[#0d1a1b]/5 dark:border-white/5 text-slate-900 dark:text-white">
+                <Calendar
+                  mode="single"
+                  selected={selectedEventDate}
+                  onSelect={setSelectedEventDate}
+                  disabled={[
+                    ...blockedDates,
+                    { before: new Date(new Date().setHours(0, 0, 0, 0)) }
+                  ]}
+                  className="p-3 w-fit"
                 />
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
 
-        {currentEventConfig && customerDetailsForPayment && currentEventConfig.eventDate && (
-          <PaymentConfirmationDialog
-            isOpen={isPaymentModalOpen}
-            onClose={() => setIsPaymentModalOpen(false)}
+              <div className="space-y-4 bg-brand-stitch-structured-primary/5 p-6 rounded-[2rem] border border-brand-stitch-structured-primary/20">
+                <div className="flex items-center justify-between pl-1">
+                  <Label className="uppercase text-[10px] font-black text-brand-stitch-structured-primary tracking-widest">Select Event Time</Label>
+                  <Info size={16} className="text-brand-stitch-structured-primary/40" />
+                </div>
+                <Select value={selectedEventTime} onValueChange={setSelectedEventTime}>
+                  <SelectTrigger className="h-14 rounded-2xl bg-white dark:bg-white/5 border-brand-stitch-structured-primary/20 font-black text-slate-700 dark:text-white shadow-sm uppercase text-sm tracking-wide">
+                    <SelectValue placeholder="--:-- --" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl max-h-[220px] dark:bg-[#1a2e2d] dark:border-white/10">
+                    {EVENT_TIME_SLOTS.map((t: string) => (
+                      <SelectItem key={t} value={t} className="font-black uppercase text-xs rounded-xl cursor-pointer my-1 text-slate-900 dark:text-white hover:bg-brand-stitch-structured-primary transition-colors">{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[10px] font-bold text-brand-stitch-structured-primary italic pl-2 leading-relaxed opacity-60">
+                  Note: Pickup or delivery coordination will be confirmed by our team following your booking.
+                </p>
+              </div>
+            </div>
+            <div className="p-8 pt-2 flex-shrink-0 border-t border-[#0d1a1b]/5 dark:border-white/5">
+              <DialogFooter>
+                <Button onClick={handleDateTimeSubmit} className="w-full h-14 bg-brand-stitch-structured-primary text-white font-black uppercase rounded-2xl shadow-lg shadow-brand-stitch-structured-primary/20 hover:brightness-110 transition-all">Confirm & Continue</Button>
+              </DialogFooter>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Customer Form Modal */}
+      <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
+        <DialogContent className="sm:max-w-xl bg-[#fdfaf5] border-none shadow-2xl h-[90vh] overflow-y-auto">
+          <CustomerDetailsForm
+            onSubmit={handleCustomerDetailsSubmit}
+            onCancel={() => setIsCustomerDetailsModalOpen(false)}
             onBack={() => {
-              setIsPaymentModalOpen(false);
-              setIsCustomerDetailsModalOpen(true);
-            }}
-            eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
-            customerDetails={customerDetailsForPayment}
-            onConfirm={() => {
-              setBookingReference(`BK-CORP-${Math.floor(Math.random() * 10000)}`);
-              setIsPaymentModalOpen(false);
-              setIsBookingSuccess(true);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setIsCustomerDetailsModalOpen(false);
+              setIsDateTimeModalOpen(true);
             }}
           />
-        )}
+        </DialogContent>
+      </Dialog>
 
-      </div>
+      {/* Payment Confirmation Modal */}
+      {isPaymentModalOpen && currentEventConfig && customerDetailsForPayment && (
+        <PaymentConfirmationDialog
+          isOpen={isPaymentModalOpen}
+          onClose={() => setIsPaymentModalOpen(false)}
+          onBack={() => {
+            setIsPaymentModalOpen(false);
+            setIsCustomerDetailsModalOpen(true);
+          }}
+          eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
+          customerDetails={customerDetailsForPayment}
+          onConfirm={() => {
+            setIsBookingSuccess(true);
+            setIsPaymentModalOpen(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }

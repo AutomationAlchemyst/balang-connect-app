@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -10,11 +10,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Space Grotesk', 'sans-serif'],
-        display: ['Syne', 'sans-serif'],
+        body: ['var(--font-plus-jakarta)', 'sans-serif'],
+        display: ['var(--font-plus-jakarta)', 'sans-serif'],
         condensed: ['Oswald', 'sans-serif'],
         handwriting: ['Permanent Marker', 'cursive'],
         code: ['monospace'],
+        'plus-jakarta': ['var(--font-plus-jakarta)', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -26,12 +27,34 @@ export default {
           gold: '#D4A110',
           purple: '#B576A4',
           green: '#3FC300',
-          // New "Liquid Paradise" Palette
+          // "Breezy Balang" Palette
+          aqua: '#0df2df',
+          teal: '#09a093',
+          midnight: '#041F1C',
           coral: '#FF6F61',
-          teal: '#004F59',
-          aqua: '#00E0C6',
           sand: '#F4EBD0',
           mango: '#FFB347',
+          // "Iced Paradise" Reference Palette
+          'ip-gold': '#f4c025',
+          'ip-teal': '#008080',
+          'ip-sand': '#f8f5ee',
+          'ip-bg-light': '#fcfbf8',
+          'ip-bg-dark': '#221e10',
+          // Stitch UI Palette
+          stitch: {
+            blue: '#135bec',
+            orange: '#eb9947',
+            light: '#fcfaf8', // Updated from code.html
+            dark: '#101622',
+            // Stitch Structured Palette
+            structured: {
+              primary: '#11c4d4',
+              light: '#f9f7f2', // Light sand
+              dark: '#102022',
+              accent: '#f2eee4',
+              ocean: '#0d1a1b',
+            },
+          },
         },
         card: {
           DEFAULT: 'hsl(var(--card))',

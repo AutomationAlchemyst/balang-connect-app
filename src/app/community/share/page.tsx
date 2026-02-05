@@ -49,7 +49,7 @@ export default function ShareStoryPage() {
     setIsLoading(true);
     console.log('Community Story Submitted:', values);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500)); 
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     toast({
       title: 'Story Submitted!',
@@ -57,7 +57,7 @@ export default function ShareStoryPage() {
     });
     form.reset();
     setIsLoading(false);
-    router.push('/community'); 
+    router.push('/community');
   }
 
   // Modern Coast Theme Constants
@@ -67,22 +67,22 @@ export default function ShareStoryPage() {
   return (
     <div className="bg-coast-gradient min-h-screen -mt-10 pt-16 pb-24">
       <div className="container mx-auto px-4">
-        
-        <div className="max-w-2xl mx-auto space-y-8">
-           <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-4">
-                  <PenTool size={14} /> Write to us
-              </div>
-              <h1 className="text-coast-heading text-4xl md:text-5xl text-brand-blue">Share Your <span className="text-brand-cyan">Experience</span></h1>
-           </div>
 
-           <Card className="glass-panel-wet border-none shadow-2xl p-4 md:p-8">
+        <div className="max-w-2xl mx-auto space-y-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-brand-blue/10 px-4 py-1 rounded-full text-brand-blue/60 text-xs font-bold uppercase tracking-widest mb-4">
+              <PenTool size={14} /> Write to us
+            </div>
+            <h1 className="text-coast-heading text-4xl md:text-5xl text-brand-blue">Share Your <span className="text-brand-cyan">Experience</span></h1>
+          </div>
+
+          <Card className="glass-panel-wet border-none shadow-2xl p-4 md:p-8">
             <CardHeader className="text-center pb-8 border-b border-brand-blue/5 mb-8">
               <CardTitle className="font-display font-black text-2xl text-brand-blue uppercase flex items-center justify-center gap-3">
-                 <MessageSquarePlus className="text-brand-cyan h-8 w-8" /> Tell Us Your Story
+                <MessageSquarePlus className="text-brand-cyan h-8 w-8" /> Tell Us Your Story
               </CardTitle>
               <CardDescription className="text-brand-blue/60 font-medium mt-2 max-w-md mx-auto">
-                 Share your experience with BalangConnect and become a part of our community stories.
+                Share your experience with Balang Kepalang and become a part of our community stories.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -162,10 +162,10 @@ export default function ShareStoryPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="pt-4">
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="btn-coast-primary w-full h-14 text-lg shadow-lg"
                       disabled={isLoading}
                     >

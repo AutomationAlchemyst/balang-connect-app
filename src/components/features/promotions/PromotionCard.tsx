@@ -2,95 +2,144 @@
 
 import Image from 'next/image';
 import type { Promotion } from '@/lib/types';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Info, Ticket, Sparkles, Crown } from 'lucide-react';
+import { Sparkles, Crown, Ticket, Info, Zap, ChevronRight, Truck, GlassWater, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { CountdownTimer } from '@/components/ui/countdown-timer';
 
 interface PromotionCardProps {
   promotion: Promotion;
-  isFeatured?: boolean;
+  variant?: 'featured' | 'exclusive' | 'flash';
 }
 
-export default function PromotionCard({ promotion, isFeatured = false }: PromotionCardProps) {
+export default function PromotionCard({ promotion, variant: forcedVariant }: PromotionCardProps) {
   const { toast } = useToast();
 
-  const handleEnterDraw = () => {
+  // Heuristic for variant if not forced
+  const variant = forcedVariant || (
+    promotion.title.toLowerCase().includes('draw') ? 'featured' :
+      promotion.title.toLowerCase().includes('discount') || promotion.title.toLowerCase().includes('wedding') ? 'exclusive' :
+        'flash'
+  );
+
+  const handleAction = () => {
     toast({
-      title: "You're in the Draw!",
-      description: `Successfully entered the "${promotion.title}" lucky draw. Good luck!`,
+      title: variant === 'featured' ? "You're in the Draw!" : "Offer Claimed!",
+      description: `Successfully entered/claimed the "${promotion.title}". Good luck!`,
     });
   };
 
-  return (
-    <Card className={cn(
-      "glass-panel-wet overflow-hidden h-full flex flex-col group transition-all duration-300",
-      isFeatured 
-        ? "border-4 border-teal-400/50 shadow-[0_20px_50px_rgba(20,184,166,0.15)] scale-[1.02] bg-teal-50/30" 
-        : "border-none hover:scale-[1.01]"
-    )}>
-      
-      {/* Featured Badge */}
-      {isFeatured && (
-        <div className="absolute top-0 right-0 z-30">
-          <div className="bg-gradient-to-bl from-teal-500 to-emerald-500 text-white font-black uppercase text-[10px] tracking-[0.2em] py-2 pl-6 pr-4 rounded-bl-[2rem] shadow-lg flex items-center gap-2">
-            <Crown size={14} fill="currentColor" /> Featured Offer
+  if (variant === 'featured') {
+    return (
+      <div className="flex flex-col items-stretch justify-start rounded-2xl shadow-2xl bg-white dark:bg-[#2d2218] border border-orange-500/20 overflow-hidden group transition-all duration-500 hover:shadow-orange-500/10 hover:border-orange-500/40">
+        <div className="relative w-full aspect-video overflow-hidden">
+          <Image
+            src={promotion.imageUrl}
+            alt={promotion.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm">
+            <Star size={14} className="text-orange-500 fill-orange-500" />
+            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Grand Prize</span>
           </div>
         </div>
-      )}
 
-      <div className="relative w-full h-64 overflow-hidden">
-        <Image
-          src={promotion.imageUrl}
-          alt={promotion.title}
-          width={600}
-          height={400}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          data-ai-hint={promotion.dataAiHint || "gift celebration"}
-        />
-        <div className={cn("absolute inset-0 bg-gradient-to-t opacity-80 group-hover:opacity-60 transition-opacity", isFeatured ? "from-teal-900/90 to-transparent" : "from-slate-900/80 to-transparent")}></div>
-        <div className="absolute bottom-6 left-6 right-6">
-           <h3 className="font-display font-black text-2xl text-white uppercase leading-tight mb-2 shadow-sm">
-             {promotion.title}
-           </h3>
-           {promotion.endDate && (
-            <p className="text-white/80 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-               <CalendarDays size={14} className="text-teal-300" />
-               Ends: {format(new Date(promotion.endDate), 'PPP')}
-            </p>
-           )}
+        <div className="flex w-full flex-col items-stretch justify-center gap-4 p-6">
+          <div className="space-y-1">
+            <p className="text-orange-600 text-[10px] font-black leading-normal tracking-[0.2em] uppercase">Lucky Draw Entry</p>
+            <h3 className="text-slate-900 dark:text-white text-2xl font-black leading-tight tracking-tighter uppercase">{promotion.title}</h3>
+          </div>
+
+          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium leading-relaxed">
+            {promotion.description}
+          </p>
+
+          {promotion.endDate && (
+            <div className="pt-2">
+              <CountdownTimer targetDate={promotion.endDate} variant="featured" />
+            </div>
+          )}
+
+          <Button
+            onClick={handleAction}
+            className="w-full h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full font-black uppercase tracking-widest shadow-xl shadow-orange-500/20 active:scale-95 transition-all flex gap-2 border-none mt-2"
+          >
+            <Ticket size={20} strokeWidth={3} />
+            <span>Enter Lucky Draw</span>
+          </Button>
         </div>
       </div>
-      
-      <CardContent className="flex-grow p-6 space-y-4">
-        <p className="text-slate-600 font-medium leading-relaxed">
-           {promotion.description}
-        </p>
-        
-        {promotion.terms && (
-          <div className={cn("p-3 rounded-xl border", isFeatured ? "bg-teal-50 border-teal-100" : "bg-slate-50 border-slate-100")}>
-            <p className="text-xs text-slate-500 flex items-start leading-tight">
-              <Info size={12} className="mr-2 mt-0.5 text-teal-500 shrink-0" />
-              <span className="font-medium">{promotion.terms}</span>
-            </p>
+    );
+  }
+
+  if (variant === 'exclusive') {
+    return (
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-200 to-yellow-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+        <div className="relative bg-white dark:bg-[#2d2218] rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-5 border border-amber-200/50 shadow-xl overflow-hidden">
+          <div className="absolute -right-4 -top-4 size-24 bg-orange-500/10 rounded-full blur-2xl"></div>
+
+          <div className="relative size-20 sm:size-24 rounded-xl overflow-hidden shrink-0 border-2 border-amber-400">
+            <Image
+              src={promotion.imageUrl}
+              alt={promotion.title}
+              fill
+              className="object-cover"
+            />
           </div>
-        )}
-      </CardContent>
-      
-      <CardFooter className="p-6 pt-0 mt-auto">
-        <Button 
-          onClick={handleEnterDraw} 
-          className={cn("w-full h-12 shadow-md uppercase font-bold tracking-wider", isFeatured ? "bg-teal-600 hover:bg-teal-700 text-white" : "btn-coast-primary")}
-        >
-          {promotion.title.toLowerCase().includes('draw') ? (
-             <><Ticket className="mr-2 h-5 w-5" /> Enter Lucky Draw</>
-          ) : (
-             <><Sparkles className="mr-2 h-5 w-5" /> Claim Offer</>
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
+
+          <div className="flex-1 space-y-1.5 text-center sm:text-left w-full">
+            <div className="flex items-center gap-1.5">
+              <Crown size={12} className="text-amber-500 fill-amber-500" />
+              <p className="text-amber-600 text-[9px] font-black uppercase tracking-[0.2em]">Premium Offer</p>
+            </div>
+            <h3 className="text-lg font-black leading-tight tracking-tight uppercase text-slate-900 dark:text-white">{promotion.title}</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 font-medium">{promotion.description}</p>
+
+            <div className="pt-2 flex items-center justify-between">
+              <span className="text-teal-600 font-black text-lg tracking-tighter">20% OFF</span>
+              <Button
+                onClick={handleAction}
+                size="sm"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[10px] h-8 px-4 font-black uppercase tracking-widest rounded-full shadow-lg shadow-orange-500/20 active:scale-95 transition-all border-none"
+              >
+                Claim
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Flash variant
+  const isDelivery = promotion.title.toLowerCase().includes('delivery');
+
+  return (
+    <div className="bg-white dark:bg-[#2d2218] rounded-2xl p-5 flex items-center gap-4 shadow-xl border border-slate-100 dark:border-white/5 group transition-all duration-300 hover:translate-x-1">
+      <div className={cn(
+        "size-12 rounded-full flex items-center justify-center shrink-0",
+        isDelivery ? "bg-teal-500/10 text-teal-600" : "bg-orange-500/10 text-orange-600"
+      )}>
+        {isDelivery ? <Truck size={20} /> : <GlassWater size={20} />}
+      </div>
+
+      <div className="flex-1 space-y-0.5">
+        <h4 className="font-black text-slate-900 dark:text-white uppercase tracking-tight">{promotion.title}</h4>
+        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{promotion.description}</p>
+      </div>
+
+      <Button
+        onClick={handleAction}
+        variant="ghost"
+        size="icon"
+        className="text-orange-500 hover:bg-orange-500/10 rounded-full h-10 w-10 shrink-0"
+      >
+        <ChevronRight size={24} strokeWidth={3} />
+      </Button>
+    </div>
   );
 }

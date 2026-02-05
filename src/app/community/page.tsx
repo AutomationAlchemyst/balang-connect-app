@@ -9,52 +9,54 @@ import { Separator } from '@/components/ui/separator';
 import CommunityLeaderboard from '@/components/features/community/CommunityLeaderboard';
 
 export const metadata: Metadata = {
-  title: 'Community - BalangConnect',
-  description: 'See your community impact, read heartwarming stories, and share your own BalangConnect experience!',
+  title: 'Community - Balang Kepalang',
+  description: 'See your community impact, read heartwarming stories, and share your own Balang Kepalang experience!',
 };
 
 export default function CommunityPage() {
   return (
-    <div className="relative min-h-screen bg-slate-50 selection:bg-teal-100 selection:text-teal-900 pb-20">
+    <div className="relative min-h-screen bg-slate-50 selection:bg-[#0df2df]/20 selection:text-[#041F1C] pb-20">
 
-      {/* Background Decor */}
+      {/* Breezy Background Decor */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-teal-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob" />
-        <div className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] bg-emerald-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-cyan-200/20 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-blob animation-delay-4000" />
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#0df2df]/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-[#0bc9b9]/10 rounded-full blur-[100px] animate-blob" />
+        <div className="absolute bottom-[-10%] right-[10%] w-[700px] h-[700px] bg-[#0df2df]/10 rounded-full blur-[120px] animate-blob animation-delay-4000" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10 pt-24 space-y-16">
 
-        {/* Header */}
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/40 shadow-sm">
-            <Heart size={14} className="text-teal-500" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-800">Our Family</span>
+        {/* HEADER - Inspired by Breezy Balang Forms */}
+        <div className="text-center mb-16 space-y-6">
+          <div className="inline-flex items-center gap-3 bg-white/40 backdrop-blur-xl px-6 py-2 rounded-full border border-white/60 shadow-lg mb-4">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0df2df] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0bc9b9]"></span>
+            </span>
+            <span className="font-black text-[10px] uppercase tracking-[0.3em] text-[#041F1C]">Our Community Family</span>
           </div>
-
-          <h1 className="font-black text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter text-slate-900 drop-shadow-sm">
-            Community <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-emerald-600">Impact</span>
+          <h1 className="text-6xl md:text-8xl font-black uppercase text-[#041F1C] tracking-tighter leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            Joyful <br className="md:hidden" />
+            <span className="breezy-text-gradient italic">Impact</span>
           </h1>
-
-          <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto">
-            See how your engagement makes a difference and helps us share joy. Your story matters to us.
+          <p className="max-w-2xl mx-auto text-xl text-[#041F1C]/60 font-bold animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
+            See how your engagement makes a difference and helps us share refreshing joy. Your story is part of our paradise.
           </p>
-
-          <Button asChild className="btn-coast-primary h-12 px-8 shadow-lg">
-            <Link href="/community/share">
-              <MessageSquarePlus className="mr-2 h-5 w-5" /> Share Your Story
-            </Link>
-          </Button>
+          <div className="pt-4">
+            <Button asChild className="breezy-btn-primary h-14 px-10 shadow-xl">
+              <Link href="/community/share" className="flex items-center gap-2">
+                <MessageSquarePlus className="h-5 w-5" /> Share Your Story
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Leaderboard Section */}
-        <div className="glass-panel-wet p-8 md:p-12">
+        <div className="breezy-glass p-8 md:p-12">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tight">Top Supporters</h2>
-            <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto">
-              Recognizing those who help make our community initiatives possible through their generous support.
+            <h2 className="text-4xl font-black uppercase text-[#041F1C] tracking-tighter">Top Supporters</h2>
+            <p className="text-lg text-[#041F1C]/60 font-bold max-w-xl mx-auto">
+              Recognizing those who help make our community initiatives possible.
             </p>
           </div>
           <CommunityLeaderboard />

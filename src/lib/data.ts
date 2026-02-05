@@ -84,173 +84,173 @@ export const mosqueDataList: MosqueData[] = [
 
 
 export const mockFlavors: Flavor[] = [
-  { 
-    id: 'f1', 
-    name: 'Lemon Mint Asamboi', 
-    description: 'Lemon juice with cuts of lemons, mint leaves and asamboi.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Best Seller', 'Non Milk Base'], 
+  {
+    id: 'f1',
+    name: 'Lemon Mint Asamboi',
+    description: 'Lemon juice with cuts of lemons, mint leaves and asamboi.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Best Seller', 'Non Milk Base'],
     color: 'bg-yellow-400',
     dataAiHint: 'lemonade mint'
   },
-  { 
-    id: 'f2', 
-    name: 'Ribena Lychee', 
-    description: 'Ribena with soda filled with bits of lychee pieces and jelly.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Recommended', 'Non Milk Base'], 
+  {
+    id: 'f2',
+    name: 'Ribena Lychee',
+    description: 'Ribena with soda filled with bits of lychee pieces and jelly.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Recommended', 'Non Milk Base'],
     color: 'bg-pink-500',
     dataAiHint: 'berry drink'
   },
-  { 
-    id: 'f3', 
-    name: 'Sparkling Longan Lemon Tea', 
-    description: 'Lemon Tea, soda with bits of longan.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Non Milk Base'], 
+  {
+    id: 'f3',
+    name: 'Sparkling Longan Lemon Tea',
+    description: 'Lemon Tea, soda with bits of longan.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Non Milk Base'],
     color: 'bg-yellow-300',
     dataAiHint: 'iced tea'
   },
-  { 
-    id: 'f4', 
-    name: 'Vimto Mojito', 
-    description: 'Vimto - often dubbed the Ribena of the Middle East - has a deeper, slightly bitter profile. Paired with zesty lemon and lime in our special blend, this drink strikes the perfect balance of sweet, tangy, and bold.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Must Try', 'Non Milk Base'], 
+  {
+    id: 'f4',
+    name: 'Vimto Mojito',
+    description: 'Vimto - often dubbed the Ribena of the Middle East - has a deeper, slightly bitter profile. Paired with zesty lemon and lime in our special blend, this drink strikes the perfect balance of sweet, tangy, and bold.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Must Try', 'Non Milk Base'],
     color: 'bg-purple-600',
     dataAiHint: 'grape soda'
   },
-  { 
-    id: 'f5', 
-    name: 'Chrysanthemum Blue Pea Tea', 
-    description: 'Calming, color-changing floral tea freshly brewed from chrysanthemum and blue pea blossoms. Beautiful, refreshing, and sugar free too!', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['New', 'Sugar-Free', 'Flower Series'], 
+  {
+    id: 'f5',
+    name: 'Chrysanthemum Blue Pea Tea',
+    description: 'Calming, color-changing floral tea freshly brewed from chrysanthemum and blue pea blossoms. Beautiful, refreshing, and sugar free too!',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Sugar-Free', 'Flower Series'],
     color: 'bg-blue-400',
     dataAiHint: 'herbal tea'
   },
-  { 
-    id: 'f6', 
-    name: 'Roselle Rizz', 
-    description: 'A zesty, heart-loving blend of roselle, chrysanthemum, oranges and hawthorn - great for digestion, immunity, and a natural refresh.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['New', 'Sugar-Free', 'Flower Series'], 
+  {
+    id: 'f6',
+    name: 'Roselle Rizz',
+    description: 'A zesty, heart-loving blend of roselle, chrysanthemum, oranges and hawthorn - great for digestion, immunity, and a natural refresh.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['New', 'Sugar-Free', 'Flower Series'],
     color: 'bg-red-500',
     dataAiHint: 'hibiscus tea'
   },
-  { 
-    id: 'f7', 
-    name: 'Rich Chocolate', 
-    description: 'Rich and milky Belgian chocolate drink.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f7',
+    name: 'Rich Chocolate',
+    description: 'Rich and milky Belgian chocolate drink.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-yellow-700',
     dataAiHint: 'chocolate milk'
   },
-  { 
-    id: 'f8', 
-    name: 'Vanilla Blue', 
-    description: 'Rich and milky vanilla flavoured drink in sky blue colour with crushed Oreo.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Most Popular', 'Milk Base'], 
+  {
+    id: 'f8',
+    name: 'Vanilla Blue',
+    description: 'Rich and milky vanilla flavoured drink in sky blue colour with crushed Oreo.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Most Popular', 'Milk Base'],
     color: 'bg-sky-400',
     dataAiHint: 'blue drink'
   },
-  { 
-    id: 'f9', 
-    name: 'Yummy Taro', 
-    description: 'A sweet somewhat bubblegum flavoured yam or better known as Taro these days.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f9',
+    name: 'Yummy Taro',
+    description: 'A sweet somewhat bubblegum flavoured yam or better known as Taro these days.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-purple-400',
     dataAiHint: 'taro smoothie'
   },
-  { 
-    id: 'f10', 
-    name: 'Milky Corn', 
-    description: 'Classic favourite thick, milky and smooth corn drink.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Recommended', 'Milk Base'], 
+  {
+    id: 'f10',
+    name: 'Milky Corn',
+    description: 'Classic favourite thick, milky and smooth corn drink.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Recommended', 'Milk Base'],
     color: 'bg-yellow-400',
     dataAiHint: 'corn drink'
   },
-  { 
-    id: 'f11', 
-    name: 'Solero Lime', 
-    description: 'Lime juice infused with milk, vanilla flavour, slices of lime & mint leaves to achieve a very similar taste to the Solero ice-cream.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Recommended', 'Milk Base'], 
+  {
+    id: 'f11',
+    name: 'Solero Lime',
+    description: 'Lime juice infused with milk, vanilla flavour, slices of lime & mint leaves to achieve a very similar taste to the Solero ice-cream.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Recommended', 'Milk Base'],
     color: 'bg-lime-400',
     dataAiHint: 'lime smoothie'
   },
-  { 
-    id: 'f12', 
-    name: 'Extra Joss Mango', 
-    description: 'A creamy, sweet kick of bold mango and energy. Extra Joss Mango mixed with milk for a smooth, satisfying treat.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Recommended', 'Milk Base'], 
+  {
+    id: 'f12',
+    name: 'Extra Joss Mango',
+    description: 'A creamy, sweet kick of bold mango and energy. Extra Joss Mango mixed with milk for a smooth, satisfying treat.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Recommended', 'Milk Base'],
     color: 'bg-orange-500',
     dataAiHint: 'mango lassi'
   },
-  { 
-    id: 'f13', 
-    name: 'Extra Joss Grape', 
-    description: 'A creamy, energizing blend of sweet grape and yoghurt-like flavour - Extra Joss Grape with milk for a smooth, fruity boost.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f13',
+    name: 'Extra Joss Grape',
+    description: 'A creamy, energizing blend of sweet grape and yoghurt-like flavour - Extra Joss Grape with milk for a smooth, fruity boost.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-purple-500',
     dataAiHint: 'grape smoothie'
   },
-  { 
-    id: 'f14', 
-    name: 'Iced Milk Tea', 
-    description: 'Your classic iced milk tea, done right - chilled, and creamy.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f14',
+    name: 'Iced Milk Tea',
+    description: 'Your classic iced milk tea, done right - chilled, and creamy.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-amber-600',
     dataAiHint: 'milk tea'
   },
-  { 
-    id: 'f15', 
-    name: 'Avocado Gula Melaka', 
-    description: 'Creamy avocado and rich gula melaka: a perfectly smooth, subtly sweet indulgence.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Must Try', 'Milk Base'], 
+  {
+    id: 'f15',
+    name: 'Avocado Gula Melaka',
+    description: 'Creamy avocado and rich gula melaka: a perfectly smooth, subtly sweet indulgence.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Must Try', 'Milk Base'],
     color: 'bg-green-600',
     dataAiHint: 'avocado smoothie'
   },
-  { 
-    id: 'f16', 
-    name: 'Pistachio Kunafa', 
-    description: 'A creamy, nutty dream - the rich pistachio flavour with a light, kunafa-inspired sweetness without the overload.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f16',
+    name: 'Pistachio Kunafa',
+    description: 'A creamy, nutty dream - the rich pistachio flavour with a light, kunafa-inspired sweetness without the overload.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-green-400',
     dataAiHint: 'pistachio drink'
   },
-  { 
-    id: 'f17', 
-    name: 'Tiramisu', 
-    description: 'A creamy, coffee-flavored treat with a hint of sweetness.', 
-    imageUrl: 'https://placehold.co/300x200.png', 
-    pricePerLiter: 5.00, 
-    tags: ['Milk Base'], 
+  {
+    id: 'f17',
+    name: 'Tiramisu',
+    description: 'A creamy, coffee-flavored treat with a hint of sweetness.',
+    imageUrl: 'https://placehold.co/300x200.png',
+    pricePerLiter: 5.00,
+    tags: ['Milk Base'],
     color: 'bg-yellow-700',
     dataAiHint: 'coffee frappe'
   },
@@ -337,10 +337,10 @@ export const mockFlavors: Flavor[] = [
 ];
 
 export const mockPackages: EventPackage[] = [
-  { 
+  {
     id: 'pkg_17l_self_pickup',
     name: '17L Balang (Self-Pickup / Delivery)',
-    description: 'Suitable for 15-25 pax. Price is for self-pickup. Delivery is available for an additional $20.00. Includes one 17L balang with your choice of one flavor.',
+    description: "Suitable for 15-25 pax. Price is for self-pickup. Delivery is available for an additional $20.00. This 17L balang is for you to keep. We don't collect the balang back.",
     price: 98.00,
     setupFee: 0,
     isAllInclusive: false,
@@ -349,39 +349,39 @@ export const mockPackages: EventPackage[] = [
     pax: '15-25',
     dataAiHint: 'small party drinks'
   },
-  { 
-    id: 'pkg_opt1', 
-    name: 'Package Option 1', 
-    description: 'Suitable for 30-80 pax, 2 x 23L balangs. Price INCLUDES setup, teardown, unlimited cups, delivery & pickup.', 
-    price: 235.00, 
+  {
+    id: 'pkg_opt1',
+    name: 'Couple of the Year 2024 (COTY24)',
+    description: 'Suitable for 30-80 pax, 2 x 23L balangs. Price INCLUDES setup, teardown, delivery & pickup.',
+    price: 235.00,
     setupFee: 190.00, // Informational: value of setup/service component included within the price
     isAllInclusive: true,
-    includedItems: ['2 x 23L Balangs (Choice of 2 Flavors)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'], 
-    imageUrl: 'https://placehold.co/400x250.png', 
+    includedItems: ['2 x 23L Balangs (Choice of 2 Flavors)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
+    imageUrl: 'https://placehold.co/400x250.png',
     pax: '30-80',
-    dataAiHint: 'party drinks' 
+    dataAiHint: 'party drinks'
   },
-  { 
-    id: 'pkg_opt2', 
-    name: 'Package Option 2', 
-    description: 'Suitable for 60-120 pax, 3 x 23L balangs. Price INCLUDES setup, teardown, unlimited cups, delivery & pickup.', 
+  {
+    id: 'pkg_opt2',
+    name: 'Charlie’s Angels',
+    description: 'Suitable for 60-120 pax, 3 x 23L balangs. Price INCLUDES setup, teardown, delivery & pickup.',
     price: 330.00, // All-inclusive price (285 setup + 45 delivery are components of this)
     setupFee: 285.00, // Informational: value of setup/service component included within the price
     isAllInclusive: true,
-    includedItems: ['3 x 23L Balangs (Choice of 3 Flavors)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'], 
-    imageUrl: 'https://placehold.co/400x250.png', 
+    includedItems: ['3 x 23L Balangs (Choice of 3 Flavors)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
+    imageUrl: 'https://placehold.co/400x250.png',
     pax: '60-120',
     dataAiHint: 'event catering'
   },
-  { 
-    id: 'pkg_opt3', 
-    name: 'Package Option 3', 
-    description: 'Suitable for 100-150 pax, 2 x 40L balangs. Price INCLUDES bal-tender (4hrs), setup, teardown, unlimited cups, delivery & pickup.', 
+  {
+    id: 'pkg_opt3',
+    name: 'Bongo Player',
+    description: 'Suitable for 100-150 pax, 2 x 40L balangs. Price INCLUDES bal-tender (4hrs), setup, teardown, delivery & pickup.',
     price: 435.00, // All-inclusive price (390 setup + 45 delivery are components of this)
     setupFee: 390.00, // Informational: value of setup/service component included within the price
     isAllInclusive: true,
-    includedItems: ['2 x 40L Balangs (Choice of 2 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Unlimited Cups'], 
-    imageUrl: 'https://placehold.co/400x250.png', 
+    includedItems: ['2 x 40L Balangs (Choice of 2 Flavors)', 'Bal-tender service (4 hours)', 'Setup & Teardown Service', 'Delivery & Pickup Fee', 'Cups provided'],
+    imageUrl: 'https://placehold.co/400x250.png',
     pax: '100-150',
     dataAiHint: 'large event'
   },
@@ -395,19 +395,54 @@ export const mockAddons: Addon[] = [
   { id: 'addon_table_rental', name: 'Table Rental', description: 'Rental of one table for your setup.', price: 20.00, category: 'Equipment' },
   { id: 'addon_bobba', name: '3 types of Bobba', description: '3 types of Bobba.', price: 20.00, category: 'Drinks' },
   { id: 'addon_metal_racks', name: 'Metal Racks', description: 'Metal Racks.', price: 80.00, category: 'Equipment' },
-  { id: 'addon_infused_water', name: 'Infused Water', description: 'Infused Water.', price: 25.00, category: 'Drinks' },
-  { id: 'addon_infused_water_23l', name: '23L Infused Water', description: 'Refreshing 23L infused water (e.g., lemon & mint).', price: 25.00, category: 'Drinks' },
-  { id: 'addon_cups_upgrade', name: 'Cups Upgrade (per 100)', description: 'Upgrade to premium cups, priced per 100 units.', price: 30.00, category: 'Services' },
+  { id: 'addon_infused_water_23l', name: '23L Infused Water (Lemon & Mint leaves)', description: 'Refreshing 23L infused water with lemon & mint leaves.', price: 25.00, category: 'Drinks' },
+  { id: 'addon_cups_upgrade_500', name: '500ml Cup Upgrade (with branding)', description: 'Upgrade to 500ml premium cups with branding.', price: 30.00, category: 'Services' },
+  { id: 'addon_cups_upgrade_1000', name: '1000ml Cup Upgrade (with branding)', description: 'Upgrade to 1000ml premium cups with branding.', price: 35.00, category: 'Services' },
+  { id: 'addon_cup_corn', name: 'Cup Corn Live Station', description: 'Includes server (2hrs). Suitable for 100-120 pax. Note: We require a power point for this station.', price: 250.00, category: 'Live Stations' },
 ];
 
 export const mockPromotions: Promotion[] = [
-  { id: 'promo1', title: 'Ramadan Special Lucky Draw', description: 'Order any package this Ramadan and stand a chance to win a free catering service for your next event!', imageUrl: 'https://placehold.co/400x200.png', endDate: '2025-04-28T00:00:00.000Z', terms: 'Min. order of 1 package. Draw will be held after Ramadan.', dataAiHint: 'ramadan celebration' },
-  { id: 'promo2', title: 'Early Bird Wedding Discount', description: 'Book your wedding package 6 months in advance and get 10% off!', imageUrl: 'https://placehold.co/400x200.png', endDate: '2025-12-31T00:00:00.000Z', terms: 'Valid for Kenduri Kahwin packages only. Non-refundable deposit required.', dataAiHint: 'wedding offer' },
+  {
+    id: 'promo-draw-1',
+    title: 'Ramadan Special Lucky Draw',
+    description: 'Win a premium Balang catering package for your next private sunset gathering!',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCamc7xsuTEQ2w3z5jSWxH5a3azKD43oG4ERqGdawckYmOMYa0VviV8N_fLXODXhl1W-DNpbGcxsUk4sm0c742NSMcB7Z58zdyyHNCcPJF33ZJeggIucqHzpmC10KzoNXatJcjNF25W7WsiPsHCAegwtvqsB-S0CPVoUjmSKF8hxKi8CK96tVvwhdMzsWihsWGpd781n7Qy7vPQQs_58XRbyRThrJMaKapbDEo5N3FbccvmwoRQAWOk-vYf7ECRacdVk_pMG03xZvY',
+    endDate: '2025-04-28T18:00:00.000Z',
+    terms: 'Min. order of 1 package. Draw will be held after Ramadan.',
+    dataAiHint: 'ramadan celebration'
+  },
+  {
+    id: 'promo-exclusive-1',
+    title: 'Early Bird Wedding Discount',
+    description: 'Get 20% off for beach-side weddings booked 6 months in advance.',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJaSPBMUL_Lg9SoEzSePvAhKcFcJsFLRRarBnSRcA38vnDmG0sFzrWMmDpy_DD9a9RsVbk2EY-SDhnm65Ry0m1w5Ea97HkYHOFLKiQvzxI-oOBw77fpYfBGvs-W_Vs9ySNIfNAWg-3-p-lr_tIUQyzVwYOJAc1PYO1SuoPxE4iVyiSVvWNOAy001vPKr7byYrH3Tbc2eJvvW-poBJLlwCNR00CfHVJvh_4prme5g0Xz2x3s6cj_sVPBQ93T_hL-TzEDbTU_9kIaE',
+    endDate: '2025-12-31T23:59:59.000Z',
+    terms: 'Valid for Kenduri Kahwin packages only.',
+    dataAiHint: 'wedding offer'
+  },
+  {
+    id: 'promo-flash-1',
+    title: 'Free Delivery Weekend',
+    description: 'On all beach party orders this weekend only!',
+    imageUrl: 'https://placehold.co/400x200.png',
+    endDate: '2025-07-06T20:00:00.000Z',
+    terms: 'Valid for island-wide delivery excluding Jurong Island.',
+    dataAiHint: 'delivery promo'
+  },
+  {
+    id: 'promo-flash-2',
+    title: 'BOGO Juice Mix',
+    description: 'Buy 1 Get 1 on Summer Mixes for orders over $100.',
+    imageUrl: 'https://placehold.co/400x200.png',
+    endDate: '2025-07-05T15:00:00.000Z',
+    terms: 'Valid for Asam Boi and Lime flavors.',
+    dataAiHint: 'bogo offer'
+  },
 ];
 
 export const mockCommunityStories: CommunityStory[] = [
-  { id: 'story1', userName: 'Siti & Ahmad', story: 'BalangConnect made our wedding day so special! The Katira was a hit with all our guests. Thank you for the amazing service!', imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-15T12:00:00.000Z', eventName: 'Our Wedding Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'wedding party', dataAiHintAvatar: 'couple avatar' },
-  { id: 'story2', userName: 'Mr. Tan', story: "We hired BalangConnect for our company's Family Day. The kids loved the Milo Dinosaur and the adults enjoyed the Asam Boi. Professional and friendly team!", imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-01T12:00:00.000Z', eventName: 'Company Family Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'corporate event', dataAiHintAvatar: 'man avatar' },
+  { id: 'story1', userName: 'Siti & Ahmad', story: 'Balang Kepalang made our wedding day so special! The Katira was a hit with all our guests. Thank you for the amazing service!', imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-15T12:00:00.000Z', eventName: 'Our Wedding Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'wedding party', dataAiHintAvatar: 'couple avatar' },
+  { id: 'story2', userName: 'Mr. Tan', story: "We hired Balang Kepalang for our company's Family Day. The kids loved the Milo Dinosaur and the adults enjoyed the Asam Boi. Professional and friendly team!", imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-01T12:00:00.000Z', eventName: 'Company Family Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'corporate event', dataAiHintAvatar: 'man avatar' },
   { id: 'story3', userName: "Aisyah's Birthday", story: "The Blue Lagoon soda was perfect for my daughter Aisyah's 10th birthday party. The setup was beautiful and hassle-free. Highly recommend!", date: '2024-06-15T12:00:00.000Z', eventName: "Aisyah's 10th Birthday", avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'birthday party', dataAiHintAvatar: 'girl avatar' },
 ];
 
@@ -418,7 +453,7 @@ export const mockLeaderboardUsers: LeaderboardUser[] = [
   { id: 'user4', rank: 4, name: 'Anonymous Donor', points: 8500 },
   { id: 'user5', rank: 5, name: 'Syed Al-Attas', points: 7650, avatarUrl: 'https://placehold.co/50x50.png', dataAiHintAvatar: 'young man' },
 ];
-    
+
 // Replaced dynamic date generation with static dates to prevent hydration errors.
 const staticUpcomingFriday1 = '2025-07-04T00:00:00.000Z';
 const staticUpcomingFriday2 = '2025-07-11T00:00:00.000Z';
@@ -459,7 +494,7 @@ export const mockInfaqNoticeBoardSlots: InfaqNoticeBoardSlot[] = [
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'food donation'
   },
-   {
+  {
     id: 'notice4',
     mosqueName: mosqueDataList[3]?.name || 'Al-Istiqamah Mosque',
     mosqueAddress: mosqueDataList[3]?.address || '2 Serangoon North Avenue 2, Singapore 555876',
@@ -476,7 +511,7 @@ export const mockInfaqNoticeBoardSlots: InfaqNoticeBoardSlot[] = [
 // Add dataAiHint to Flavor images
 mockFlavors.forEach(flavor => {
   if (!flavor.dataAiHint) { // Basic fallback if specific not set above
-      flavor.dataAiHint = flavor.name.toLowerCase().split(' ').slice(0,2).join(' ');
+    flavor.dataAiHint = flavor.name.toLowerCase().split(' ').slice(0, 2).join(' ');
   }
 });
 
@@ -497,7 +532,7 @@ mockPromotions.forEach(promo => {
 // Ensure community stories have hints
 mockCommunityStories.forEach(story => {
   if (story.imageUrl && !story.dataAiHintStory) {
-    story.dataAiHintStory = story.eventName ? story.eventName.toLowerCase().split(' ').slice(0,2).join(' ') : 'community event';
+    story.dataAiHintStory = story.eventName ? story.eventName.toLowerCase().split(' ').slice(0, 2).join(' ') : 'community event';
   }
   if (story.avatarUrl && !story.dataAiHintAvatar) {
     story.dataAiHintAvatar = 'person avatar';

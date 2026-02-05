@@ -33,7 +33,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 
 
-const SPONSORSHIP_AMOUNT = 25.00;
+const SPONSORSHIP_AMOUNT = 15.00;
 
 const sponsorDeliveryFormSchema = z.object({
   donorName: z.string().min(2, { message: 'Donor name must be at least 2 characters.' }).max(50),
@@ -345,12 +345,15 @@ export default function SponsorDeliveryForm() {
           />
         )}
 
-        <div className="p-8 rounded-[2rem] bg-brand-aqua/10 border border-brand-aqua/20 space-y-2 mt-8">
-          <div className="flex justify-between text-2xl font-display font-black text-brand-teal items-center">
-            <span className="flex items-center uppercase tracking-tighter"><DollarSign className="mr-3 h-8 w-8 text-brand-aqua" strokeWidth={3} />Sponsorship</span>
-            <span className="text-3xl">${SPONSORSHIP_AMOUNT.toFixed(2)}</span>
+        <div className="p-8 rounded-[2rem] bg-[#0df2df]/10 border border-[#0df2df]/20 space-y-2 mt-8 text-center">
+          <div className="flex flex-col items-center justify-center space-y-2">
+            <span className="flex items-center text-[#041F1C] text-sm font-black uppercase tracking-[0.2em] gap-2">
+              <DollarSign className="h-5 w-5 text-[#09a093]" strokeWidth={3} />
+              Sponsorship Amount
+            </span>
+            <span className="text-5xl font-black text-[#09a093] tracking-tighter">${SPONSORSHIP_AMOUNT.toFixed(2)}</span>
           </div>
-          <p className="text-[10px] text-brand-teal/50 font-black uppercase tracking-widest border-t border-brand-teal/10 pt-4">Covers the full delivery fee for Infaq Balangs to a mosque in need.</p>
+          <p className="text-[10px] text-[#041F1C]/50 font-bold uppercase tracking-widest pt-2">Covers the full delivery fee for Infaq Balangs.</p>
         </div>
 
         <FormField
@@ -369,7 +372,7 @@ export default function SponsorDeliveryForm() {
               </FormControl>
               <div className="space-y-1 leading-none">
                 <Label htmlFor="sponsor-consent" className="cursor-pointer text-[10px] font-black uppercase tracking-tight text-brand-teal/70 leading-relaxed block">
-                  By submitting this form, I consent to BalangConnect using my personal data for this sponsorship. My data will be handled in compliance with Singapore's PDPA. I acknowledge that BalangConnect may follow up by contacting me via WhatsApp/Email. *
+                  By submitting this form, I consent to Balang Kepalang using my personal data for this sponsorship. My data will be handled in compliance with Singapore's PDPA. I acknowledge that Balang Kepalang may follow up by contacting me via WhatsApp/Email. *
                 </Label>
                 <FormMessage />
               </div>

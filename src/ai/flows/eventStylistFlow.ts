@@ -36,10 +36,10 @@ const EventStylistOutputSchema = z.object({
 export type EventStylistOutput = z.infer<typeof EventStylistOutputSchema>;
 
 const stylistPrompt = ai.definePrompt({
-    name: 'eventStylistPrompt',
-    input: { schema: EventStylistInputSchema },
-    output: { schema: EventStylistOutputSchema },
-    prompt: `You are an expert Event Stylist for BalangConnect, a beverage catering service. A customer needs help planning their event.
+  name: 'eventStylistPrompt',
+  input: { schema: EventStylistInputSchema },
+  output: { schema: EventStylistOutputSchema },
+  prompt: `You are an expert Event Stylist for Balang Kepalang, a beverage catering service. A customer needs help planning their event.
     Based on their description, you will generate a creative theme, a color palette, and suggest the best flavors and package from the lists provided.
     Your suggestions must be exciting, relevant, and helpful.
 
@@ -62,9 +62,9 @@ const stylistPrompt = ai.definePrompt({
 });
 
 export async function eventStylistFlow(input: EventStylistInput): Promise<EventStylistOutput> {
-    const { output } = await stylistPrompt(input);
-    if (!output) {
-        throw new Error('The AI failed to generate event ideas. Please try a different description.');
-    }
-    return output;
+  const { output } = await stylistPrompt(input);
+  if (!output) {
+    throw new Error('The AI failed to generate event ideas. Please try a different description.');
+  }
+  return output;
 }
