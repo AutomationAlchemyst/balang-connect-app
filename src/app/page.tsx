@@ -126,7 +126,7 @@ export default function HomePage() {
    return (
       <div className="relative w-full overflow-x-hidden font-plus-jakarta text-[#0d1c1b] dark:text-white">
          {/* Hero Section */}
-         <section ref={heroRef} className="relative h-[95vh] w-full flex flex-col items-center justify-between py-32 overflow-hidden">
+         <section ref={heroRef} className="relative min-h-[92dvh] md:h-[95vh] w-full flex flex-col items-center justify-start md:justify-between py-24 md:py-32 overflow-hidden">
             {/* Background */}
             <div className="absolute inset-0 z-0">
                <div
@@ -150,7 +150,7 @@ export default function HomePage() {
 
             {/* MIDDLE: Logo Watermark */}
             <div
-               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[650px] md:h-[650px] opacity-30 z-10 pointer-events-none mix-blend-overlay"
+               className="relative md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[650px] md:h-[650px] opacity-40 md:opacity-30 z-10 pointer-events-none mix-blend-overlay my-8 md:my-0"
                ref={logoRef}
             >
                <Image
@@ -163,7 +163,7 @@ export default function HomePage() {
             </div>
 
             {/* BOTTOM: Subtext & Buttons */}
-            <div className="relative z-30 w-full px-6 flex flex-col items-center text-center gap-8 pb-10">
+            <div className="relative z-30 w-full px-6 flex flex-col items-center text-center gap-6 md:gap-8 pb-10">
                <p className="text-white/90 text-[13px] md:text-lg font-medium max-w-[300px] md:max-w-md mx-auto leading-relaxed backdrop-blur-md p-5 md:p-6 rounded-2xl bg-black/20 border border-white/10 shadow-xl fade-in-up opacity-0">
                   Premium Balang catering for corporate retreats and exclusive private events.
                </p>
