@@ -140,10 +140,10 @@ export default function HomePage() {
             {/* TOP: Kinetic Rainbow Text */}
             <div className="relative z-30 pt-10">
                <div className="text-slide-up overflow-visible">
-                  <h1 ref={textRef} className="text-white text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase flex items-end justify-center perspective-1000">
-                     <span className="block origin-bottom-right -rotate-12 translate-y-4">Summer</span>
-                     <span className="block mb-4 text-4xl md:text-6xl mx-2 opacity-90">In A</span>
-                     <span className="block origin-bottom-left rotate-12 translate-y-4 text-[#0df2df] italic">Jar</span>
+                  <h1 ref={textRef} className="text-white text-4xl sm:text-5xl md:text-8xl font-black leading-none tracking-tighter uppercase flex items-end justify-center perspective-1000">
+                     <span className="block origin-bottom-right -rotate-6 md:-rotate-12 translate-y-2 md:translate-y-4">Summer</span>
+                     <span className="block mb-2 md:mb-4 text-2xl sm:text-3xl md:text-6xl mx-2 opacity-90">In A</span>
+                     <span className="block origin-bottom-left rotate-6 md:rotate-12 translate-y-2 md:translate-y-4 text-[#0df2df] italic">Jar</span>
                   </h1>
                </div>
             </div>
@@ -164,7 +164,7 @@ export default function HomePage() {
 
             {/* BOTTOM: Subtext & Buttons */}
             <div className="relative z-30 w-full px-6 flex flex-col items-center text-center gap-8 pb-10">
-               <p className="text-white/90 text-sm md:text-lg font-medium max-w-[280px] md:max-w-md mx-auto leading-relaxed backdrop-blur-md p-6 rounded-2xl bg-black/20 border border-white/10 shadow-xl fade-in-up opacity-0">
+               <p className="text-white/90 text-[13px] md:text-lg font-medium max-w-[300px] md:max-w-md mx-auto leading-relaxed backdrop-blur-md p-5 md:p-6 rounded-2xl bg-black/20 border border-white/10 shadow-xl fade-in-up opacity-0">
                   Premium Balang catering for corporate retreats and exclusive private events.
                </p>
 
@@ -183,7 +183,7 @@ export default function HomePage() {
             </div>
 
             <div
-               className="absolute bottom-[-5%] -right-16 w-64 h-64 opacity-60 -rotate-45 z-40 pointer-events-none"
+               className="absolute bottom-[-2%] -right-12 w-48 h-48 md:w-64 md:h-64 opacity-60 -rotate-45 z-20 pointer-events-none"
                style={{
                   backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdUYrzTGtGjOQj69h8MCwD1XfYKeTT6EmrkpqYDGK3DArZIa2sgpSUINNiV2Fh0OO6jfPD1Y7utJORGg5rCRP3Fr-wxHIhDSH_Ekyta5ygd_sb1Z72MCSrZuJLnOHHUQLJWjzim9Sv6Al-j32LGur9jYUz0eaP1D2f5F7q_kPsxYT3pz1EJVo5xpHj5QNv5PVUNKHcaVtHYFKvWHl6dg60lZOImbo7OMJ8GUZjPrtLQwQiorbJZVGU1VV7jChOVjAfMf_RCfef6yQ")',
                   backgroundSize: 'contain',

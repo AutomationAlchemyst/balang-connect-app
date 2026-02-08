@@ -80,7 +80,7 @@ export default function Header() {
           : 'bg-transparent border-transparent'
           }`}>
           <Link href="/" className="flex items-center gap-2 group relative z-10">
-            <div className="relative h-10 w-28 md:h-12 md:w-32 transition-transform duration-500 group-hover:scale-105">
+            <div className="relative h-11 w-30 md:h-12 md:w-32 transition-transform duration-500 group-hover:scale-105">
               <Image
                 src="/logo.png"
                 alt="Balang Kepalang Logo"
@@ -212,6 +212,11 @@ export default function Header() {
                           <Button variant="outline" asChild className="w-full h-14 rounded-2xl bg-white/20 backdrop-blur-md border-white/40 font-black uppercase tracking-widest text-brand-midnight">
                             <Link href={calendarUrl} target="_blank" onClick={() => setIsSheetOpen(false)}>
                               <CalendarDays size={18} className="mr-2" /> Calendar
+                            </Link>
+                          </Button>
+                          <Button variant="outline" asChild className="w-full h-14 rounded-2xl bg-white/20 backdrop-blur-md border-white/40 font-black uppercase tracking-widest text-brand-midnight">
+                            <Link href="/admin/manage-dates" onClick={() => setIsSheetOpen(false)}>
+                              <Ban size={18} className="mr-2" /> Dates
                             </Link>
                           </Button>
                           <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl">
