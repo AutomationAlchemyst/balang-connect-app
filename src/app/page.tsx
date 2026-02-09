@@ -126,7 +126,7 @@ export default function HomePage() {
    return (
       <div className="relative w-full overflow-x-hidden font-plus-jakarta text-[#0d1c1b] dark:text-white">
          {/* Hero Section */}
-         <section ref={heroRef} className="relative min-h-[92dvh] md:h-[95vh] w-full flex flex-col items-center justify-start md:justify-between py-24 md:py-32 overflow-hidden">
+         <section ref={heroRef} className="relative min-h-[92dvh] 2xl:h-[95vh] w-full flex flex-col items-center justify-start 2xl:justify-between py-24 md:py-32 2xl:py-48 overflow-hidden">
             {/* Background */}
             <div className="absolute inset-0 z-0">
                <div
@@ -140,9 +140,9 @@ export default function HomePage() {
             {/* TOP: Kinetic Rainbow Text */}
             <div className="relative z-30 pt-10">
                <div className="text-slide-up overflow-visible">
-                  <h1 ref={textRef} className="text-white text-4xl sm:text-5xl md:text-8xl font-black leading-none tracking-tighter uppercase flex items-end justify-center perspective-1000">
+                  <h1 ref={textRef} className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black leading-none tracking-tighter uppercase flex items-end justify-center perspective-1000">
                      <span className="block origin-bottom-right -rotate-6 md:-rotate-12 translate-y-2 md:translate-y-4">Summer</span>
-                     <span className="block mb-2 md:mb-4 text-2xl sm:text-3xl md:text-6xl mx-2 opacity-90">In A</span>
+                     <span className="block mb-2 md:mb-4 text-2xl sm:text-3xl lg:text-4xl 2xl:text-6xl mx-2 opacity-90">In A</span>
                      <span className="block origin-bottom-left rotate-6 md:rotate-12 translate-y-2 md:translate-y-4 text-[#0df2df] italic">Jar</span>
                   </h1>
                </div>
@@ -150,7 +150,7 @@ export default function HomePage() {
 
             {/* MIDDLE: Logo Watermark */}
             <div
-               className="relative md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[650px] md:h-[650px] opacity-40 md:opacity-30 z-10 pointer-events-none mix-blend-overlay my-8 md:my-0"
+               className="relative 2xl:absolute 2xl:top-1/2 2xl:left-1/2 2xl:-translate-x-1/2 2xl:-translate-y-1/2 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[450px] lg:h-[450px] 2xl:w-[650px] 2xl:h-[650px] opacity-40 2xl:opacity-30 z-10 pointer-events-none mix-blend-overlay my-8 md:my-12 2xl:my-0"
                ref={logoRef}
             >
                <Image
@@ -163,12 +163,12 @@ export default function HomePage() {
             </div>
 
             {/* BOTTOM: Subtext & Buttons */}
-            <div className="relative z-30 w-full px-6 flex flex-col items-center text-center gap-6 md:gap-8 pb-10">
-               <p className="text-white/90 text-[13px] md:text-lg font-medium max-w-[300px] md:max-w-md mx-auto leading-relaxed backdrop-blur-md p-5 md:p-6 rounded-2xl bg-black/20 border border-white/10 shadow-xl fade-in-up opacity-0">
+            <div className="relative z-30 w-full px-6 flex flex-col items-center text-center gap-6 md:gap-8 2xl:pb-10">
+               <p className="text-white/90 text-[13px] md:text-base lg:text-lg font-medium max-w-[300px] md:max-w-md lg:max-w-lg mx-auto leading-relaxed backdrop-blur-md p-5 md:p-6 rounded-2xl bg-black/20 border border-white/10 shadow-xl fade-in-up opacity-0">
                   Premium Balang catering for corporate retreats and exclusive private events.
                </p>
 
-               <div className="flex flex-col md:flex-row w-full max-w-md gap-3 fade-in-up opacity-0">
+               <div className="flex flex-col md:flex-row w-full max-w-md lg:max-w-lg gap-3 fade-in-up opacity-0">
                   <Link href="/event-builder" className="w-full">
                      <button className="w-full bg-[#0df2df] text-[#0d1c1b] h-14 py-4 rounded-2xl font-black text-base uppercase tracking-wider shadow-xl shadow-[#0df2df]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:brightness-110">
                         Book Event
