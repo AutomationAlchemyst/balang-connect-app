@@ -39,11 +39,34 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Balang Kepalang - Singapore\'s First Ice Blended Air Balang!',
-  description: 'Experience the iced cold air balang revolution. Get your Balang Kepalang drinks here.',
+  metadataBase: new URL('https://balangconnect.theworkflowguys.com'),
+  title: {
+    default: 'Balang Kepalang — Singapore\'s First Ice Blended Air Balang!',
+    template: '%s — Balang Kepalang',
+  },
+  description:
+    'Premium iced balang catering for corporate and private events, with a gamified community giving system. Singapore\'s first ice blended air balang!',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
+  },
+  alternates: {
+    canonical: 'https://balangconnect.theworkflowguys.com',
+  },
+  openGraph: {
+    title: 'Balang Kepalang — Singapore\'s First Ice Blended Air Balang!',
+    description:
+      'Premium iced balang catering for corporate and private events, with a gamified community giving system.',
+    siteName: 'Balang Kepalang',
+    url: 'https://balangconnect.theworkflowguys.com',
+    type: 'website',
+    locale: 'en_SG',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Balang Kepalang — Singapore\'s First Ice Blended Air Balang!',
+    description:
+      'Premium iced balang catering for corporate and private events, with a gamified community giving system.',
   },
 };
 

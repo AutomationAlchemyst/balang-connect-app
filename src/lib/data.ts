@@ -83,7 +83,7 @@ export const mosqueDataList: MosqueData[] = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 
-export const mockFlavors: Flavor[] = [
+export const SEED_FLAVORS: Flavor[] = [
   {
     id: 'f1',
     name: 'Lemon Mint Asamboi',
@@ -336,7 +336,7 @@ export const mockFlavors: Flavor[] = [
   }
 ];
 
-export const mockPackages: EventPackage[] = [
+export const SEED_PACKAGES: EventPackage[] = [
   {
     id: 'pkg_17l_self_pickup',
     name: '17L Balang (Self-Pickup / Delivery)',
@@ -387,7 +387,7 @@ export const mockPackages: EventPackage[] = [
   },
 ];
 
-export const mockAddons: Addon[] = [
+export const SEED_ADDONS: Addon[] = [
   { id: 'addon_balang_23l', name: 'Additional 1 x 23L Balang', description: 'One extra 23L balang of your chosen flavor.', price: 95.00, category: 'Drinks' },
   { id: 'addon_balang_40l', name: 'Additional 1 x 40L Balang', description: 'One extra 40L balang of your chosen flavor.', price: 165.00, category: 'Drinks' },
   { id: 'addon_bartender_1hr', name: 'Additional Bal-Tender (1 Hour)', description: 'Additional hour of bal-tender service.', price: 15.00, category: 'Services' },
@@ -401,7 +401,7 @@ export const mockAddons: Addon[] = [
   { id: 'addon_cup_corn', name: 'Cup Corn Live Station', description: 'Includes server (2hrs). Suitable for 100-120 pax. Note: We require a power point for this station.', price: 250.00, category: 'Live Stations' },
 ];
 
-export const mockPromotions: Promotion[] = [
+export const SEED_PROMOTIONS: Promotion[] = [
   {
     id: 'promo-draw-1',
     title: 'Ramadan Special Lucky Draw',
@@ -460,7 +460,7 @@ const staticUpcomingFriday2 = '2025-07-11T00:00:00.000Z';
 const staticUpcomingFriday3 = '2025-07-18T00:00:00.000Z';
 const staticPastFriday = '2025-06-27T00:00:00.000Z';
 
-export const mockInfaqNoticeBoardSlots: InfaqNoticeBoardSlot[] = [
+export const SEED_INFAQ_NOTICE_BOARD_SLOTS: InfaqNoticeBoardSlot[] = [
   {
     id: 'notice1',
     mosqueName: mosqueDataList[0]?.name || 'Al-Ansar Mosque',
@@ -509,21 +509,21 @@ export const mockInfaqNoticeBoardSlots: InfaqNoticeBoardSlot[] = [
 
 
 // Add dataAiHint to Flavor images
-mockFlavors.forEach(flavor => {
+SEED_FLAVORS.forEach(flavor => {
   if (!flavor.dataAiHint) { // Basic fallback if specific not set above
     flavor.dataAiHint = flavor.name.toLowerCase().split(' ').slice(0, 2).join(' ');
   }
 });
 
 // Add dataAiHint to Package images
-mockPackages.forEach(pkg => {
+SEED_PACKAGES.forEach(pkg => {
   if (!pkg.dataAiHint) {
     pkg.dataAiHint = pkg.name.toLowerCase().includes('wedding') ? 'wedding drinks' : 'event drinks';
   }
 });
 
 // Add dataAiHint to Promotion images
-mockPromotions.forEach(promo => {
+SEED_PROMOTIONS.forEach(promo => {
   if (!promo.dataAiHint) {
     promo.dataAiHint = 'special offer';
   }

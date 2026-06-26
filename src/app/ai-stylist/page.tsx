@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { eventStylistFlow, type EventStylistOutput } from '@/ai/flows/eventStylistFlow';
-import { mockFlavors, mockPackages } from '@/lib/data';
+import { fetchFlavors, fetchPackages } from '@/lib/actions/data-actions';
+import type { Flavor, EventPackage } from '@/lib/types';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -18,6 +19,16 @@ export default function AiStylistPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  const [flavors, setFlavors] = useState<Flavor[]>([]);
+  const [packages, setPackages] = useState<EventPackage[]>([]);
+
+  useEffect(() => {
+    Promise.all([fetchFlavors(), fetchPackages()]).then(([fData, pData]) => {
+      setFlavors(fData);
+      setPackages(pData);
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +64,10 @@ export default function AiStylistPage() {
     if (!aiResponse) return;
 
     const flavorIds = aiResponse.suggestedFlavors
-      .map(sf => mockFlavors.find(f => f.name === sf.name)?.id)
+      .map(sf => flavors.find(f => f.name === sf.name)?.id)
       .filter(id => !!id);
 
-    const packageId = mockPackages.find(p => p.name === aiResponse.suggestedPackage.name)?.id;
+    const packageId = packages.find(p => p.name === aiResponse.suggestedPackage.name)?.id;
 
     const queryParams = new URLSearchParams();
     if (packageId) {
@@ -69,7 +80,7 @@ export default function AiStylistPage() {
     router.push(`/event-builder?${queryParams.toString()}`);
   };
 
-  const activePackage = aiResponse ? mockPackages.find(p => p.name === aiResponse.suggestedPackage.name) : null;
+  const activePackage = aiResponse ? packages.find(p => p.name === aiResponse.suggestedPackage.name) : null;
   const packagePrice = activePackage?.price || 1250;
 
   return (
@@ -234,7 +245,7 @@ export default function AiStylistPage() {
                 {/* Main Vibe Image (First Flavor as Proxy for visual) */}
                 {aiResponse.suggestedFlavors[0] && (
                   <div className="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-[4/5] relative overflow-hidden group shadow-lg"
-                    style={{ backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%), url(${mockFlavors.find(f => f.name === aiResponse.suggestedFlavors[0].name)?.imageUrl || 'https://placehold.co/400x500'})` }}>
+                    style={{ backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%), url(${flavors.find(f => f.name === aiResponse.suggestedFlavors[0].name)?.imageUrl || 'https://placehold.co/400x500'})` }}>
                     <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/10">
                       <Info size={14} className="text-white" />
                     </div>
@@ -259,7 +270,7 @@ export default function AiStylistPage() {
                   {/* Secondary Flavor / Element */}
                   {aiResponse.suggestedFlavors[1] && (
                     <div className="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-square flex-1 relative overflow-hidden shadow-lg"
-                      style={{ backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%), url(${mockFlavors.find(f => f.name === aiResponse.suggestedFlavors[1].name)?.imageUrl || 'https://placehold.co/400x400'})` }}>
+                      style={{ backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%), url(${flavors.find(f => f.name === aiResponse.suggestedFlavors[1].name)?.imageUrl || 'https://placehold.co/400x400'})` }}>
                       <p className="text-white text-xs font-bold leading-tight">{aiResponse.suggestedFlavors[1].name}</p>
                     </div>
                   )}
@@ -318,7 +329,7 @@ export default function AiStylistPage() {
               <div className="space-y-3">
                 {/* Map remaining flavors or add-ons here */}
                 {aiResponse.suggestedFlavors.slice(1).map((flavor, index) => {
-                  const flavorImg = mockFlavors.find(f => f.name === flavor.name)?.imageUrl;
+                  const flavorImg = flavors.find(f => f.name === flavor.name)?.imageUrl;
                   return (
                     <div key={index} className="bg-white/5 border border-white/5 rounded-xl p-3 flex items-center gap-4 hover:bg-white/10 transition-colors cursor-pointer">
                       <div className="size-16 rounded-lg bg-cover bg-center shrink-0 border border-white/10"

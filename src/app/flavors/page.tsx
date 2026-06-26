@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { FLAVOR_CATEGORIES } from '@/data/mockData';
 import { useFlavorSelection } from '@/hooks/useFlavorSelection';
-import { Plus, ArrowRight, Droplets, Coffee, Flower2, Star, Waves, Check } from 'lucide-react';
+import { fetchFlavors } from '@/lib/actions/data-actions';
+import { Flavor } from '@/lib/types';
+import { Plus, ArrowRight, Droplets, Coffee, Flower2, Star, Waves, Check, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 /**
@@ -17,15 +19,34 @@ import Image from 'next/image';
  * - Layout: Responsive Grid (2-col mobile, 4-col desktop), Sticky Header, Horizontal Filter Scroll
  */
 export default function FlavorsPage() {
+  const [flavors, setFlavors] = useState<Flavor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFlavors().then((data) => {
+      setFlavors(data);
+      setLoading(false);
+    });
+  }, []);
+
   const {
     selectedFlavorIds,
     toggleFlavorSelection,
     proceedToEventBuilder,
     filterFlavors,
     canProceed
-  } = useFlavorSelection();
+  } = useFlavorSelection(flavors);
 
   const [activeCategory, setActiveCategory] = useState('all');
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#fcfbf8] font-plus-jakarta text-[#1c180d]">
+        <Loader2 className="h-10 w-10 animate-spin text-[#f4c025]" strokeWidth={3} />
+        <p className="mt-4 font-extrabold text-xs uppercase tracking-widest text-[#1c180d]/60 animate-pulse">Loading Fresh Flavors...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#fcfbf8] font-plus-jakarta text-[#1c180d] pt-32 md:pt-40">

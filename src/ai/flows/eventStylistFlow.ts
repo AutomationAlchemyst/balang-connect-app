@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI-powered event stylist that suggests themes, colors, flavors, and packages.
@@ -6,11 +5,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { mockFlavors, mockPackages } from '@/lib/data';
-
-// Prepare a simplified list of flavors and packages for the AI prompt
-const availableFlavors = mockFlavors.map(f => ({ id: f.id, name: f.name, description: f.description, tags: f.tags }));
-const availablePackages = mockPackages.map(p => ({ id: p.id, name: p.name, description: p.description, pax: p.pax }));
+import { getFlavors, getPackages } from '@/lib/firestore-collections';
 
 const EventStylistInputSchema = z.object({
   eventDescription: z.string().min(10).describe('A description of the event from the user.'),
@@ -35,16 +30,22 @@ const EventStylistOutputSchema = z.object({
 });
 export type EventStylistOutput = z.infer<typeof EventStylistOutputSchema>;
 
-const stylistPrompt = ai.definePrompt({
-  name: 'eventStylistPrompt',
-  input: { schema: EventStylistInputSchema },
-  output: { schema: EventStylistOutputSchema },
-  prompt: `You are an expert Event Stylist for Balang Kepalang, a beverage catering service. A customer needs help planning their event.
+export async function eventStylistFlow(input: EventStylistInput): Promise<EventStylistOutput> {
+  // Fetch latest flavors and packages from Firestore
+  const [flavors, packages] = await Promise.all([getFlavors(), getPackages()]);
+
+  // Simplify list for AI prompt
+  const availableFlavors = flavors.map(f => ({ id: f.id, name: f.name, description: f.description, tags: f.tags }));
+  const availablePackages = packages.map(p => ({ id: p.id, name: p.name, description: p.description, pax: p.pax }));
+
+  const { output } = await ai.generate({
+    output: { schema: EventStylistOutputSchema },
+    prompt: `You are an expert Event Stylist for Balang Kepalang, a beverage catering service. A customer needs help planning their event.
     Based on their description, you will generate a creative theme, a color palette, and suggest the best flavors and package from the lists provided.
     Your suggestions must be exciting, relevant, and helpful.
 
     EVENT DESCRIPTION:
-    "{{{eventDescription}}}"
+    "${input.eventDescription}"
 
     AVAILABLE FLAVORS (Choose from this list only):
     ${JSON.stringify(availableFlavors, null, 2)}
@@ -59,10 +60,8 @@ const stylistPrompt = ai.definePrompt({
     - You must suggest exactly one package.
     - Ensure your suggestions strictly use the names from the provided lists.
     `,
-});
+  });
 
-export async function eventStylistFlow(input: EventStylistInput): Promise<EventStylistOutput> {
-  const { output } = await stylistPrompt(input);
   if (!output) {
     throw new Error('The AI failed to generate event ideas. Please try a different description.');
   }

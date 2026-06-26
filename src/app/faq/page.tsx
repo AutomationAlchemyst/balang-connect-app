@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import {
     Accordion,
     AccordionContent,
@@ -7,6 +8,12 @@ import {
 } from "@/components/ui/accordion";
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'FAQ',
+  description:
+    'Frequently asked questions about Balang Kepalang — pricing, packages, delivery, infaq, payment terms, and more.',
+};
 
 const faqData = [
     {

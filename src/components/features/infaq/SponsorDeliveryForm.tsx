@@ -28,7 +28,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { hearAboutUsOptions } from './InfaqForm';
 import { submitInfaqContribution } from '@/app/infaq/actions';
-import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import { getBlockedDates } from '@/app/admin/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 

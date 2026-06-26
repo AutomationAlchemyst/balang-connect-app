@@ -29,7 +29,7 @@ import { Label } from '@/components/ui/label';
 import { submitInfaqContribution } from '@/app/infaq/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mosqueDataList } from '@/lib/data';
-import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import { getBlockedDates } from '@/app/admin/actions';
 
 
 const INFAQ_BALANG_PRICE = 90.00;

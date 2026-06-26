@@ -10,7 +10,6 @@ import { Leaf, Snowflake, ArrowRight, Package, Wrench, HeartHandshake, Sparkles,
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { mockFlavors } from '@/data/mockData';
 import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -18,7 +17,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HomePage() {
-   const popularMixes = mockFlavors.filter(f => f.isFeatured).slice(0, 5);
    const heroRef = useRef<HTMLElement>(null);
    const bgRef = useRef<HTMLDivElement>(null);
    const textRef = useRef<HTMLHeadingElement>(null);

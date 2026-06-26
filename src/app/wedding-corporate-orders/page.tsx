@@ -5,9 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { mockCorporatePackages, mockCorporateAddons } from '@/lib/corporate-data';
-import { mockFlavors } from '@/lib/data';
-import type { EventPackage } from '@/lib/types';
+import { fetchFlavors, fetchCorporatePackages, fetchAddons } from '@/lib/actions/data-actions';
+import type { Flavor, Addon, EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -45,7 +44,7 @@ import PaymentConfirmationDialog from '@/components/features/event-builder/Payme
 import BookingSuccessView from '@/components/features/event-builder/BookingSuccessView';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
-import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import { getBlockedDates } from '@/app/admin/actions';
 import NextImage from 'next/image';
 
 const BASE_DELIVERY_FEE = 45.00;
@@ -65,6 +64,11 @@ export default function CorporateOrdersPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+
+  const [flavors, setFlavors] = useState<Flavor[]>([]);
+  const [packages, setPackages] = useState<EventPackage[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [selectedPackage, setSelectedPackage] = useState<EventPackage | null>(null);
   const [selectedPackageFlavors, setSelectedPackageFlavors] = useState<string[]>([]);
@@ -89,6 +93,49 @@ export default function CorporateOrdersPage() {
   // Success State
   const [isBookingSuccess, setIsBookingSuccess] = useState(false);
   const [bookingReference, setBookingReference] = useState<string | undefined>(undefined);
+
+  // Fetch Firestore Data
+  useEffect(() => {
+    Promise.all([
+      fetchFlavors(),
+      fetchCorporatePackages(),
+      fetchAddons(),
+    ])
+      .then(([fData, pData, aData]) => {
+        setFlavors(fData);
+        setPackages(pData);
+        setAddons(aData);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to load Corporate Builder options:', err);
+        toast({
+          title: 'Error loading options',
+          description: 'Failed to fetch options from Firestore. Please try refreshing.',
+          variant: 'destructive',
+        });
+      });
+  }, [toast]);
+
+  // Handle default options from URL query parameters
+  useEffect(() => {
+    if (!loading && packages.length > 0) {
+      const defaultPackageId = searchParams?.get('defaultPackageId');
+      const addFlavorIds = searchParams?.get('addFlavorIds');
+
+      if (defaultPackageId) {
+        const pkg = packages.find((p) => p.id === defaultPackageId);
+        if (pkg) {
+          setSelectedPackage(pkg);
+        }
+      }
+
+      if (addFlavorIds) {
+        const ids = addFlavorIds.split(',').filter((id) => flavors.some((f) => f.id === id));
+        setSelectedPackageFlavors(ids);
+      }
+    }
+  }, [loading, packages, flavors, searchParams]);
 
   useEffect(() => {
     setIsDeliveryRequested(false);
@@ -156,16 +203,6 @@ export default function CorporateOrdersPage() {
     setSelectedPackageFlavors(prev => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  useEffect(() => {
-    const defaultPackageIdFromUrl = searchParams.get('defaultPackageId');
-    if (defaultPackageIdFromUrl) {
-      const packageToSet = mockCorporatePackages.find(p => p.id === defaultPackageIdFromUrl);
-      if (packageToSet && selectedPackage?.id !== packageToSet.id) {
-        setSelectedPackage(packageToSet);
-      }
-    }
-  }, [searchParams, selectedPackage?.id]);
-
 
   // Price Calculation Logic
   useEffect(() => {
@@ -182,7 +219,7 @@ export default function CorporateOrdersPage() {
     const addonsSelectedList = Object.entries(selectedAddons).filter(([, quantity]) => quantity > 0);
     if (addonsSelectedList.length > 0) {
       addonsSelectedList.forEach(([addonId, quantity]) => {
-        const addon = mockCorporateAddons.find(a => a.id === addonId);
+        const addon = addons.find(a => a.id === addonId);
         if (addon) {
           currentTotal += addon.price * quantity;
         }
@@ -276,11 +313,11 @@ export default function CorporateOrdersPage() {
     // Validate Add-on Flavors
     const missingAddonFlavors: string[] = [];
     Object.entries(selectedAddons).forEach(([addonId, qty]) => {
-      const addon = mockCorporateAddons.find(a => a.id === addonId);
+      const addon = addons.find(a => a.id === addonId);
       if (addon?.requiresFlavor && qty > 0) {
-        const flavors = addonFlavorSelections[addonId] || [];
+        const addonFlavors = addonFlavorSelections[addonId] || [];
         // Check if we have enough flavor selections and all are defined
-        if (flavors.length < qty || flavors.includes(undefined) || flavors.some(f => f === "")) {
+        if (addonFlavors.length < qty || addonFlavors.includes(undefined) || addonFlavors.some(f => f === "")) {
           missingAddonFlavors.push(addon.name);
         }
       }
@@ -296,26 +333,26 @@ export default function CorporateOrdersPage() {
     }
 
     const packageFlavorDetails = selectedPackageFlavors
-      .map(id => mockFlavors.find(f => f.id === id)?.name)
+      .map(id => flavors.find(f => f.id === id)?.name)
       .filter((name): name is string => !!name);
 
     const addonsDetails = Object.entries(selectedAddons)
       .map(([addonId, quantity]) => {
         if (quantity === 0) return null;
-        const addon = mockCorporateAddons.find(a => a.id === addonId);
+        const addon = addons.find(a => a.id === addonId);
         if (!addon) return null;
 
-        let flavors: string[] | undefined = undefined;
+        let addonFlavorsList: string[] | undefined = undefined;
         if (addon.requiresFlavor) {
           const flavorIds = addonFlavorSelections[addonId] || [];
-          flavors = flavorIds.map(fid => mockFlavors.find(f => f.id === fid)?.name).filter((n): n is string => !!n);
+          addonFlavorsList = flavorIds.map(fid => flavors.find(f => f.id === fid)?.name).filter((n): n is string => !!n);
         }
 
         return {
           name: addon.name,
           quantity,
           price: (addon.price * quantity).toFixed(2),
-          ...(flavors && flavors.length > 0 && { flavors }),
+          ...(addonFlavorsList && addonFlavorsList.length > 0 && { flavors: addonFlavorsList }),
         };
       })
       .filter((detail): detail is NonNullable<typeof detail> => detail !== null);
@@ -432,13 +469,13 @@ export default function CorporateOrdersPage() {
                     <select
                       className="w-full rounded-xl text-[#0d1a1b] dark:text-white border border-[#f2eee4] dark:border-white/10 bg-white dark:bg-[#0d1a1b]/40 h-14 px-4 text-base font-normal focus:ring-2 focus:ring-brand-stitch-structured-primary focus:border-brand-stitch-structured-primary transition-all shadow-sm appearance-none"
                       onChange={(e) => {
-                        const pkg = mockCorporatePackages.find(p => p.id === e.target.value);
+                        const pkg = packages.find(p => p.id === e.target.value);
                         setSelectedPackage(pkg || null);
                       }}
                       value={selectedPackage?.id || ""}
                     >
                       <option value="" disabled>Select from premium options</option>
-                      {mockCorporatePackages.map(pkg => (
+                      {packages.map(pkg => (
                         <option key={pkg.id} value={pkg.id}>
                           {pkg.name} (${pkg.price})
                         </option>
@@ -501,7 +538,7 @@ export default function CorporateOrdersPage() {
                 <p className="text-[#0d1a1b]/60 dark:text-white/60 text-sm font-medium leading-relaxed mb-6">Select your premium Balang flavors.</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {mockFlavors.map(flavor => {
+                  {flavors.map(flavor => {
                     const qty = selectedPackageFlavors.filter(id => id === flavor.id).length;
                     const isSelected = qty > 0;
                     // Max flavors reached if total selected >= limit
@@ -580,7 +617,7 @@ export default function CorporateOrdersPage() {
                 <p className="text-[#0d1a1b]/60 dark:text-white/60 text-sm font-medium leading-relaxed mb-6">Enhance your event with our premium service extras.</p>
 
                 <div className="flex flex-col gap-4">
-                  {mockCorporateAddons.map((addon) => {
+                  {addons.map((addon) => {
                     const qty = selectedAddons[addon.id] || 0;
                     return (
                       <div key={addon.id} className="group flex flex-col p-4 bg-white dark:bg-[#0d1a1b]/30 rounded-xl border border-[#f2eee4] dark:border-white/5 hover:border-brand-stitch-structured-primary/50 transition-all duration-300 shadow-sm">
@@ -631,7 +668,7 @@ export default function CorporateOrdersPage() {
                                     onChange={(e) => handleUpdateAddonFlavor(addon.id, idx, e.target.value)}
                                   >
                                     <option value="" disabled>Choose a flavor...</option>
-                                    {mockFlavors.map(flavor => (
+                                    {flavors.map(flavor => (
                                       <option key={flavor.id} value={flavor.id}>{flavor.name}</option>
                                     ))}
                                   </select>
@@ -670,7 +707,7 @@ export default function CorporateOrdersPage() {
                       {selectedPackageFlavors.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
                           {selectedPackageFlavors.map(fid => {
-                            const f = mockFlavors.find(fl => fl.id === fid);
+                            const f = flavors.find(fl => fl.id === fid);
                             return f ? <span key={fid} className="text-[9px] bg-[#f9f7f2] dark:bg-white/10 px-1.5 py-0.5 rounded text-[#0d1a1b]/60 dark:text-white/60 uppercase font-bold">{f.name}</span> : null
                           })}
                         </div>
@@ -689,7 +726,7 @@ export default function CorporateOrdersPage() {
                   <div className="space-y-2 pb-4 border-b border-[#f2eee4] dark:border-white/5">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-[#0d1a1b]/40 dark:text-white/40">Add-ons</p>
                     {Object.entries(selectedAddons).map(([id, qty]) => {
-                      const addon = mockCorporateAddons.find(a => a.id === id);
+                      const addon = addons.find(a => a.id === id);
                       if (!addon) return null;
                       return (
                         <div key={id} className="flex justify-between text-sm">

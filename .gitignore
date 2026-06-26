@@ -47,8 +47,8 @@ firestore-debug.log
 # Firebase local configuration
 .firebaserc
 
-# Path to Firebase Admin SDK credentials
-GOOGLE_APPLICATION_CREDENTIALS=".credentials/service-account.json"
-
 # Ignore sensitive credentials
-credentials/service-account.json
+credentials/
+
+# Design tool config
+stitch.json

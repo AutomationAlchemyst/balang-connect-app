@@ -1,0 +1,24 @@
+import type { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://balangconnect.theworkflowguys.com';
+
+  const routes = [
+    '',
+    '/flavors',
+    '/event-builder',
+    '/wedding-corporate-orders',
+    '/ai-stylist',
+    '/infaq',
+    '/community',
+    '/promotions',
+    '/faq',
+  ];
+
+  return routes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: route === '' ? 'weekly' : 'monthly',
+    priority: route === '' ? 1 : route === '/event-builder' ? 0.9 : 0.8,
+  }));
+}

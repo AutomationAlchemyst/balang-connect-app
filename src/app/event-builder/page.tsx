@@ -5,8 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { mockPackages, mockAddons, mockFlavors } from '@/lib/data';
-import type { EventPackage } from '@/lib/types';
+import { fetchFlavors, fetchRegularPackages, fetchAddons } from '@/lib/actions/data-actions';
+import type { Flavor, Addon, EventPackage } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -43,7 +43,7 @@ import PaymentConfirmationDialog from '@/components/features/event-builder/Payme
 import BookingSuccessView from '@/components/features/event-builder/BookingSuccessView';
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from '@/lib/utils';
-import { getBlockedDates } from '@/app/admin/manage-dates/actions';
+import { getBlockedDates } from '@/app/admin/actions';
 import NextImage from 'next/image';
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -64,6 +64,11 @@ export default function EventBuilderPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+
+  const [flavors, setFlavors] = useState<Flavor[]>([]);
+  const [packages, setPackages] = useState<EventPackage[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [selectedPackage, setSelectedPackage] = useState<EventPackage | null>(null);
   const [selectedPackageFlavors, setSelectedPackageFlavors] = useState<string[]>([]);
@@ -93,6 +98,49 @@ export default function EventBuilderPage() {
 
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
   const [isCalendarDataLoading, setIsCalendarDataLoading] = useState(true);
+
+  // Fetch Firestore Data
+  useEffect(() => {
+    Promise.all([
+      fetchFlavors(),
+      fetchRegularPackages(),
+      fetchAddons(),
+    ])
+      .then(([fData, pData, aData]) => {
+        setFlavors(fData);
+        setPackages(pData);
+        setAddons(aData);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to load Event Builder options:', err);
+        toast({
+          title: 'Error loading options',
+          description: 'Failed to fetch options from Firestore. Please try refreshing.',
+          variant: 'destructive',
+        });
+      });
+  }, [toast]);
+
+  // Handle default options from URL query parameters
+  useEffect(() => {
+    if (!loading && packages.length > 0) {
+      const defaultPackageId = searchParams?.get('defaultPackageId');
+      const addFlavorIds = searchParams?.get('addFlavorIds');
+
+      if (defaultPackageId) {
+        const pkg = packages.find((p) => p.id === defaultPackageId);
+        if (pkg) {
+          setSelectedPackage(pkg);
+        }
+      }
+
+      if (addFlavorIds) {
+        const ids = addFlavorIds.split(',').filter((id) => flavors.some((f) => f.id === id));
+        setSelectedPackageFlavors(ids);
+      }
+    }
+  }, [loading, packages, flavors, searchParams]);
 
   const resetBookingProcess = () => {
     setSelectedPackage(null);
@@ -209,10 +257,10 @@ export default function EventBuilderPage() {
       selectedPackage: selectedPackage ? {
         name: selectedPackage.name,
         price: selectedPackage.price.toString(),
-        flavors: selectedPackageFlavors.map(id => mockFlavors.find(f => f.id === id)?.name || id)
+        flavors: selectedPackageFlavors.map(id => flavors.find(f => f.id === id)?.name || id)
       } : null,
       addons: Object.entries(selectedAddons).map(([id, qty]) => {
-        const addon = mockAddons.find(a => a.id === id);
+        const addon = addons.find(a => a.id === id);
         return {
           name: addon?.name || id,
           quantity: qty,
@@ -245,7 +293,7 @@ export default function EventBuilderPage() {
     }
 
     Object.entries(selectedAddons).forEach(([id, qty]) => {
-      const addon = mockAddons.find(a => a.id === id);
+      const addon = addons.find(a => a.id === id);
       if (addon) {
         currentTotal += addon.price * qty;
       }
@@ -260,7 +308,7 @@ export default function EventBuilderPage() {
 
     setTotalPrice(currentTotal);
     setDisplayDeliveryFee(displayFee);
-  }, [selectedPackage, selectedAddons, isDeliveryRequested]);
+  }, [selectedPackage, selectedAddons, isDeliveryRequested, addons]);
 
   const hasSelection = selectedPackage !== null || Object.keys(selectedAddons).length > 0;
   const canProceed = selectedPackage !== null && selectedPackageFlavors.length === requiredFlavorCount;
@@ -326,12 +374,15 @@ export default function EventBuilderPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockPackages.map((pkg: EventPackage) => {
+            {packages.map((pkg: EventPackage) => {
               const isSelected = selectedPackage?.id === pkg.id;
               const packageImages: Record<string, string> = {
                 'pkg_wedding_corporate': 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800',
+                'pkg_opt1': 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800',
                 'pkg_charlies_angels': 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800',
+                'pkg_opt2': 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800',
                 'pkg_bongo_player': 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800',
+                'pkg_opt3': 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800',
                 'pkg_17l_self_pickup': 'https://images.unsplash.com/photo-1544145945-f904253d0c71?auto=format&fit=crop&w=800'
               };
 
@@ -433,11 +484,11 @@ export default function EventBuilderPage() {
             <p className="text-[#0d1c1b]/60 dark:text-white/60 text-sm font-bold mb-8">
               Pick signature Balang flavors for your guests.
             </p>
-
+ 
             <div className="flex flex-wrap gap-3 mb-10 justify-center animate-in fade-in slide-in-from-top-4 duration-700">
               {Array.from({ length: requiredFlavorCount }).map((_, idx) => {
                 const selectedFlavorId = selectedPackageFlavors[idx];
-                const flavor = selectedFlavorId ? mockFlavors.find(f => f.id === selectedFlavorId) : null;
+                const flavor = selectedFlavorId ? flavors.find(f => f.id === selectedFlavorId) : null;
                 return (
                   <div
                     key={idx}
@@ -483,9 +534,9 @@ export default function EventBuilderPage() {
                 );
               })}
             </div>
-
+ 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {mockFlavors.map((flavor: any) => {
+              {flavors.map((flavor: any) => {
                 const count = selectedPackageFlavors.filter(id => id === flavor.id).length;
                 const isSelected = count > 0;
                 const canAdd = selectedPackageFlavors.length < requiredFlavorCount;
@@ -592,7 +643,7 @@ export default function EventBuilderPage() {
 
             {/* Add-on Items List */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
-              {mockAddons.filter((a: any) => a.category === activeCategory || (activeCategory === 'Equipment' && a.category === 'Food')).map((addon: any) => {
+              {addons.filter((a: any) => a.category === activeCategory || (activeCategory === 'Equipment' && a.category === 'Food')).map((addon: any) => {
                 const qty = selectedAddons[addon.id] || 0;
                 const isSelected = qty > 0;
                 const isBalangAddon = addon.id === 'addon_balang_23l' || addon.id === 'addon_balang_40l' || addon.id === 'addon_infused_water_23l';
@@ -654,7 +705,7 @@ export default function EventBuilderPage() {
                             </PopoverTrigger>
                             <PopoverContent className="w-[240px] p-2 bg-white/95 dark:bg-[#1a2e2d]/95 backdrop-blur-xl border-primary/20 rounded-2xl shadow-2xl">
                               <div className="grid grid-cols-1 gap-1">
-                                {mockFlavors.map((f: any) => (
+                                {flavors.map((f: any) => (
                                   <button
                                     key={f.id}
                                     onClick={() => setAddonFlavorSelections(prev => {

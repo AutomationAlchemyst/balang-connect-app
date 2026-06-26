@@ -1,7 +1,9 @@
 [
   {
     "origin": [
-      "http://localhost:3000"
+      "http://localhost:3000",
+      "https://balangconnect.theworkflowguys.com",
+      "https://balang-connect-app.vercel.app"
     ],
     "method": [
       "GET",

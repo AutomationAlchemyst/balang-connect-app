@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { mockFlavors } from '@/data/mockData';
 import { Flavor } from '@/lib/types';
 
-export function useFlavorSelection() {
+export function useFlavorSelection(flavors: Flavor[]) {
     const [selectedFlavorIds, setSelectedFlavorIds] = useState<string[]>([]);
     const router = useRouter();
     const { toast } = useToast();
@@ -35,23 +34,23 @@ export function useFlavorSelection() {
     }, [selectedFlavorIds, router, toast]);
 
     const filterFlavors = useCallback((categoryId: string): Flavor[] => {
-        if (categoryId === 'all') return mockFlavors;
+        if (categoryId === 'all') return flavors;
 
         switch (categoryId) {
             case 'featured':
-                return mockFlavors.filter(f => f.isFeatured || f.tags?.includes('Best Seller'));
+                return flavors.filter(f => f.isFeatured || f.tags?.includes('Best Seller'));
             case 'creamy':
-                return mockFlavors.filter(f => f.category === 'creamy' || f.tags?.includes('Milk Base'));
+                return flavors.filter(f => f.category === 'creamy' || f.tags?.includes('Milk Base'));
             case 'cordial':
-                return mockFlavors.filter(f => f.category === 'cordial');
+                return flavors.filter(f => f.category === 'cordial');
             case 'tea':
-                return mockFlavors.filter(f => f.category === 'tea');
+                return flavors.filter(f => f.category === 'tea');
             case 'coffee':
-                return mockFlavors.filter(f => f.category === 'coffee');
+                return flavors.filter(f => f.category === 'coffee');
             default:
-                return mockFlavors.filter(f => f.category === categoryId);
+                return flavors.filter(f => f.category === categoryId);
         }
-    }, []);
+    }, [flavors]);
 
     return {
         selectedFlavorIds,

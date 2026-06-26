@@ -22,8 +22,8 @@ const initializeAdminApp = () => {
   }
   return admin.app();
 };
-
 const adminApp = initializeAdminApp();
 const adminDb = admin.firestore(adminApp);
+const adminAuth = admin.auth(adminApp);
 
-export { adminApp, adminDb };
+export { adminApp, adminDb, adminAuth };

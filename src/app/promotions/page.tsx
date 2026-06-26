@@ -1,6 +1,6 @@
 
 import PromotionCard from '@/components/features/promotions/PromotionCard';
-import { mockPromotions } from '@/lib/data';
+import { getPromotions } from '@/lib/firestore-collections';
 import type { Metadata } from 'next';
 import { Sparkles, Waves, Bolt, Star } from 'lucide-react';
 import Image from 'next/image';
@@ -11,10 +11,11 @@ export const metadata: Metadata = {
   description: 'Check out our latest promotions, discounts, and lucky draw events. Don\'t miss out on exciting offers!',
 };
 
-export default function PromotionsPage() {
-  const luckyDraws = mockPromotions.filter(p => p.id.includes('draw'));
-  const exclusiveOffers = mockPromotions.filter(p => p.id.includes('exclusive'));
-  const flashDeals = mockPromotions.filter(p => p.id.includes('flash'));
+export default async function PromotionsPage() {
+  const promotions = await getPromotions();
+  const luckyDraws = promotions.filter(p => p.id.includes('draw'));
+  const exclusiveOffers = promotions.filter(p => p.id.includes('exclusive'));
+  const flashDeals = promotions.filter(p => p.id.includes('flash'));
 
   return (
     <div className="relative min-h-screen bg-[#f8f7f5] dark:bg-[#221910] selection:bg-orange-500/20 selection:text-orange-900 pb-32">
@@ -117,7 +118,7 @@ export default function PromotionsPage() {
           </section>
         )}
 
-        {mockPromotions.length === 0 && (
+        {promotions.length === 0 && (
           <div className="bg-white/50 backdrop-blur-xl p-20 text-center max-w-2xl mx-auto rounded-[3rem] border border-white shadow-2xl">
             <div className="bg-orange-500/10 p-8 rounded-full inline-block mb-8">
               <Sparkles className="h-12 w-12 text-orange-500" />

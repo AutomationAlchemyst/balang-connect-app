@@ -19,7 +19,8 @@ import {
   Waves,
   Sparkles,
   TicketPercent,
-  X
+  X,
+  Settings
 } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 import { cn } from '@/lib/utils';
@@ -122,8 +123,8 @@ export default function Header() {
                   </Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild className="rounded-full border-[#0df2df]/20 text-[#041F1C] hover:bg-[#0df2df]/10 transition-all font-bold">
-                  <Link href="/admin/manage-dates">
-                    <Ban size={16} className="mr-2" /> Dates
+                  <Link href="/admin">
+                    <Settings size={16} className="mr-2" /> Admin
                   </Link>
                 </Button>
                 <Button variant="ghost" size="icon" onClick={handleLogout} className="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full h-10 w-10">
@@ -215,8 +216,8 @@ export default function Header() {
                             </Link>
                           </Button>
                           <Button variant="outline" asChild className="w-full h-14 rounded-2xl bg-white/20 backdrop-blur-md border-white/40 font-black uppercase tracking-widest text-brand-midnight">
-                            <Link href="/admin/manage-dates" onClick={() => setIsSheetOpen(false)}>
-                              <Ban size={18} className="mr-2" /> Dates
+                            <Link href="/admin" onClick={() => setIsSheetOpen(false)}>
+                              <Settings size={18} className="mr-2" /> Admin
                             </Link>
                           </Button>
                           <Button variant="destructive" onClick={handleLogout} className="w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl">

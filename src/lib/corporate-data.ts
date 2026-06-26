@@ -1,7 +1,7 @@
 
 import type { EventPackage, Addon } from './types';
 
-export const mockCorporatePackages: EventPackage[] = [
+export const SEED_CORPORATE_PACKAGES: EventPackage[] = [
   {
     id: 'corp_cw_300',
     name: 'Corporate Package CW 300',
@@ -76,7 +76,7 @@ export const mockCorporatePackages: EventPackage[] = [
   }
 ];
 
-export const mockCorporateAddons: Addon[] = [
+export const SEED_CORPORATE_ADDONS: Addon[] = [
   { id: 'addon_balang_23l', name: 'Additional 1 x 23L Balang', description: 'One extra 23L balang of your chosen flavor.', price: 95.00, category: 'Drinks', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80', requiresFlavor: true },
   { id: 'addon_balang_40l', name: 'Additional 1 x 40L Balang', description: 'One extra 40L balang of your chosen flavor.', price: 165.00, category: 'Drinks', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80', requiresFlavor: true },
   { id: 'addon_bartender_1hr', name: 'Additional Bal-Tender (1 Hour)', description: 'Additional hour of bal-tender service.', price: 15.00, category: 'Services', imageUrl: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80' },

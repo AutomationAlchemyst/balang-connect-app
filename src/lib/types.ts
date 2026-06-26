@@ -8,6 +8,8 @@ export interface Flavor {
   tags?: string[];
   color?: string; // for UI accent, e.g., 'bg-red-500'
   dataAiHint?: string;
+  isFeatured?: boolean;
+  category?: string;
 }
 
 export interface EventPackage {
