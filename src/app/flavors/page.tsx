@@ -108,26 +108,29 @@ export default function FlavorsPage() {
                   )}
                   style={{ boxShadow: isSelected ? '0 10px 30px -5px rgba(244, 192, 37, 0.3)' : undefined }}
                 >
-                  <div
-                    className="relative aspect-[3/4] w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                    style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%), url(${flavor.imageUrl})`
-                    }}
-                  >
-                    <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+                  <div className="relative aspect-[3/4] w-full overflow-hidden">
+                    <Image
+                      src={flavor.imageUrl || 'https://images.unsplash.com/photo-1544145945-f904253d0c71?auto=format&fit=crop&w=300'}
+                      alt={flavor.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
+
+                    <div className="absolute left-2 top-2 flex flex-wrap gap-1 z-10">
                       {flavor.tags?.slice(0, 1).map(tag => (
                         <span key={tag} className="rounded-full bg-[#f4c025] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#1c180d] shadow-sm">
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <div className="absolute bottom-3 left-3 right-3 transition-transform duration-300 group-hover:-translate-y-1">
+                    <div className="absolute bottom-3 left-3 right-3 transition-transform duration-300 group-hover:-translate-y-1 z-10">
                       <h3 className="leading-tight text-white text-base md:text-lg font-bold drop-shadow-md">{flavor.name}</h3>
                     </div>
 
                     {/* Selection Overlay */}
                     <div className={cn(
-                      "absolute inset-0 bg-[#f4c025]/20 backdrop-blur-[2px] flex items-center justify-center transition-all duration-300",
+                      "absolute inset-0 bg-[#f4c025]/20 backdrop-blur-[2px] flex items-center justify-center transition-all duration-300 z-20",
                       isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 bg-black/20"
                     )}>
                       <div className={cn(

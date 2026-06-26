@@ -95,10 +95,10 @@ export default function FlavorSelectionStep({
           const canAdd = selectedPackageFlavors.length < requiredFlavorCount;
 
           return (
-            <div key={flavor.id} className="group relative">
+            <div key={flavor.id} className="group relative h-full">
               <div
                 className={cn(
-                  'aspect-square rounded-[2rem] bg-white dark:bg-[#1a2e2d] border-2 transition-all duration-500 p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden',
+                  'min-h-[290px] w-full rounded-[2rem] bg-white dark:bg-[#1a2e2d] border-2 transition-all duration-500 p-5 shadow-sm flex flex-col items-center justify-between text-center relative overflow-hidden',
                   isSelected
                     ? 'border-primary shadow-xl shadow-primary/10'
                     : 'border-transparent dark:border-white/5 hover:border-primary/30'

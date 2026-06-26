@@ -1,6 +1,7 @@
 'use client';
 
 import type { Flavor } from '@/lib/types';
+import NextImage from 'next/image';
 import { Plus, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -50,10 +51,14 @@ export default function FlavorSelectionStep({
               )}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="size-10 rounded-lg bg-cover bg-center shrink-0 border border-[#0d1a1b]/5"
-                  style={{ backgroundImage: `url('${flavor.imageUrl}')` }}
-                ></div>
+                <div className="relative size-10 shrink-0 border border-[#0d1a1b]/5 rounded-lg overflow-hidden">
+                  <NextImage
+                    src={flavor.imageUrl || 'https://images.unsplash.com/photo-1544145945-f904253d0c71?auto=format&fit=crop&w=100'}
+                    alt={flavor.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-[#0d1a1b] dark:text-white font-bold text-sm line-clamp-1">
                     {flavor.name}
