@@ -211,7 +211,7 @@ export default function EventBuilderPage() {
         <DialogContent className="max-w-[95vw] md:max-w-xl p-0 border-0 bg-transparent shadow-none">
           <DialogTitle className="sr-only">Final Details</DialogTitle>
           <DialogDescription className="sr-only">Provide your contact information and event details to proceed.</DialogDescription>
-          <div className="bg-white dark:bg-[#1a2e2d] m-1 rounded-[2.5rem] shadow-2xl w-full p-8 border border-white/20">
+          <div className="bg-white dark:bg-[#1a2e2d] m-1 rounded-[2.5rem] shadow-2xl w-full max-h-[85vh] overflow-y-auto p-6 md:p-8 border border-white/20 custom-scrollbar">
             <CustomerDetailsForm
               onSubmit={handleCustomerDetailsSubmit}
               onCancel={() => setIsCustomerDetailsModalOpen(false)}

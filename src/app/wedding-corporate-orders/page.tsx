@@ -223,17 +223,18 @@ export default function CorporateOrdersPage() {
         calendarBgClass="bg-[#f9f7f2] dark:bg-black/20"
       />
 
-      {/* Customer Form Modal */}
       <Dialog open={isCustomerDetailsModalOpen} onOpenChange={setIsCustomerDetailsModalOpen}>
-        <DialogContent className="sm:max-w-xl bg-[#fdfaf5] border-none shadow-2xl h-[90vh] overflow-y-auto">
-          <CustomerDetailsForm
-            onSubmit={handleCustomerDetailsSubmit}
-            onCancel={() => setIsCustomerDetailsModalOpen(false)}
-            onBack={() => {
-              setIsCustomerDetailsModalOpen(false);
-              setIsDateTimeModalOpen(true);
-            }}
-          />
+        <DialogContent className="max-w-[95vw] md:max-w-xl p-0 border-0 bg-transparent shadow-none">
+          <div className="bg-white dark:bg-[#1a2e2d] m-1 rounded-[2.5rem] shadow-2xl w-full max-h-[85vh] overflow-y-auto p-6 md:p-8 border border-white/20 custom-scrollbar">
+            <CustomerDetailsForm
+              onSubmit={handleCustomerDetailsSubmit}
+              onCancel={() => setIsCustomerDetailsModalOpen(false)}
+              onBack={() => {
+                setIsCustomerDetailsModalOpen(false);
+                setIsDateTimeModalOpen(true);
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 

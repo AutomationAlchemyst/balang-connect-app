@@ -459,7 +459,7 @@ export default function PaymentConfirmationDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-grow min-h-0 bg-white/50 overscroll-contain">
+        <div className="flex-grow min-h-0 overflow-y-auto bg-white/50 overscroll-contain custom-scrollbar">
           {renderContent()}
         </div>
 
