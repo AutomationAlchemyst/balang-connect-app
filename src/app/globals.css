@@ -111,7 +111,11 @@
   }
 
   .breezy-input {
-    @apply bg-white/50 border-white/80 rounded-2xl focus:ring-8 focus:ring-[#0df2df]/20 focus:border-[#0df2df]/40 transition-all duration-500 font-bold h-16 px-6;
+    @apply bg-white/80 border-[#041F1C]/20 border rounded-2xl focus:ring-4 focus:ring-[#0df2df]/20 focus:border-[#09a093] transition-all duration-500 font-bold h-12 px-4 text-[#041F1C] placeholder-[#041F1C]/40;
+  }
+
+  textarea.breezy-input {
+    @apply h-auto py-3 min-h-[100px] resize-y;
   }
 
   .breezy-card-hero {
