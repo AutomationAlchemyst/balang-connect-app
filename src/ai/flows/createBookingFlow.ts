@@ -226,6 +226,37 @@ Payment Proof: ${input.paymentProofUrl || 'Not provided'}`,
   }
 );
 
+async function retryToolCall<T extends { success: boolean; error?: string }>(
+  toolFn: () => Promise<T>,
+  name: string,
+  retries = 3,
+  delay = 1000
+): Promise<T> {
+  let attempt = 0;
+  while (attempt < retries) {
+    attempt++;
+    try {
+      const result = await toolFn();
+      if (result.success) {
+        return result;
+      }
+      console.warn(`[Retry] ${name} attempt ${attempt} failed: ${result.error}`);
+      if (attempt >= retries) {
+        return result;
+      }
+    } catch (error: any) {
+      console.error(`[Retry] ${name} attempt ${attempt} threw error:`, error);
+      if (attempt >= retries) {
+        return { success: false, error: error.message || 'Operation threw unhandled error' } as unknown as T;
+      }
+    }
+    const sleepTime = delay * Math.pow(2, attempt - 1);
+    console.log(`[Retry] Sleeping for ${sleepTime}ms before retrying ${name}...`);
+    await new Promise(resolve => setTimeout(resolve, sleepTime));
+  }
+  return { success: false, error: 'Maximum retry limit exceeded.' } as unknown as T;
+}
+
 export const createBookingFlow = ai.defineFlow(
   {
     name: 'createBookingFlow',
@@ -240,9 +271,9 @@ export const createBookingFlow = ai.defineFlow(
     try {
       const orderId = generateOrderId();
       const [sheetResult, calendarResult, whatsappResult] = await Promise.all([
-        addBookingToSheet(input),
-        createCalendarEvent(input),
-        sendWhatsAppMessage({ ...input, orderId }),
+        retryToolCall(() => addBookingToSheet(input), 'addBookingToSheet'),
+        retryToolCall(() => createCalendarEvent(input), 'createCalendarEvent'),
+        retryToolCall(() => sendWhatsAppMessage({ ...input, orderId }), 'sendWhatsAppMessage'),
       ]);
 
       return { sheet: sheetResult, calendar: calendarResult, whatsapp: whatsappResult };

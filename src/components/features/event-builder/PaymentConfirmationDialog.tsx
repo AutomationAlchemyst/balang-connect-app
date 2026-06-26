@@ -24,7 +24,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { createBookingFlow } from '@/ai/flows/createBookingFlow';
 import { format } from 'date-fns';
 import type { CustomerDetailsFormValues } from './CustomerDetailsForm';
-import type { EventConfig } from '@/app/event-builder/page';
+import type { EventConfig } from '@/hooks/useEventBuilder';
 
 interface PaymentConfirmationDialogProps {
   isOpen: boolean;
@@ -132,7 +132,7 @@ export default function PaymentConfirmationDialog({
       await uploadBytes(storageRef, paymentProofFile);
       const downloadURL = await getDownloadURL(storageRef);
 
-      const addonsForFlow = eventConfig.addons.map(a => ({
+      const addonsForFlow = eventConfig.addons.map((a: any) => ({
         name: a.name,
         quantity: a.quantity,
         flavors: a.flavors || []
