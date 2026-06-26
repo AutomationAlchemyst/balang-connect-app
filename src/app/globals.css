@@ -105,6 +105,9 @@
 
   .breezy-text-gradient {
     @apply text-transparent bg-clip-text bg-gradient-to-br from-[#041F1C] to-[#09a093] font-black;
+    display: inline-block;
+    padding: 0.1em 0.25em 0.1em 0.05em;
+    margin: -0.1em -0.25em -0.1em -0.05em;
   }
 
   .breezy-input {
