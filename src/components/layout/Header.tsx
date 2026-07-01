@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetFooter, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import {
   Menu,
   CupSoda,
@@ -20,11 +20,22 @@ import {
   Sparkles,
   TicketPercent,
   X,
-  Settings
+  Settings,
+  Instagram,
+  Facebook,
+  Video,
+  MessageCircle
 } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 import { cn } from '@/lib/utils';
 import { MagneticButton } from '@/components/ui/magnetic-button';
+import { SOCIAL_LINKS, whatsappLink } from '@/lib/site-config';
+
+const SOCIAL_ICONS: Record<string, typeof Instagram> = {
+  Instagram,
+  TikTok: Video,
+  Facebook,
+};
 
 const navItems = [
   { href: '/flavors', label: 'Flavors', icon: CupSoda },
@@ -161,6 +172,8 @@ export default function Header() {
                 </div>
 
                 <div className="relative z-10 flex flex-col h-full">
+                  <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+                  <SheetDescription className="sr-only">Browse pages and quick actions</SheetDescription>
                   <SheetHeader className="p-6 pt-12 flex flex-row items-center justify-end shrink-0">
                     <Button
                       variant="ghost"
@@ -237,24 +250,36 @@ export default function Header() {
                       Balang Kepalang
                     </p>
                     <div className="flex justify-center gap-10">
-                      <Link href="#" className="flex flex-col items-center gap-2 group">
-                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
-                          <Image src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png" alt="IG" width={24} height={24} className="opacity-80" />
+                      <Link
+                        href={whatsappLink()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center gap-2 group"
+                        onClick={() => setIsSheetOpen(false)}
+                      >
+                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-[#25D366] group-hover:text-white transition-all shadow-lg border border-white/60">
+                          <MessageCircle className="w-6 h-6" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">IG</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">Chat</span>
                       </Link>
-                      <Link href="#" className="flex flex-col items-center gap-2 group">
-                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
-                          <Image src="https://img.icons8.com/material-rounded/24/000000/tiktok.png" alt="TikTok" width={24} height={24} className="opacity-80" />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">TikTok</span>
-                      </Link>
-                      <Link href="#" className="flex flex-col items-center gap-2 group">
-                        <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
-                          <Image src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png" alt="FB" width={24} height={24} className="opacity-80" />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">FB</span>
-                      </Link>
+                      {SOCIAL_LINKS.map(({ label, href }) => {
+                        const Icon = SOCIAL_ICONS[label] ?? MessageCircle;
+                        return (
+                          <Link
+                            key={label}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center gap-2 group"
+                            onClick={() => setIsSheetOpen(false)}
+                          >
+                            <div className="size-14 rounded-full bg-white/40 flex items-center justify-center text-brand-midnight group-hover:bg-brand-aqua group-hover:text-white transition-all shadow-lg border border-white/60">
+                              <Icon className="w-6 h-6" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-brand-midnight">{label}</span>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

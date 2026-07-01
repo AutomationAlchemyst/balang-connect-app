@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 const faqData = [
     {
         question: "How much are your air balangs?",
-        answer: "Our pricing varies based on the number of pax. Please refer to our Packages tab and Wedding & Corp tab to find the option that best suits your needs."
+        answer: "Our pricing varies based on the number of pax. Please head to our Event Builder or Wedding & Corp tab to find the option that best suits your needs."
     },
     {
         question: "Do you provide just 1 balang?",
-        answer: "Yes, we do. We offer a 17L balang that’s ideal for small groups of about 15 to 25 pax, and the balang is yours to keep. To place an order, simply head over to our Packages tab."
+        answer: "Yes, we do. We offer a 17L balang that’s ideal for small groups of about 15 to 25 pax, and the balang is yours to keep. To place an order, simply head over to our Event Builder."
     },
     {
         question: "Does your package include a table?",

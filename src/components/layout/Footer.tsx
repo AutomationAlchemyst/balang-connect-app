@@ -1,6 +1,19 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Waves, Instagram, Facebook, Video } from 'lucide-react';
+import { Instagram, Facebook, Video, MessageCircle } from 'lucide-react';
+import { SOCIAL_LINKS, whatsappLink } from '@/lib/site-config';
+
+const SOCIAL_ICONS: Record<string, typeof Instagram> = {
+  Instagram,
+  TikTok: Video,
+  Facebook,
+};
+
+const SOCIAL_HOVER: Record<string, string> = {
+  Instagram: 'hover:bg-[#E1306C] hover:border-[#E1306C] hover:shadow-[#E1306C]/20',
+  TikTok: 'hover:bg-black hover:border-black hover:shadow-white/10',
+  Facebook: 'hover:bg-[#1877F2] hover:border-[#1877F2] hover:shadow-[#1877F2]/20',
+};
 
 export default function Footer() {
   return (
@@ -27,20 +40,25 @@ export default function Footer() {
             <p className="text-white/60 text-lg font-medium leading-relaxed max-w-md font-plus-jakarta">
               The ultimate "Surfers Paradise" drink experience. Bringing premium, ice-blended hydration to every bazaar and corporate event in Singapore.
             </p>
-            <div className="flex gap-4">
-              <Link href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white hover:-translate-y-1 hover:rotate-3 hover:shadow-lg hover:shadow-[#E1306C]/20 transition-all duration-300 group">
-                <span className="sr-only">Instagram</span>
-                <Instagram className="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Link>
-              <Link href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#000000] hover:border-[#000000] hover:text-white hover:-translate-y-1 hover:rotate-3 hover:shadow-lg hover:shadow-white/10 transition-all duration-300 group">
-                <span className="sr-only">TikTok</span>
-                <Video className="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Link>
-              <Link href="#" className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white hover:-translate-y-1 hover:rotate-3 hover:shadow-lg hover:shadow-[#1877F2]/20 transition-all duration-300 group">
-                <span className="sr-only">Facebook</span>
-                <Facebook className="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Link>
-            </div>
+            {SOCIAL_LINKS.length > 0 && (
+              <div className="flex gap-4">
+                {SOCIAL_LINKS.map(({ label, href }) => {
+                  const Icon = SOCIAL_ICONS[label] ?? MessageCircle;
+                  return (
+                    <Link
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:-translate-y-1 hover:rotate-3 hover:shadow-lg transition-all duration-300 group ${SOCIAL_HOVER[label] ?? ''}`}
+                    >
+                      <span className="sr-only">{label}</span>
+                      <Icon className="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-2 space-y-8">
@@ -62,20 +80,19 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-3 space-y-8">
-            <h4 className="font-black uppercase text-[#0df2df] tracking-tighter text-lg font-plus-jakarta">Stay Freshwater</h4>
+            <h4 className="font-black uppercase text-[#0df2df] tracking-tighter text-lg font-plus-jakarta">Get In Touch</h4>
             <p className="text-white/40 text-sm font-medium font-plus-jakarta leading-relaxed">
-              Join our mailing list for special event discounts and exclusive flavor drops.
+              Planning an event or have a question? Message us directly on WhatsApp — we usually reply within the day.
             </p>
-            <div className="flex gap-3">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="bg-white/5 backdrop-blur-md border border-white/60 rounded-2xl px-6 py-4 w-full focus:outline-none focus:border-[#0df2df] focus:ring-4 focus:ring-[#0df2df]/20 transition-all text-white placeholder:text-white/40 font-bold"
-              />
-              <button className="bg-[#0df2df] text-[#041F1C] px-8 py-4 rounded-2xl font-black hover:bg-white hover:scale-105 hover:shadow-xl hover:shadow-[#0df2df]/20 transition-all uppercase text-xs tracking-widest shrink-0">
-                Go
-              </button>
-            </div>
+            <Link
+              href={whatsappLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-2xl font-black hover:bg-[#128C7E] hover:scale-105 hover:shadow-xl hover:shadow-[#25D366]/20 transition-all uppercase text-xs tracking-widest"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Chat on WhatsApp
+            </Link>
           </div>
         </div>
 

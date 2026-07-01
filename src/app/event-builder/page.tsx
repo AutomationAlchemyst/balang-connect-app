@@ -231,8 +231,8 @@ export default function EventBuilderPage() {
           onClose={() => setIsPaymentModalOpen(false)}
           eventConfig={currentEventConfig as any}
           customerDetails={customerDetailsForPayment}
-          onConfirm={() => {
-            setBookingReference(`BK-${Math.floor(Math.random() * 10000)}`);
+          onConfirm={(orderId) => {
+            setBookingReference(orderId);
             setIsPaymentModalOpen(false);
             setIsBookingSuccess(true);
             window.scrollTo({ top: 0, behavior: 'smooth' });

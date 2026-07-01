@@ -441,17 +441,17 @@ export const SEED_PROMOTIONS: Promotion[] = [
 ];
 
 export const mockCommunityStories: CommunityStory[] = [
-  { id: 'story1', userName: 'Siti & Ahmad', story: 'Balang Kepalang made our wedding day so special! The Katira was a hit with all our guests. Thank you for the amazing service!', imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-15T12:00:00.000Z', eventName: 'Our Wedding Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'wedding party', dataAiHintAvatar: 'couple avatar' },
-  { id: 'story2', userName: 'Mr. Tan', story: "We hired Balang Kepalang for our company's Family Day. The kids loved the Milo Dinosaur and the adults enjoyed the Asam Boi. Professional and friendly team!", imageUrl: 'https://placehold.co/350x250.png', date: '2024-07-01T12:00:00.000Z', eventName: 'Company Family Day', avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'corporate event', dataAiHintAvatar: 'man avatar' },
-  { id: 'story3', userName: "Aisyah's Birthday", story: "The Blue Lagoon soda was perfect for my daughter Aisyah's 10th birthday party. The setup was beautiful and hassle-free. Highly recommend!", date: '2024-06-15T12:00:00.000Z', eventName: "Aisyah's 10th Birthday", avatarUrl: 'https://placehold.co/50x50.png', dataAiHintStory: 'birthday party', dataAiHintAvatar: 'girl avatar' },
+  { id: 'story1', userName: 'Siti & Ahmad', story: 'Balang Kepalang made our wedding day so special! The Katira was a hit with all our guests. Thank you for the amazing service!', imageUrl: '', date: '2024-07-15T12:00:00.000Z', eventName: 'Our Wedding Day', avatarUrl: '', dataAiHintStory: 'wedding party', dataAiHintAvatar: 'couple avatar' },
+  { id: 'story2', userName: 'Mr. Tan', story: "We hired Balang Kepalang for our company's Family Day. The kids loved the Milo Dinosaur and the adults enjoyed the Asam Boi. Professional and friendly team!", imageUrl: '', date: '2024-07-01T12:00:00.000Z', eventName: 'Company Family Day', avatarUrl: '', dataAiHintStory: 'corporate event', dataAiHintAvatar: 'man avatar' },
+  { id: 'story3', userName: "Aisyah's Birthday", story: "The Blue Lagoon soda was perfect for my daughter Aisyah's 10th birthday party. The setup was beautiful and hassle-free. Highly recommend!", date: '2024-06-15T12:00:00.000Z', eventName: "Aisyah's 10th Birthday", avatarUrl: '', dataAiHintStory: 'birthday party', dataAiHintAvatar: 'girl avatar' },
 ];
 
 export const mockLeaderboardUsers: LeaderboardUser[] = [
-  { id: 'user1', rank: 1, name: 'Haji Sulaiman', points: 12500, avatarUrl: 'https://placehold.co/50x50.png', badge: 'Community Champion', dataAiHintAvatar: 'senior man' },
-  { id: 'user2', rank: 2, name: 'Fatimah Binte Razak', points: 11200, avatarUrl: 'https://placehold.co/50x50.png', badge: 'Masjid Benefactor', dataAiHintAvatar: 'woman hijab' },
-  { id: 'user3', rank: 3, name: 'The Tan Family', points: 9800, avatarUrl: 'https://placehold.co/50x50.png', dataAiHintAvatar: 'family portrait' },
+  { id: 'user1', rank: 1, name: 'Haji Sulaiman', points: 12500, avatarUrl: '', badge: 'Community Champion', dataAiHintAvatar: 'senior man' },
+  { id: 'user2', rank: 2, name: 'Fatimah Binte Razak', points: 11200, avatarUrl: '', badge: 'Masjid Benefactor', dataAiHintAvatar: 'woman hijab' },
+  { id: 'user3', rank: 3, name: 'The Tan Family', points: 9800, avatarUrl: '', dataAiHintAvatar: 'family portrait' },
   { id: 'user4', rank: 4, name: 'Anonymous Donor', points: 8500 },
-  { id: 'user5', rank: 5, name: 'Syed Al-Attas', points: 7650, avatarUrl: 'https://placehold.co/50x50.png', dataAiHintAvatar: 'young man' },
+  { id: 'user5', rank: 5, name: 'Syed Al-Attas', points: 7650, avatarUrl: '', dataAiHintAvatar: 'young man' },
 ];
 
 // Replaced dynamic date generation with static dates to prevent hydration errors.

@@ -50,6 +50,7 @@ export default function CorporateOrdersPage() {
     isBookingSuccess,
     setIsBookingSuccess,
     bookingReference,
+    setBookingReference,
     requiredFlavorCount,
     canProceed,
     handleAddPackageFlavor,
@@ -249,7 +250,8 @@ export default function CorporateOrdersPage() {
           }}
           eventConfig={currentEventConfig as EventConfig & { eventDate: Date }}
           customerDetails={customerDetailsForPayment}
-          onConfirm={() => {
+          onConfirm={(orderId) => {
+            setBookingReference(orderId);
             setIsBookingSuccess(true);
             setIsPaymentModalOpen(false);
           }}

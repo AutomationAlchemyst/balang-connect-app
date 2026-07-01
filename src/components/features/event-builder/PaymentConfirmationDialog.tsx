@@ -30,7 +30,7 @@ interface PaymentConfirmationDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onBack: () => void;
-  onConfirm?: () => void;
+  onConfirm?: (orderId?: string) => void;
   eventConfig: EventConfig & { eventDate: Date };
   customerDetails: CustomerDetailsFormValues;
 }
@@ -163,7 +163,7 @@ export default function PaymentConfirmationDialog({
       } else {
         setSubmissionStatus('success');
         if (onConfirm) {
-          onConfirm();
+          onConfirm(result.orderId);
         }
       }
     } catch (e: any) {

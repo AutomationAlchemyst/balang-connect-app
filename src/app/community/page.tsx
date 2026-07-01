@@ -1,11 +1,9 @@
-import SectionTitle from '@/components/ui/SectionTitle';
 import StoryCard from '@/components/features/community/StoryCard';
 import { mockCommunityStories } from '@/lib/data';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { MessageSquarePlus, Heart, Users } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { MessageSquarePlus, Users } from 'lucide-react';
 import CommunityLeaderboard from '@/components/features/community/CommunityLeaderboard';
 
 export const metadata: Metadata = {

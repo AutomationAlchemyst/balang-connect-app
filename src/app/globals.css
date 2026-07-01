@@ -87,18 +87,21 @@
     box-shadow: 0 12px 40px -12px rgba(13, 242, 223, 0.15);
   }
 
-  .breezy-btn-primary {
+  .breezy-btn-primary,
+  .btn-coast-primary {
     @apply bg-gradient-to-br from-[#0df2df] via-[#0bc9b9] to-[#09a093] text-[#041F1C] font-black uppercase tracking-widest rounded-2xl shadow-xl;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  .breezy-btn-primary:hover {
+  .breezy-btn-primary:hover,
+  .btn-coast-primary:hover {
     @apply shadow-2xl brightness-110;
     transform: translateY(-2px) rotate(-1deg);
   }
 
-  .breezy-btn-primary:active {
+  .breezy-btn-primary:active,
+  .btn-coast-primary:active {
     @apply brightness-90;
     transform: scale(0.96) rotate(0deg);
   }
@@ -110,16 +113,78 @@
     margin: -0.1em -0.25em -0.1em -0.05em;
   }
 
-  .breezy-input {
+  .breezy-input,
+  .input-coast {
     @apply bg-white/80 border-[#041F1C]/20 border rounded-2xl focus:ring-4 focus:ring-[#0df2df]/20 focus:border-[#09a093] transition-all duration-500 font-bold h-12 px-4 text-[#041F1C] placeholder-[#041F1C]/40;
   }
 
-  textarea.breezy-input {
+  textarea.breezy-input,
+  textarea.input-coast {
     @apply h-auto py-3 min-h-[100px] resize-y;
+  }
+
+  /* Hero overlay — darkens the coastal photo so white text stays legible */
+  .hero-gradient {
+    background: linear-gradient(180deg, rgba(4, 31, 28, 0.25) 0%, rgba(4, 31, 28, 0.1) 35%, rgba(4, 31, 28, 0.7) 100%);
+  }
+
+  /* Soft breezy page background */
+  .bg-coast-gradient {
+    background: linear-gradient(180deg, #eefbfa 0%, #ffffff 45%, #eafaf8 100%);
+  }
+
+  .coast-gradient {
+    background: linear-gradient(180deg, #eefbfa 0%, #ffffff 45%, #eafaf8 100%);
+  }
+
+  .text-coast-heading {
+    @apply font-display font-black uppercase tracking-tighter leading-tight;
+  }
+
+  /* Thin, unobtrusive scrollbar for internal scroll regions */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(4, 31, 28, 0.15) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(4, 31, 28, 0.15);
+    border-radius: 9999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(4, 31, 28, 0.3);
   }
 
   .breezy-card-hero {
     @apply relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#0df2df]/10 to-white/50 backdrop-blur-md border border-white/60;
+  }
+
+  /* Glass panels (aliased to the breezy glass system) */
+  .glass-panel-static {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2rem];
+    box-shadow: 0 12px 40px -12px rgba(13, 242, 223, 0.15);
+  }
+
+  .glass-panel-wet {
+    @apply bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2rem];
+    box-shadow: 0 12px 40px -12px rgba(13, 242, 223, 0.15);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-panel-wet:hover {
+    @apply bg-white/60 border-white/80;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 50px -12px rgba(13, 242, 223, 0.25);
   }
 
   .coastal-tilt-right {
@@ -143,6 +208,35 @@
 
     50% {
       transform: translateY(-10px) rotate(calc(var(--tw-rotate, 0deg) + 0.5deg));
+    }
+  }
+
+  /* Ambient background blobs */
+  .animate-blob {
+    animation: blob 7s infinite ease-in-out;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  @keyframes blob {
+
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -40px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.95);
     }
   }
 }

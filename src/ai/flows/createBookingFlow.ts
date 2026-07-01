@@ -67,7 +67,11 @@ const getGoogleAuthClient = () => {
 // =================================================================
 
 const generateOrderId = () => {
-  return Math.random().toString(36).substring(2, 8);
+  // Timestamp-seeded so references are effectively unique and roughly ordered,
+  // then a short random suffix to avoid same-millisecond collisions.
+  const time = Date.now().toString(36).slice(-4).toUpperCase();
+  const rand = Math.random().toString(36).substring(2, 5).toUpperCase();
+  return `BK-${time}${rand}`;
 };
 
 const addBookingToSheet = ai.defineTool(
@@ -262,24 +266,26 @@ export const createBookingFlow = ai.defineFlow(
     name: 'createBookingFlow',
     inputSchema: BookingFlowInputSchema,
     outputSchema: z.object({
+      orderId: z.string(),
       sheet: z.any(),
       calendar: z.any(),
       whatsapp: z.any(),
     }),
   },
   async (input) => {
+    const orderId = generateOrderId();
     try {
-      const orderId = generateOrderId();
       const [sheetResult, calendarResult, whatsappResult] = await Promise.all([
         retryToolCall(() => addBookingToSheet(input), 'addBookingToSheet'),
         retryToolCall(() => createCalendarEvent(input), 'createCalendarEvent'),
         retryToolCall(() => sendWhatsAppMessage({ ...input, orderId }), 'sendWhatsAppMessage'),
       ]);
 
-      return { sheet: sheetResult, calendar: calendarResult, whatsapp: whatsappResult };
+      return { orderId, sheet: sheetResult, calendar: calendarResult, whatsapp: whatsappResult };
     } catch (error: any) {
       console.error('createBookingFlow: FATAL - An unhandled error occurred:', error);
       return {
+        orderId,
         sheet: { success: false, error: `Flow failed: ${error.message}` },
         calendar: { success: false, error: `Flow failed: ${error.message}` },
         whatsapp: { success: false, error: `Flow failed: ${error.message}` },

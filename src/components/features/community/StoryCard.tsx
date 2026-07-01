@@ -34,7 +34,7 @@ export default function StoryCard({ story }: StoryCardProps) {
             {story.avatarUrl ? (
               <AvatarImage src={story.avatarUrl} alt={story.userName} data-ai-hint="person avatar" />
             ) : (
-              <AvatarFallback className="bg-brand-yellow text-brand-blue font-bold text-xl">{userInitials}</AvatarFallback>
+              <AvatarFallback className="bg-brand-cyan/20 text-brand-teal font-bold text-xl">{userInitials}</AvatarFallback>
             )}
           </Avatar>
         </div>
